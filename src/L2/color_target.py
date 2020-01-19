@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 
 # Import internal programs
-import L1_camera as cam
+import camera as cam
 
 width = 120                                                 # width of image being processed (pixels)
 color_range = np.array([[0, 185, 100], [175, 220, 175]])    # enter values here if running standalone program.

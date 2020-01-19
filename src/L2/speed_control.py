@@ -7,7 +7,7 @@
 import numpy as np      # for handling arrays
 
 # Import local files
-import L1_motors as m   # for controlling motors
+import motors as m      # for controlling motors
 
 # Initialize variables
 u_integral = 0

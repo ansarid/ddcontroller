@@ -73,20 +73,20 @@ def write(port, pin, state):  # Use this function to control an output.
             print("ERROR: Pin {} on port {} is not setup as an output!".format(pin, port))
     else:
         exit(1)
-        
+
 # SET UP ALL OF THE PINS TO DEFAULT
 pin_setup()  # set up all pins with the default modes.
 
 # # UNCOMMENT THE SECTION BELOW TO RUN AS A STANDALONE PROGRAM
 # # READ EXAMPLE
 # while True:
-#     pin = read(0,1) # read port 0, pin 1
-#     print("Port 0 Pin 1 Condition:",pin) # print the state that was read.
+#     pin = read(0, 1) # read port 0, pin 1
+#     print("Port 0 Pin 1 Condition:", pin) # print the state that was read.
 #     time.sleep(1) # delay 1 second
 
 # # WRITE EXAMPLE
 # while True:  # a loop to blink the red LED.
 # 	time.sleep(1)
-# 	write(0,0,1)
+# 	write(0, 0, 1)
 # 	time.sleep(1)
-# 	write(0,0,0)
+# 	write(0, 0, 0)

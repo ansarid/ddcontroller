@@ -5,7 +5,7 @@
 # Code for Beagle Hardware
 
 # Import internal libraries
-import L2_log as log
+import log
 
 # Import external libraries
 import Adafruit_GPIO.I2C as Adafruit_I2C    # for i2c communication functions

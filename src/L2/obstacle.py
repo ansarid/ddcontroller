@@ -4,10 +4,10 @@
 # it is a level 2 program.
 
 import time
-import L1_lidar as lidar    # import the level 1 program
-import numpy as np          # for operating on arrays
+import lidar            # import the level 1 program
+import numpy as np      # for operating on arrays
 
-p0 = np.asarray([0, 0])          # define p0, which is the location of the lidar (x and y).
+p0 = np.asarray([0, 0])         # define p0, which is the location of the lidar (x and y).
 p1 = np.asarray([0.300, 0.0])   # define p1, which is the location of interest for collisions (meters)
 num_points = 54                 # Desired number of points in your scan (54 has been tested)
 

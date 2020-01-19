@@ -5,7 +5,7 @@
 
 import cv2
 import numpy as np
-import L1_camera as cam
+import camera as cam
 
 color_range = ((0, 0, 0), (255, 255, 255))
 

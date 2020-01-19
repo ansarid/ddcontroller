@@ -42,7 +42,7 @@ def getHeading(myAxes):                     # convert scaled values to a heading
 
 
 if __name__ == "__main__":
-    while 1:
+    while True:
         axes = getXY()                          # call xy function
         print("raw values:", axes)
         axesScaled = scale(axes)                # perform scale function

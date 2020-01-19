@@ -14,7 +14,7 @@ import numpy as np
 import time
 
 # Run the main loop
-while 1:
+while True:
     accel = mpu.getAccel()                          # call the function from within L1_mpu.py
     (xAccel) = accel[0]                             # x axis is stored in the first element
     (yAccel) = accel[1]                             # y axis is stored in the second element

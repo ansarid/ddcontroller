@@ -24,7 +24,7 @@ def write_rfid(text):
 # UNCOMMENT THE SECTION BELOW TO RUN AS STANDALONE CODE
 # Read RFID
 
-# while 1:
+# while True:
 #     sn, data = read_rfid()  # Read card serial number and data and store to sn and data variables
 #     print("Serial Number: ", sn, "\t Data: ", data) # Print serial number and data
 

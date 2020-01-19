@@ -28,7 +28,7 @@ def getDcJack(): # return the voltage measured at the barrel plug
 
 
 if __name__ == "__main__":
-    while 1:
+    while True:
         adcData = getAdc()
         dcJack = getDcJack()
         print("adc (v):", adcData, "\t battery (v):", dcJack)

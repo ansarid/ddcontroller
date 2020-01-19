@@ -79,13 +79,13 @@ pin_setup()  # set up all pins with the default modes.
 
 # # UNCOMMENT THE SECTION BELOW TO RUN AS A STANDALONE PROGRAM
 # # READ EXAMPLE
-# while 1:
+# while True:
 #     pin = read(0,1) # read port 0, pin 1
 #     print("Port 0 Pin 1 Condition:",pin) # print the state that was read.
 #     time.sleep(1) # delay 1 second
 
 # # WRITE EXAMPLE
-# while 1:  # a loop to blink the red LED.
+# while True:  # a loop to blink the red LED.
 # 	time.sleep(1)
 # 	write(0,0,1)
 # 	time.sleep(1)

@@ -1,2 +1,2 @@
-# scuttlepy
+# ScuttlePy
 SCUTTLE Python

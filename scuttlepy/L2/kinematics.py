@@ -3,9 +3,9 @@
 # This program takes the encoder values from encoders, computes wheel movement
 # and computes the movement of the wheelbase center based on SCUTTLE kinematics.
 
-import encoder as enc    # local library for encoders
-import numpy as np          # library for math operations
-import time                 # library for time access
+from scuttlepy.L1 import encoder as enc     # local library for encoders
+import numpy as np                          # library for math operations
+import time                                 # library for time access
 
 # define kinematics
 R = 0.041               # radius in meters

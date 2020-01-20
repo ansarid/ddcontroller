@@ -6,7 +6,7 @@
 import time
 
 # import internal programs
-import servo
+from scuttlepy.L1 import servo
 
 span = 180      # input here the span of the servo in use (degrees)
 maxCmd = 1.5

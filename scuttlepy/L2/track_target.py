@@ -5,7 +5,7 @@
 
 import cv2
 import numpy as np
-import camera as cam
+from scuttlepy.L1 import camera as cam
 
 color_range = ((0, 0, 0), (255, 255, 255))
 

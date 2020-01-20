@@ -7,7 +7,7 @@
 import numpy as np      # for handling arrays
 
 # Import local files
-import motors as m      # for controlling motors
+from scuttlepy.L1 import motors as m    # for controlling motors
 
 # Initialize variables
 u_integral = 0

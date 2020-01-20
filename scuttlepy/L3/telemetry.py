@@ -6,8 +6,8 @@
 # Access nodered at 192.168.8.1:1880 (by default, it's running on the Blue)
 
 # Import Internal Programs
-import L1_mpu as mpu
-import L2_log as log
+from scuttlepy.L1 import mpu
+from scuttlepy.L1 import log
 
 # Import External programs
 import numpy as np

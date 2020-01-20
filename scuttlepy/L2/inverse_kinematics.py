@@ -8,7 +8,7 @@ import numpy as np      # to perform matrix operations
 import time
 
 # Import internal programs
-import gamepad as gp     # to call getGP from gamepad
+from scuttlepy.L1 import gamepad as gp     # to call getGP from gamepad
 
 # define robot geometry
 R = 0.041                                   # wheel radius

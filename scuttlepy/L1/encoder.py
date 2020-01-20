@@ -5,7 +5,7 @@
 # Code for Beagle Hardware
 
 # Import internal libraries
-import log
+from scuttlepy.L1 import log
 
 # Import external libraries
 import Adafruit_GPIO.I2C as Adafruit_I2C    # for i2c communication functions

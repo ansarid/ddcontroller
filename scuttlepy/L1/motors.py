@@ -42,10 +42,10 @@ if __name__ == "__main__":
             print("motors.py: driving fwd")
             l_motor.setDuty(1)
             r_motor.setDuty(1)
-            time.sleep(4)                       # run fwd for 4 seconds
+            time.sleep(4)
             print("motors.py: driving reverse")
             r_motor.setDuty(-1)
             l_motor.setDuty(-1)
-            time.sleep(4)                       # run reverse for 2 seconds
+            time.sleep(4)
 
 

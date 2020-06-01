@@ -34,7 +34,7 @@ class Motor:
 
 if __name__ == "__main__":
 
-    l_motor= Motor(1) 	                                # Left Motor (ch1)
+    l_motor = Motor(1) 	                                # Left Motor (ch1)
     r_motor = Motor(2) 	                                # Right Motor (ch2)
 
     while rcpy.get_state() != rcpy.EXITING:     # exit loop if rcpy not ready

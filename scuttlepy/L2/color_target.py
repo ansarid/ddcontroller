@@ -8,10 +8,10 @@ import cv2
 import numpy as np
 
 # Import internal programs
-from scuttlepy.L1 import camera as cam
+import L1_camera as cam
 
 width = 120                                                 # width of image being processed (pixels)
-color_range = np.array([[0, 185, 100], [175, 220, 175]])    # enter values here if running standalone program.
+color_range = np.array([[0, 0, 0], [255, 255, 255]])        # enter values here if running standalone program.
 
 
 # This function searches an image for an object of the specified color.  Returns array containing [x, y, radius] in pixels.
@@ -21,25 +21,22 @@ def colorTarget(color_range=((0, 0, 0), (255, 255, 255))):
     if filter == 'RGB':
         frame_to_thresh = image.copy()
     else:
-        frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # convert image to hsv colorspace RENAME THIS TO IMAGE_HSV
+        frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)                # convert image to hsv colorspace RENAME THIS TO IMAGE_HSV
+
     thresh = cv2.inRange(frame_to_thresh, color_range[0], color_range[1])
-    # apply a blur function
-    # kernel = np.ones((5,5),np.uint8)
-    # mask = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel) # Apply blur
-    # mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel) # Apply blur 2nd iteration
     mask = thresh
 
     cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]    # generates number of contiguous "1" pixels
-    if len(cnts) == 0:   # begin processing if there are "1" pixels discovered
+    if len(cnts) == 0:                                                                      # begin processing if there are "1" pixels discovered
         return np.array([None, None, 0])
     else:
-        c = max(cnts, key=cv2.contourArea)  # return the largest target area
+        c = max(cnts, key=cv2.contourArea)                                                  # return the largest target area
         ((x, y), radius) = cv2.minEnclosingCircle(c)
         if radius > 4:
             return np.array([round(x, 1), round(y, 1), round(radius, 1)])
 
 
-def horizLoc(target_x):  # generate an estimate of the angle of the target from center
+def horizLoc(target_x):                             # generate an estimate of the angle of the target from center
     if target_x is not None:
         viewAngle = 90                              # camera view, degrees
         ratio = target_x / width                    # divide by pixels in width
@@ -52,7 +49,7 @@ def horizLoc(target_x):  # generate an estimate of the angle of the target from 
 
 if __name__ == "__main__":
     while True:
-        target = colorTarget(color_range)       # grab target x, y, radius
+        target = colorTarget(color_range)           # grab target x, y, radius
         x = target[0]
         radius = target[2]
         if x is None:

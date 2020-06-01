@@ -5,55 +5,53 @@
 # Code for Beagle Hardware
 
 # Import internal libraries
-from scuttlepy.L1 import log
+# from scuttlepy.L1 import log
 
 # Import external libraries
-import Adafruit_GPIO.I2C as Adafruit_I2C    # for i2c communication functions
 import time
 import numpy as np                          # for handling arrays
-
-encL = Adafruit_I2C.Device(0x40, 1)     # encoder i2c address
-encR = Adafruit_I2C.Device(0x41, 1)     # encoder i2c address
+from smbus2 import SMBus
 
 
-# the readEncs function communicates to one device in one function call
-def readEnc(channel):
-    try:
+class Encoder:
+    def __init__(self, address, bus=1):
+        self.bus = SMBus(bus)
+        self.address = address
+
+    def readAngle(self):
+
         # The AS5048B encoder gives a 14 bit angular reading
-        if channel == 'L':
-            msB = encL.readU16(0xFE)    # capture the 8 msb's from encoder
-            lsB = encL.readU16(0xFF)    # capture the 6 lsb's from encoder
-        elif channel == "R":
-            msB = encR.readU16(0xFE)    # capture the 8 msb's from encoder
-            lsB = encR.readU16(0xFF)    # capture the 6 lsb's from encoder
-        # lsB can contribute  at most 1.4 degrees to the reading
-        # for msB, perform bitwise operation to get true scaling of these bits
-        msB = ((msB << 8) | (msB >> 8)) & 0xFFFF
-        msB = ((msB & 0xFF00) >> 2) | (msB & 0x3F)
-        angle_raw = msB + lsB  # multiplying by 0.0219 will give degrees
-    except:
-        print('Warning (I2C): Could not read encoder ' + channel)
-        angle_raw = 0  # set to zero, avoid sending wrong value
-    return angle_raw   # the returned value must be scaled by ( 359deg / 2^14 )
+        self.msB = self.bus.read_byte_data(self.address, 0xFE)    # capture the 8 msb's from encoder
+        self.lsB = self.bus.read_byte_data(self.address, 0xFF)    # capture the 6 lsb's from encoder
 
+        self.angle = (self.msB << 6) | self.lsB
+        self.angle = self.angle * (360 / 2**14)      # scale values to get degrees
+        return self.angle
 
-# The read() function returns both encoder values (RAW).
-# Call this function from external programs.
-def read():
-    encLeft = readEnc('L')                      # call for left enc value
-    encRight = readEnc('R')                     # call for right enc value
-    encoders = np.array([encLeft, encRight])    # form array from left and right
-    return encoders
+    def readMagnitude(self):
+
+        # The AS5048B encoder gives a 14 bit angular reading
+        self.msB = self.bus.read_byte_data(self.address, 0xFC)    # capture the 8 msb's from encoder
+        self.lsB = self.bus.read_byte_data(self.address, 0xFD)    # capture the 6 lsb's from encoder
+
+        self.magnitude = (self.msB << 6) | self.lsB
+
+        return self.magnitude
 
 
 if __name__ == "__main__":
-    while True:
-        encoders = read()
-        encoders = np.round((encoders * (359 / 2**14)), 2)      # scale values to get degrees
-        print("encoders: ", encoders)                           # print the values
 
-        # SECTION FOR LOGGING --------------------------
+    leftEncoder =   Encoder(0x43)
+    rightEncoder =  Encoder(0x40)
 
-        log.uniqueFile(encoders[0], "encL.txt")
-        log.uniqueFile(encoders[1], "encR.txt")
-        time.sleep(0.10)            # short delay
+    while 1:
+        # leftAngle = round(leftEncoder.readAngle(), 2)
+        # rightAngle = round(rightEncoder.readAngle(), 2)
+
+        leftMag = round(leftEncoder.readMagnitude(), 2)
+        rightMag = round(rightEncoder.readMagnitude(), 2)
+
+        # print(leftAngle, "\t", rightAngle)
+        print(leftMag, "\t", rightMag)
+
+        time.sleep(0.01)

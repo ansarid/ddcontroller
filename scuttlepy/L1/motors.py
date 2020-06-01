@@ -7,42 +7,45 @@
 # Import external libraries
 import rcpy
 import rcpy.motor as motor
-import time             # only necessary if running this program as a loop
-import numpy as np      # for clip function
+import time                                     # only necessary if running this program as a loop
+import numpy as np                              # for clip function
 
-motor_l = 1 	# Left Motor (ch1)
-motor_r = 2 	# Right Motor (ch2)
 # NOTE: THERE ARE 4 OUTPUTS.  3 & 4 ACCESSIBLE THROUGH diode & accy functions
 
-rcpy.set_state(rcpy.RUNNING)    # initialize the rcpy library
 
+class Motor:
 
-# define functions to command motors, effectively controlling PWM
-def MotorL(speed):              # takes argument in range [-1,1]
-    motor.set(motor_l, speed)
+    def __init__(self, channel):
+        self.channel = channel
+        rcpy.set_state(rcpy.RUNNING)
 
+    def setDuty(self, duty):
+        if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
+            motor.set(self.channel, duty)
 
-def MotorR(speed):              # takes argument in range [-1,1]
-    motor.set(motor_r, speed)
+    def diode(self, state, channel):                # takes argument in range [0,1]
+        np.clip(self.state, 0, 1)                   # limit the output, disallow negative voltages
+        if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
+            motor.set(self.channel, self.state)
 
-
-def diode(state, channel):      # takes argument in range [0,1]
-    np.clip(state, 0, 1)        # limit the output, disallow negative voltages
-    motor.set(channel, state)
-
-
-def accy(state, channel):       # takes argument in range [-1,1]
-    motor.set(channel, state)
-
+    def accy(self, state, channel):                 # takes argument in range [-1,1]
+        if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
+            motor.set(self.channel, self.state)
 
 if __name__ == "__main__":
+
+    l_motor= Motor(1) 	                                # Left Motor (ch1)
+    r_motor = Motor(2) 	                                # Right Motor (ch2)
+
     while rcpy.get_state() != rcpy.EXITING:     # exit loop if rcpy not ready
         if rcpy.get_state() == rcpy.RUNNING:    # execute loop when rcpy is ready
             print("motors.py: driving fwd")
-            MotorL(0.4)                         # gentle speed for testing program. 0.3 PWM may not spin the wheels.
-            MotorR(0.4)
+            l_motor.setDuty(1)
+            r_motor.setDuty(1)
             time.sleep(4)                       # run fwd for 4 seconds
             print("motors.py: driving reverse")
-            MotorL(-0.6)
-            MotorR(-0.6)
-            time.sleep(2)                       # run reverse for 2 seconds
+            r_motor.setDuty(-1)
+            l_motor.setDuty(-1)
+            time.sleep(4)                       # run reverse for 2 seconds
+
+

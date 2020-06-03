@@ -4,78 +4,115 @@
 # to send to motors, and has a function to execute PID control.
 
 # Import external libraries
-import numpy as np                                  # for handling arrays
+import time
+import math
+# import numpy as np                                  # for handling arrays
 
 # Import local files
-import L1_motors as m                               # for controlling motors
-
-# Initialize variables
-u_integral = 0
-DRS = 0.8
-kp = 0.04                                           # proportional term
-ki = 0.04                                           # integral term
-kd = 0.0                                            # derivative term
-pidGains = np.array([kp, ki, kd])                   # form an array to collect pid gains.
+import scuttlepy.L1.motor as motor                  # for controlling motors
+import scuttlepy.L1.encoder as encoder              # for reading encoders
 
 
-# a function for converting target rotational speeds to PWMs without feedback
-def openLoop(pdl, pdr):
-    DRS = 0.8                                       # create a variable for direct-re-scaling
-    duties = np.array([pdl, pdr])                   # put the values into an array
-    duties = duties * 1/9.75 * DRS                  # rescaling. 1=max PWM, 9.75 = max rad/s achievable
-    duties[0] = sorted([-1, duties[0], 1])[1]       # place bounds on duty cycle
-    duties[1] = sorted([-1, duties[1], 1])[1]       # place bounds on duty cycle
-    return duties
+class PID:
+    def __init__(self, kp, ki, kd):
+        self.kp = kp                                            # proportional term
+        self.ki = ki                                            # integral term
+        self.kd = kd                                            # derivative term
+
+        self.u_proportional = 0
+        self.u_integral = 0
+        self.u_derivative = 0
+
+        self.t1 = time.time()
+        self.e1 = 0
+
+    def pid(self, pdt, pdc):    # phidottarget, phidotcurrent
+        e0 = self.e1
+        print("Error: ",e0)
+        self.e1 = pdt - pdc
+        t0 = self.t1
+        self.t1 = time.time()
+        dt = self.t1 - t0
+        de_dt = (self.e1 - e0)/dt
+
+        self.u_proportional = (self.e1 * self.kp)                                       # proportional term
+        self.u_integral += (self.e1 * self.ki)                                          # integral term
+        self.u_derivative = (de_dt * self.kd)                                      # derivative term
+
+        u = (self.u_proportional + self.u_integral + self.u_derivative)
+
+        return u
 
 
-def driveOpenLoop(pdTargets):                       # Pass Phi dot targets to this function
-    duties = openLoop(pdTargets[0], pdTargets[1])   # produce duty cycles from the phi dots
-    m.MotorL(duties[0])                             # send command to motors
-    m.MotorR(duties[1])                             # send command to motors
+class Wheel:
+
+    def __init__(self, motor_channel, encoder_address, wheel_radius=41):
+        self.speed = 0                                      # (rad/s)
+        self.radius = wheel_radius                          # mm
+        self.motor = motor.Motor(motor_channel)
+        self.encoder = encoder.Encoder(encoder_address)
+
+        self.pid = PID(0.04, 0.04, 0.0)
+
+        self.pdCurrents = 0
+
+        self.res = (360/2**14)                          # resolution of the encoders
+        self.roll = int(360/self.res)                   # variable for rollover logic
+        self.gap = 0.5 * self.roll                      # degress specified as limit for rollover
+        self.wait = 0.02                                # wait time between encoder measurements (s)
+
+    def _getTravel(self, deg0, deg1):                    # calculate the delta on Left wheel
+        trav = deg1 - deg0                              # reset the travel reading
+        if((-trav) >= self.gap):                        # if movement is large (has rollover)
+            trav = (deg1 - deg0 + self.roll)            # forward rollover
+        if(trav >= self.gap):
+            trav = (deg1 - deg0 - self.roll)            # reverse rollover
+        return(trav)
+
+    def _getPdCurrent(self):
+        encoder_deg = self.encoder.readAngle()          # grabs the current encoder readings in degrees
+        deg0 = round(encoder_deg, 1)                    # reading in degrees.
+        t1 = time.time()                                # time.time() reports in seconds
+        time.sleep(self.wait)                           # delay specified amount
+        encoder_deg = self.encoder.readAngle()          # grabs the current encoder readings in degrees
+        deg1 = round(encoder_deg, 1)                    # reading in degrees.
+        t2 = time.time()                                # reading about .003 seconds
+        deltaT = round((t2 - t1), 3)                    # new scalar dt value
+
+        # ---- movement calculations
+        trav = self._getTravel(deg0, deg1) * self.res      # grabs travel of left wheel, degrees
+        # travL = -1 * travL                              # this wheel is inverted from the right side
+
+        # build an array of wheel speeds in rad/s
+        trav = trav * 0.5                             # pulley ratio = 0.5 wheel turns per pulley turn
+        trav = math.radians(trav)                     # convert degrees to radians
+        trav = round(trav, 3)                         # round the array
+        wheelSpeed = trav / deltaT
+        wheelSpeed = round(wheelSpeed, 3)
+        return(wheelSpeed)                              # returns [pdl, pdr] in radians/second
+
+    def setSpeed(self, pdt):
+        pdc = self._getPdCurrent()                            # (rad/s)
+        duty = self.pid.pid(pdt, pdc)
+
+        if -0.222 < duty and duty < 0.222:
+            duty = (duty * 3)
+        elif duty > 0.222:
+            duty = ((duty * 0.778) + 0.222)
+        else:
+            duty = ((duty * 0.778) - 0.222)
+
+        print("duty: ",duty)
+        self.motor.setDuty(duty)
 
 
-def scalingFunction(x):                             # a fcn to compress the PWM region where motors don't turn
-    if -0.222 < x and x < 0.222:
-        y = (x * 3)
-    elif x > 0.222:
-        y = ((x * 0.778) + 0.222)
-    else:
-        y = ((x * 0.778) - 0.222)
-    return y
+if __name__ == "__main__":
 
+    l_wheel = Wheel(1, 0x43) 	                        # Left Motor (ch1)
+    r_wheel = Wheel(2, 0x40) 	                        # Right Motor (ch2)
 
-def scaleMotorEffort(u):                            # send the control effort signals to the scaling function
-    u_out = np.zeros(2)
-    u_out[0] = scalingFunction(u[0])
-    u_out[1] = scalingFunction(u[1])
-    return(u_out)
+    while True:
 
-
-def driveClosedLoop(pdt, pdc, de_dt):               # new function requires pidGains argument
-    global u_integral
-    e = (pdt - pdc)                                 # compute error
-
-    kp = pidGains[0]
-    ki = pidGains[1]
-    kd = pidGains[2]
-
-    # generate components of the control effort, u
-    u_proportional = (e * kp)                                       # proportional term
-    # u_integral += (e * ki)
-    try:
-        u_integral += (e * ki)                                      # integral term
-    except:
-        u_integral = (e*ki)
-
-    u_derivative = (de_dt * kd)                                     # derivative term
-
-    # condition the signal before sending to motors
-    u = np.round((u_proportional + u_integral + u_derivative), 2)   # must round to ensure driver handling
-    u = scaleMotorEffort(u)                                         # perform scaling - described above
-    u[0] = sorted([-1, u[0], 1])[1]                                 # place bounds on the motor commands
-    u[1] = sorted([-1, u[1], 1])[1]                                 # within [-1, 1]
-
-    # send the signal to motors
-    m.MotorL(round(u[0], 2))                                        # must round to ensure driver handling!
-    m.MotorR(round(u[1], 2))                                        # must round to ensure driver handling!
-    return
+        print("Left Motor speed 1 rps")
+        l_wheel.setSpeed(math.pi*2)
+        r_wheel.setSpeed(math.pi*2)

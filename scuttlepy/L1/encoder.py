@@ -45,13 +45,13 @@ if __name__ == "__main__":
     rightEncoder =  Encoder(0x40)
 
     while 1:
-        # leftAngle = round(leftEncoder.readAngle(), 2)
-        # rightAngle = round(rightEncoder.readAngle(), 2)
+        leftAngle = round(leftEncoder.readAngle(), 2)
+        rightAngle = round(rightEncoder.readAngle(), 2)
 
         leftMag = round(leftEncoder.readMagnitude(), 2)
         rightMag = round(rightEncoder.readMagnitude(), 2)
 
-        # print(leftAngle, "\t", rightAngle)
+        print(leftAngle, "\t", rightAngle)
         print(leftMag, "\t", rightMag)
 
         time.sleep(0.01)

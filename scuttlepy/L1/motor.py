@@ -20,8 +20,8 @@ class Motor:
         rcpy.set_state(rcpy.RUNNING)
 
     def setDuty(self, duty):
-        if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
-            motor.set(self.channel, duty)
+        if rcpy.get_state() == rcpy.RUNNING:            # execute loop when rcpy is ready
+            motor.set(self.channel, round(duty, 2))     # must round to ensure driver handling!
 
     def diode(self, state, channel):                # takes argument in range [0,1]
         np.clip(self.state, 0, 1)                   # limit the output, disallow negative voltages
@@ -32,9 +32,10 @@ class Motor:
         if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
             motor.set(self.channel, self.state)
 
+
 if __name__ == "__main__":
 
-    l_motor= Motor(1) 	                                # Left Motor (ch1)
+    l_motor = Motor(1) 	                                # Left Motor (ch1)
     r_motor = Motor(2) 	                                # Right Motor (ch2)
 
     while rcpy.get_state() != rcpy.EXITING:     # exit loop if rcpy not ready
@@ -42,10 +43,8 @@ if __name__ == "__main__":
             print("motors.py: driving fwd")
             l_motor.setDuty(1)
             r_motor.setDuty(1)
-            time.sleep(4)
+            time.sleep(5)
             print("motors.py: driving reverse")
-            r_motor.setDuty(-1)
             l_motor.setDuty(-1)
-            time.sleep(4)
-
-
+            r_motor.setDuty(-1)
+            time.sleep(5)

@@ -54,3 +54,8 @@ if __name__ == "__main__":
             print("mag (μT):", myMag, "\t accel(m/s^2):", myAccel)
 
         time.sleep(0.2)
+
+
+class MPU:
+    def __init__(self):
+        

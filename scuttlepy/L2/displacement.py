@@ -4,9 +4,10 @@
 # calculates the chassis displacement and continuously adds up the displacement
 # to indicate how much the robot has advanced, in meters.
 
-import L1_encoder as enc                    # local library for encoders
+import scuttlepy.L1.encoder as enc                    # local library for encoders
 import numpy as np                          # library for math operations
 import time                                 # library for time access
+import math
 
 # define kinematics
 R = 0.041                                   # radius in meters
@@ -56,9 +57,9 @@ while True:
     # build an array of wheel travels in rad/s
     travs = np.array([travL, travR])        # store wheels travel in degrees
     travs = travs * 0.5                     # pulley ratio = 0.5 wheel turns per pulley turn
-    travs = travs * 3.14 / 180              # convert degrees to radians
+    travs = math.radians(travs)             # convert degrees to radians
     travs = np.round(travs, decimals=3)     # round the array
-    
+
     chass = getChassis(travs)               # convert the wheel travels to chassis travel
     x = x + chass[0]                        # add the latest advancement(m) to the total
     t = t + chass[1]

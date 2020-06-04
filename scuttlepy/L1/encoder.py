@@ -21,27 +21,26 @@ class Encoder:
     def readPos(self):
 
         # The AS5048B encoder gives a 14 bit angular reading
-        self.msB = self.bus.read_byte_data(self.address, 0xFE)    # capture the 8 msb's from encoder
-        self.lsB = self.bus.read_byte_data(self.address, 0xFF)    # capture the 6 lsb's from encoder
+        self.pos = self.bus.read_i2c_block_data(self.address, 0xFE, 2)
 
-        self.pos = (self.msB << 6) | self.lsB
+        self.pos = (self.pos[0] << 6) | self.pos[1]
+
         return self.pos
 
     def readAngle(self):
 
         # The AS5048B encoder gives a 14 bit angular reading
-        self.msB = self.bus.read_byte_data(self.address, 0xFE)    # capture the 8 msb's from encoder
-        self.lsB = self.bus.read_byte_data(self.address, 0xFF)    # capture the 6 lsb's from encoder
+        self.angle = self.bus.read_i2c_block_data(self.address, 0xFE, 2)
 
         self.angle = (self.msB << 6) | self.lsB
         self.angle = self.angle * (360 / 2**14)      # scale values to get degrees
+
         return self.angle
 
     def readMagnitude(self):
 
         # The AS5048B encoder gives a 14 bit angular reading
-        self.msB = self.bus.read_byte_data(self.address, 0xFC)    # capture the 8 msb's from encoder
-        self.lsB = self.bus.read_byte_data(self.address, 0xFD)    # capture the 6 lsb's from encoder
+        self.magnitude = self.bus.read_i2c_block_data(self.address, 0xFC, 2)
 
         self.magnitude = (self.msB << 6) | self.lsB
 

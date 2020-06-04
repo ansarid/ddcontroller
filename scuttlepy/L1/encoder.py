@@ -18,6 +18,15 @@ class Encoder:
         self.bus = SMBus(bus)
         self.address = address
 
+    def readPos(self):
+
+        # The AS5048B encoder gives a 14 bit angular reading
+        self.msB = self.bus.read_byte_data(self.address, 0xFE)    # capture the 8 msb's from encoder
+        self.lsB = self.bus.read_byte_data(self.address, 0xFF)    # capture the 6 lsb's from encoder
+
+        self.pos = (self.msB << 6) | self.lsB
+        return self.pos
+
     def readAngle(self):
 
         # The AS5048B encoder gives a 14 bit angular reading

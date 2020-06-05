@@ -14,15 +14,19 @@ import scuttlepy.L1.motor as motor                  # for controlling motors
 import scuttlepy.L1.encoder as encoder              # for reading encoders
 import scuttlepy.L2.PID as PID                      # for PID controller
 
+
 class Wheel:
 
-    def __init__(self, motor_channel, encoder_address, wheel_radius=41):
+    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False):
         self.speed = 0                                      # (rad/s)
         self.radius = wheel_radius                          # mm
         self.motor = motor.Motor(motor_channel)
         self.encoder = encoder.Encoder(encoder_address)
+        self.invert_motor = invert_motor
+        self.invert_encoder = invert_encoder
 
-        self.pid = PID.PID(0.06, 0.9, 0.000009)
+        # self.pid = PID.PID(0.06, 0.9, 0.000009)
+        self.pid = PID.PID(0.04, 0.04, 0.0)
 
         self.pdCurrents = 0
 
@@ -39,7 +43,7 @@ class Wheel:
             trav = (pos1 - pos0 - self.roll)            # reverse rollover
         return(trav)
 
-    def getAngularVelocity(self):
+    def getSpeed(self):
         encoder_deg = self.encoder.readPos()            # grabs the current encoder readings in integer values
         pos0 = round(encoder_deg, 1)                    # reading in degrees.
         t1 = time.time()                                # time.time() reports in seconds
@@ -63,55 +67,45 @@ class Wheel:
         wheelSpeed = round(wheelSpeed, 3)
         deg1 = round(pos1 * self.res, 1)
         deg0 = round(pos0 * self.res, 1)
-        return(wheelSpeed)                              # returns pdc in radians/second
+        if not self.invert_encoder:
+            self.speed = wheelSpeed
+            return self.speed                             # returns current phi dot in radians/second
+        else:
+            self.speed = -1 * wheelSpeed
+            return self.speed                             # returns current phi dot in radians/second inverted
 
     def setSpeed(self, pdt):
         self.pid.SetPoint = pdt
-        self.pid.update(self.getAngularVelocity())
+        self.speed = self.getSpeed()
+        self.pid.update(self.speed)
         duty = self.pid.output
 
+        ### THIS NEEDS TO BE REFACTORED ###
         if -0.222 < duty and duty < 0.222:
             duty = (duty * 3)
         elif duty > 0.222:
             duty = ((duty * 0.778) + 0.222)
         else:
             duty = ((duty * 0.778) - 0.222)
+        ### THIS NEEDS TO BE REFACTORED ###
 
-        # print("Duty: ",duty)
-        self.motor.setDuty(duty)
+        if not self.invert_motor:
+            self.motor.setDuty(duty)
+        else:
+            self.motor.setDuty(-1*duty)
 
 
 if __name__ == "__main__":
 
-    l_wheel = Wheel(1, 0x43) 	                        # Left Motor (ch1)
-    r_wheel = Wheel(2, 0x40) 	                        # Right Motor (ch2)
+    r_wheel = Wheel(2, 0x40) 	                            # Right Motor (ch2)
+    l_wheel = Wheel(1, 0x43, invert_encoder=True) 	        # Left Motor  (ch1)
 
-    import numpy as np
+    print("Left Wheel, Right Wheel")
 
-    av = []
+    while True:
 
-    # while True:
-    for i in range(500):
+        print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
 
-        # print("Left Motor speed 1 rps")
-        # l_wheel.setSpeed(math.pi*2)
-        # r_wheel.setSpeed(math.pi*2)
-        # time.sleep(10)
-
-        # print("Left Motor speed 0.5 rps")
-        r_wheel.setSpeed(math.radians(360))     # 6.283
-        # r_wheel.setSpeed(3.14)
-        # # time.sleep(10)
-
-        # print("Left Motor speed 0 rps")
-        # l_wheel.setSpeed(0)
-        # r_wheel.setSpeed(0)
-        # # time.sleep(10)
-
-        av.append(r_wheel.getAngularVelocity())
-        if len(av) > 50:
-            av.pop(0)
-        # r_wheel.motor.setDuty(0.7)
-        print(r_wheel.getAngularVelocity(), ",", round(r_wheel.pid.last_error, 3), ",", round(np.average(av),2))
-        # print(r_wheel.getAngularVelocity())
-        # time.sleep(0.1)
+        # Set Wheel Speed to 6.28 rad/s
+        r_wheel.setSpeed(6.28)
+        l_wheel.setSpeed(6.28)

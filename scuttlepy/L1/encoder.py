@@ -14,14 +14,16 @@ from smbus2 import SMBus
 
 
 class Encoder:
+
     def __init__(self, address, bus=1):
+
         self.bus = SMBus(bus)
         self.address = address
 
     def readPos(self):
 
         # The AS5048B encoder gives a 14 bit angular reading
-        self.pos = self.bus.read_i2c_block_data(self.address, 0xFE, 2)
+        self.pos = self.bus.read_i2c_block_data(self.address, 0xFE, 2)  # Takes ~700 microseconds.
 
         self.pos = (self.pos[0] << 6) | self.pos[1]
 
@@ -52,7 +54,8 @@ if __name__ == "__main__":
     leftEncoder =   Encoder(0x43)
     rightEncoder =  Encoder(0x40)
 
-    while 1:
+    while True:
+
         leftAngle = round(leftEncoder.readAngle(), 2)
         rightAngle = round(rightEncoder.readAngle(), 2)
 

@@ -32,29 +32,19 @@ class Motor:
         if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
             motor.set(self.channel, self.state)
 
+
 if __name__ == "__main__":
 
-    l_motor= Motor(1) 	                                # Left Motor (ch1)
     r_motor = Motor(2) 	                                # Right Motor (ch2)
+    l_motor = Motor(1) 	                                # Left Motor  (ch1)
 
     while rcpy.get_state() != rcpy.EXITING:     # exit loop if rcpy not ready
         if rcpy.get_state() == rcpy.RUNNING:    # execute loop when rcpy is ready
-            # print("motors.py: driving fwd")
-            # l_motor.setDuty(0.7)
-            # r_motor.setDuty(0.7)
-            # time.sleep(15)
-            # print("motors.py: driving reverse")
-            # l_motor.setDuty(-0.7)
-            # r_motor.setDuty(-0.7)
-            # time.sleep(15)
-
-            r_motor.setDuty(1)
-            time.sleep(15)
+            print("Driving Forwards with a 0.7 Duty Cycle.")
             r_motor.setDuty(0.7)
+            l_motor.setDuty(0.7)
             time.sleep(15)
-            r_motor.setDuty(0.5)
+            print("Driving Backwards with a -0.7 Duty Cycle.")
+            r_motor.setDuty(-0.7)
+            l_motor.setDuty(-0.7)
             time.sleep(15)
-            r_motor.setDuty(0.3)
-            time.sleep(15)
-
-

@@ -40,8 +40,6 @@ class PID:
         self.Ki = I
         self.Kd = D
 
-        self.error = 0
-
         self.sample_time = 0.00
         self.current_time = current_time if current_time is not None else time.time()
         self.last_time = self.current_time
@@ -75,7 +73,7 @@ class PID:
            Test PID with Kp=1.2, Ki=1, Kd=0.001 (test_pid.py)
 
         """
-        self.error = self.SetPoint - feedback_value
+        error = self.SetPoint - feedback_value
 
         self.current_time = current_time if current_time is not None else time.time()
         delta_time = self.current_time - self.last_time

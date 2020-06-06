@@ -30,37 +30,36 @@ class Wheel:
 
         self.pdCurrents = 0
 
-        self.res = (360/2**14)                                  # resolution of the encoders
-        self.roll = int(360/self.res)                           # variable for rollover logic
+        self.roll = int(360/self.encoder.res)                   # variable for rollover logic
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
 
-    def getTravel(self, pos0, pos1):                           # calculate the delta on Left wheel
-        trav = pos1 - pos0                                      # reset the travel reading
-        if((-trav) >= self.gap):                                # if movement is large (has rollover)
-            trav = (pos1 - pos0 + self.roll)                    # handle forward rollover
-        if(trav >= self.gap):
-            trav = (pos1 - pos0 - self.roll)                    # handle reverse rollover
-        return(trav)
+    def getTravel(self, position0, position1):                            # calculate the delta on Left wheel
+        travel = position1 - position0                                    # reset the travel reading
+        if((-travel) >= self.gap):                              # if movement is large (has rollover)
+            travel = (position1 - position0 + self.roll)                  # handle forward rollover
+        if(travel >= self.gap):
+            travel = (position1 - position0 - self.roll)                    # handle reverse rollover
+        return(travel)
 
     def getSpeed(self):
         encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
-        pos0 = round(encoder_deg, 1)                            # reading in degrees.
-        t1 = time.time()                                        # time.time() reports in seconds
+        position0 = round(encoder_deg, 1)                            # reading in degrees.
+        time1 = time.time()                                        # time.time() reports in seconds
         time.sleep(self.wait)                                   # delay specified amount
         encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
-        pos1 = round(encoder_deg, 1)                            # reading in degrees.
-        t2 = time.time()                                        # reading about .003 seconds
-        deltaT = round((t2 - t1), 3)                            # new scalar dt value
+        position1 = round(encoder_deg, 1)                            # reading in degrees.
+        time2 = time.time()                                        # reading about .003 seconds
+        deltaT = round((time2 - time1), 3)                            # new scalar dt value
 
         # ---- movement calculations
-        trav = self.getTravel(pos0, pos1) * self.res           # grabs travel of left wheel, degrees
+        travel = self.getTravel(position0, position1) * self.encoder.res           # grabs travel of left wheel, degrees
 
         # build an array of wheel speeds in rad/s
-        trav = trav * 0.5                                       # pulley ratio = 0.5 wheel turns per pulley turn
-        trav = math.radians(trav)                               # convert degrees to radians
-        trav = round(trav, 3)                                   # round the array
-        wheelSpeed = trav / deltaT
+        travel = travel * 0.5                                       # pulley ratio = 0.5 wheel turns per pulley turn
+        travel = math.radians(travel)                               # convert degrees to radians
+        travel = round(travel, 3)                                   # round the array
+        wheelSpeed = travel / deltaT
         wheelSpeed = round(wheelSpeed, 3)
         self.speed = wheelSpeed
         return self.speed                                       # returns current phi dot in radians/second

@@ -76,5 +76,5 @@ start_time = time.time()
 
 while (time.time() - start_time) <= 5:                                   # Run loop for 10 seconds.
 
-    scuttle.setMotion([0.5, -1])                                           # Set target robot speed and angular velocity [m/s,rad/s]
-    print(scuttle.l_wheel.getSpeed(), ",", scuttle.r_wheel.getSpeed())    # Print Wheel Speeds.
+    scuttle.setMotion([0.5, -1])                                            # Set target robot speed and angular velocity [m/s,rad/s]
+    print(scuttle.l_wheel.getSpeed(), ",", scuttle.r_wheel.getSpeed())      # Print Wheel Speeds.

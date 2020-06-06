@@ -1,6 +1,7 @@
+import time
+import math
 import numpy as np
 import scuttlepy.L2.speed_control as actuator
-import time
 
 
 class SCUTTLE:
@@ -27,6 +28,12 @@ class SCUTTLE:
         self.r_wheel = actuator.Wheel(self.r_motorChannel, self.r_encoderAddress)
         self.l_wheel = actuator.Wheel(self.l_motorChannel, self.l_encoderAddress, invert_encoder=True)
 
+    def setGlobal(self, pos):
+        self.globalPosition = pos
+
+    def setHeading(self, heading):
+        self.heading = heading
+
     def getMotion(self):                                   # Forward Kinematics
                                                            # Function to update and return [x_dot,theta_dot]
         L = self.wheelBase
@@ -35,17 +42,17 @@ class SCUTTLE:
         A = np.array([[     R/2,     R/2],
                       [-R/(2*L), R/(2*L)]])                 # This matrix relates phi dot left and phi dot right to x dot and theta dot.
 
-        B = np.array([self.l_wheel.getAngularVelocity(),
-                      self.r_wheel.getAngularVelocity()])
+        B = np.array([self.l_wheel.getSpeed(),
+                      self.r_wheel.getSpeed()])
 
         C = np.matmul(A, B)                                 # Perform matrix multiplication
         self.speed = C[0]                                   # Update speed of SCUTTLE [m/s]
         self.angularVelocity = C[1]                         # Update angularVelocity = [rad/s]
 
-        return C
+        return [self.speed, self.angularVelocity]           # return [speed, angularVelocity]
 
-    def setMotion(self, targetMotion):                       # Inverse Kinematics
-                                                             # Function to update and return [phi_dot_left, phi_dot_right]
+    def setMotion(self, targetMotion):                      # Inverse Kinematics
+                                                            # Function to update and return [phi_dot_left, phi_dot_right]
         L = self.wheelBase
         R = self.wheelRadius
 
@@ -60,18 +67,19 @@ class SCUTTLE:
         self.r_wheel.setSpeed(C[1])                         # Set angularVelocity = [rad/s]
 
     # def move(self, pos)
-    # def rotate(self, pos)
+    # def rotate(self, theta)
 
 
 scuttle = SCUTTLE()
 
 start_time = time.time()
 
-while (time.time() - start_time) =< 10:                 # Run loop for 10 seconds.
+while (time.time() - start_time) <= 5:                                   # Run loop for 10 seconds.
 
-    scuttle.setMotion([0.2, 0])                                         # Set target robot speed and angular velocity [m/s,rad/s]
-    print(scuttle.l_wheel.getSpeed(), ",", scuttle.r_wheel.getSpeed())  # Print Wheel Speeds.
+    scuttle.setMotion([0.5, -1])                                           # Set target robot speed and angular velocity [m/s,rad/s]
+    print(scuttle.l_wheel.getSpeed(), ",", scuttle.r_wheel.getSpeed())    # Print Wheel Speeds.
 
 # scuttle1 = SCUTTLE(name="TEAM_1", ip="192.168.1.2")
 # scuttle2 = SCUTTLE(name="TEAM_2", ip="192.168.1.3")
 # scuttle3 = SCUTTLE(name="TEAM_3", ip="192.168.1.4")
+

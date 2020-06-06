@@ -15,15 +15,22 @@ import numpy as np                              # for clip function
 
 class Motor:
 
-    def __init__(self, channel):
+    def __init__(self, channel, invert=False):
+
         self.channel = channel
         self.duty = 0
+        self.invert = invert
+
         rcpy.set_state(rcpy.RUNNING)
         motor.set(self.channel, self.duty)
 
     def setDuty(self, duty):
         if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
-            self.duty = duty
+            if not self.invert:
+                self.duty = duty
+            else:
+                self.duty = -1 * duty
+
             motor.set(self.channel, self.duty)
 
     def diode(self, state, channel):                # takes argument in range [0,1]
@@ -34,6 +41,7 @@ class Motor:
     def accy(self, state, channel):                 # takes argument in range [-1,1]
         if rcpy.get_state() == rcpy.RUNNING:        # execute loop when rcpy is ready
             motor.set(self.channel, self.state)
+
 
 if __name__ == "__main__":
 

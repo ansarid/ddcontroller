@@ -10,9 +10,9 @@ import math
 
 # Import local files
 
-import scuttlepy.L1.motor as motor                              # for controlling motors
-import scuttlepy.L1.encoder as encoder                          # for reading encoders
-import scuttlepy.L2.PID as PID                                  # for PID controller
+from scuttlepy.perception import encoder                        # for reading encoders
+from scuttlepy.control import PID                               # for PID controller
+from scuttlepy.actuation import motor                           # for controlling motors
 
 
 class Wheel:

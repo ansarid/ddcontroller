@@ -1,7 +1,7 @@
 import time
 import math
 import numpy as np
-import scuttlepy.L2.speed_control as actuator
+from scuttlepy.actuation import wheels
 
 
 class SCUTTLE:
@@ -25,8 +25,8 @@ class SCUTTLE:
 
         self.batteryVoltage = 0
 
-        self.r_wheel = actuator.Wheel(self.r_motorChannel, self.r_encoderAddress)
-        self.l_wheel = actuator.Wheel(self.l_motorChannel, self.l_encoderAddress, invert_encoder=True)
+        self.r_wheel = wheels.Wheel(self.r_motorChannel, self.r_encoderAddress)
+        self.l_wheel = wheels.Wheel(self.l_motorChannel, self.l_encoderAddress, invert_encoder=True)
 
     def setGlobal(self, pos):
         self.globalPosition = pos
@@ -78,8 +78,3 @@ while (time.time() - start_time) <= 5:                                   # Run l
 
     scuttle.setMotion([0.5, -1])                                           # Set target robot speed and angular velocity [m/s,rad/s]
     print(scuttle.l_wheel.getSpeed(), ",", scuttle.r_wheel.getSpeed())    # Print Wheel Speeds.
-
-# scuttle1 = SCUTTLE(name="TEAM_1", ip="192.168.1.2")
-# scuttle2 = SCUTTLE(name="TEAM_2", ip="192.168.1.3")
-# scuttle3 = SCUTTLE(name="TEAM_3", ip="192.168.1.4")
-

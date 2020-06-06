@@ -34,31 +34,31 @@ class Wheel:
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
 
-    def getTravel(self, position0, position1):                            # calculate the delta on Left wheel
-        travel = position1 - position0                                    # reset the travel reading
+    def getTravel(self, position0, position1):                  # calculate the delta on Left wheel
+        travel = position1 - position0                          # reset the travel reading
         if((-travel) >= self.gap):                              # if movement is large (has rollover)
-            travel = (position1 - position0 + self.roll)                  # handle forward rollover
+            travel = (position1 - position0 + self.roll)        # handle forward rollover
         if(travel >= self.gap):
-            travel = (position1 - position0 - self.roll)                    # handle reverse rollover
+            travel = (position1 - position0 - self.roll)        # handle reverse rollover
         return(travel)
 
     def getSpeed(self):
         encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
-        position0 = round(encoder_deg, 1)                            # reading in degrees.
-        time1 = time.time()                                        # time.time() reports in seconds
+        position0 = round(encoder_deg, 1)                       # reading in degrees.
+        time1 = time.time()                                     # time.time() reports in seconds
         time.sleep(self.wait)                                   # delay specified amount
         encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
-        position1 = round(encoder_deg, 1)                            # reading in degrees.
-        time2 = time.time()                                        # reading about .003 seconds
-        deltaT = round((time2 - time1), 3)                            # new scalar dt value
+        position1 = round(encoder_deg, 1)                       # reading in degrees.
+        time2 = time.time()                                     # reading about .003 seconds
+        deltaT = round((time2 - time1), 3)                      # new scalar dt value
 
         # ---- movement calculations
         travel = self.getTravel(position0, position1) * self.encoder.res           # grabs travel of left wheel, degrees
 
         # build an array of wheel speeds in rad/s
-        travel = travel * 0.5                                       # pulley ratio = 0.5 wheel turns per pulley turn
-        travel = math.radians(travel)                               # convert degrees to radians
-        travel = round(travel, 3)                                   # round the array
+        travel = travel * 0.5                                   # pulley ratio = 0.5 wheel turns per pulley turn
+        travel = math.radians(travel)                           # convert degrees to radians
+        travel = round(travel, 3)                               # round the array
         wheelSpeed = travel / deltaT
         wheelSpeed = round(wheelSpeed, 3)
         self.speed = wheelSpeed
@@ -85,7 +85,7 @@ class Wheel:
 if __name__ == "__main__":
 
     r_wheel = Wheel(2, 0x40) 	                                # Right Motor (ch2)
-    l_wheel = Wheel(1, 0x43, invert_encoder=True)                       # Left Motor  (ch1)
+    l_wheel = Wheel(1, 0x43, invert_encoder=True)               # Left Motor  (ch1)
 
     print("Left Wheel, Right Wheel")
 

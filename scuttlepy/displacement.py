@@ -63,6 +63,6 @@ while True:
     chass = getChassis(travs)               # convert the wheel travels to chassis travel
     x = x + chass[0]                        # add the latest advancement(m) to the total
     t = t + chass[1]
-    # print("x(m)", x)                        # print x in meters
+    print("x(m)", x)                        # print x in meters
     # print(t)                                # print theta in radians
     time.sleep(.1)

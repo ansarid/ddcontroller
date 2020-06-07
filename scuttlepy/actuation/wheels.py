@@ -25,6 +25,8 @@ class Wheel:
         self.invert_motor = invert_motor
         self.invert_encoder = invert_encoder
 
+        self.pulleyRatio = 0.5                                  # pulley ratio = 0.5 wheel turns per pulley turn
+
         # self.pid = PID.PID(0.06, 0.9, 0.000009)
         self.pid = PID.PID(0.04, 0.04, 0.0)
 
@@ -45,21 +47,20 @@ class Wheel:
     def getSpeed(self):
         encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
         position0 = round(encoder_deg, 1)                       # reading in degrees.
-        time1 = time.time()                                     # time.time() reports in seconds
+        timeInitial = time.time()                               # time.time() reports in seconds
         time.sleep(self.wait)                                   # delay specified amount
         encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
         position1 = round(encoder_deg, 1)                       # reading in degrees.
-        time2 = time.time()                                     # reading about .003 seconds
-        deltaT = round((time2 - time1), 3)                      # new scalar dt value
+        timeFinal = time.time()                                 # reading about .003 seconds
 
         # ---- movement calculations
         travel = self.getTravel(position0, position1) * self.encoder.res           # grabs travel of left wheel, degrees
 
         # build an array of wheel speeds in rad/s
-        travel = travel * 0.5                                   # pulley ratio = 0.5 wheel turns per pulley turn
+        travel = travel * self.pulleyRatio
         travel = math.radians(travel)                           # convert degrees to radians
         travel = round(travel, 3)                               # round the array
-        wheelSpeed = travel / deltaT
+        wheelSpeed = travel / (timeFinal - timeInitial)
         wheelSpeed = round(wheelSpeed, 3)
         self.speed = wheelSpeed
         return self.speed                                       # returns current phi dot in radians/second

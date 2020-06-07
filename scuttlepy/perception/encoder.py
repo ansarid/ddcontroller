@@ -20,7 +20,7 @@ class Encoder:
         self.bus = SMBus(bus)
         self.address = address
         self.invert = invert
-        self.res = (360/2**14)
+        self.resolution = (360/2**14)
 
     def readPos(self):
 

@@ -14,7 +14,6 @@ from scuttlepy.perception import encoder                        # for reading en
 from scuttlepy.control import PID                               # for PID controller
 from scuttlepy.actuation import motor                           # for controlling motors
 
-
 class Wheel:
 
     def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False):
@@ -35,6 +34,8 @@ class Wheel:
         self.roll = int(360/self.encoder.res)                   # variable for rollover logic
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
+
+        self.wheelThread()
 
     def getTravel(self, position0, position1):                  # calculate the delta on Left wheel
         travel = position1 - position0                          # reset the travel reading
@@ -81,7 +82,6 @@ class Wheel:
         ### THIS NEEDS TO BE REFACTORED ###
 
         self.motor.setDuty(duty)
-
 
 if __name__ == "__main__":
 

@@ -12,7 +12,7 @@ class SCUTTLE:
         self.heading = 0
         self.compass = 0
         self.angularVelocity = 0
-        self.globalPosition = [0, 0]
+        self.globalPosition = np.array([0, 0])
 
         self.l_motorChannel = 1
         self.r_motorChannel = 2
@@ -75,17 +75,50 @@ class SCUTTLE:
 
 
 scuttle = SCUTTLE()
+scuttle.globalPosition = np.array([0, 0])     # set an initial position for testing
 
-myDistance = 1        # m
-rampDown = 0.010      # m
-gap = myDistance - rampDown
+myPoint = np.array([0.5, -0.5])                    # x, y destination in meters
+myVector = myPoint - scuttle.globalPosition
+print("myVector:", myVector)                    # in meters, x & y
+
+vectorLength = math.sqrt(myVector[0]**2 + myVector[1]**2) # length in m
+
+theta12 = math.atan2(myVector[1], myVector[0])
+print("theta12, rad:", theta12)
+turn = theta12 - scuttle.heading                # calculate required turn, rad
+turn = math.degrees(turn)                       # convert to degrees
+print("turn, deg:", turn)
+if( turn > 180):                                # large turns should be reversed
+    turn = turn -180 * -1                       # 
+
+print("myDistance", vectorLength) # how far will scuttle advance (m)
+
+myDistance = vectorLength       # m
+rampDown = 0.020                # m
+myTurn = math.radians(turn)     # deg
+overSteer = math.radians(5)     # deg
 
 
 def goStraight():
-    scuttle.l_wheel.motor.setDuty(0.6)
-    scuttle.r_wheel.motor.setDuty(0.6)
+    scuttle.l_wheel.motor.setDuty(0.735)
+    scuttle.r_wheel.motor.setDuty(0.75)
+
+def turnL():
+    scuttle.l_wheel.motor.setDuty(-0.63)
+    scuttle.r_wheel.motor.setDuty(0.65)
+
+def turnR():
+    scuttle.l_wheel.motor.setDuty(0.63)
+    scuttle.r_wheel.motor.setDuty(-0.65)
+
+def turn(val):
+    if val > 0:
+        turnL()
+    else:
+        turnR()
 
     print("Set DC")
+
 
 def straightLine(myDistance):
     goStraight()
@@ -127,7 +160,8 @@ encL1 = 0
 encR1 = 0
 
 stopped = False
-goStraight()
+
+turn(myTurn) # myTurn argument is for choosing direction, starts turning
 
 # this loop continuously adds up the x forward movement originating from the encoders.
 while True:
@@ -139,7 +173,58 @@ while True:
 
     # ---- movement calculations
     travL = getTravel(encL0, encL1) * res   # grabs travel of left wheel, degrees
-    # travL = -1 * travL                      # this wheel is inverted from the right side
+    # travL = -1 * travL                    # this wheel is inverted from the right side
+    travR = getTravel(encR0, encR1) * res   # grabs travel of right wheel, degrees
+
+    # build an array of wheel travels in rad/s
+    travs = np.array([travL, travR])        # store wheels travel in degrees
+    travs = travs * 0.5                     # pulley ratio = 0.5 wheel turns per pulley turn
+    travs = travs * 3.14 / 180              # convert degrees to radians
+    travs = np.round(travs, decimals=3)     # round the array
+
+    chass = getChassis(travs)               # convert the wheel travels to chassis travel
+    x = x + chass[0]                        # add the latest advancement(m) to the total
+    t = t + chass[1]
+    scuttle.heading = t
+    # print("x(m)", x)                        # print x in meters
+    # print("turn, rad):", t)                              # print theta in radians
+    print("turn, deg):", math.degrees(t))                              # print theta in radians
+    time.sleep(0.08)
+    # if x > (myDistance-rampDown) and not stopped:
+    #     stop()
+    #     stopped = True
+    #     print("Stopping")
+    # if t > (myTurn - overSteer):
+    t_low = int(100*(myTurn - overSteer))
+    t_high = int(100*(myTurn + overSteer))
+    # print(t_low, t_high, int(t*100))
+    if int(t*100) in range(t_low, t_high):
+        stop()
+        if not stopped:
+            stopTime = time.time()
+            stopped = True
+        print("Stopping")
+        if (time.time() - stopTime) > 0.200:
+            break
+
+print("turning completed.")
+print("heading:", scuttle.heading)
+
+stopped = False
+
+goStraight() # begin the driving forward
+
+# this loop continuously adds up the x forward movement originating from the encoders.
+while True:
+    encL0 = encL1                           # transfer previous reading.
+    encR0 = encR1                           # transfer previous reading.
+    # encoders = [scuttle.l_wheel.getSpeed(), scuttle.r_wheel.getSpeed()]                   # grabs the current encoder readings, raw
+    encL1 = round(scuttle.l_wheel.encoder.readPos(), 1)           # reading, raw.
+    encR1 = round(scuttle.r_wheel.encoder.readPos(), 1)           # reading, raw.
+
+    # ---- movement calculations
+    travL = getTravel(encL0, encL1) * res   # grabs travel of left wheel, degrees
+    # travL = -1 * travL                    # this wheel is inverted from the right side
     travR = getTravel(encR0, encR1) * res   # grabs travel of right wheel, degrees
 
     # build an array of wheel travels in rad/s
@@ -152,8 +237,10 @@ while True:
     x = x + chass[0]                        # add the latest advancement(m) to the total
     t = t + chass[1]
     print("x(m)", x)                        # print x in meters
-    # print(t)                              # print theta in radians
-    time.sleep(.1)
-    if x >= (myDistance-rampDown) and not stopped:
+    # print("turn, rad):", t)                              # print theta in radians
+    # print("turn, deg):", math.degrees(t))                              # print theta in radians
+    time.sleep(0.08)
+    if x > (myDistance-rampDown) and not stopped:
         stop()
         stopped = True
+        print("Stopping")

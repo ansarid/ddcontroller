@@ -211,7 +211,8 @@ class SCUTTLE:
                 if (time.time() - stopTime) > 0.200:
                     break
         self.globalPosition = np.array(point)
-        self.heading = 0
+        self.heading = myTurn
+        # self.heading = 0
 
 waypoints = [
             [   0,  0.2],

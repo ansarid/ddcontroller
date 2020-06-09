@@ -9,7 +9,6 @@
 
 # Import external libraries
 import time
-import numpy as np                          # for handling arrays
 from smbus2 import SMBus
 
 
@@ -63,8 +62,8 @@ class Encoder:
 
 if __name__ == "__main__":
 
-    rightEncoder =  Encoder(0x40)
-    leftEncoder =   Encoder(0x43, invert=True)
+    rightEncoder = Encoder(0x40)
+    leftEncoder = Encoder(0x43, invert=True)
 
     while True:
 

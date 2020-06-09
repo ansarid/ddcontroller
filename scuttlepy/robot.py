@@ -162,23 +162,25 @@ class SCUTTLE:
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
         # this loop continuously adds up the x forward movement originating from the encoders.
 
-        t_low = int(100*(myTurn - self.overSteer))
-        t_high = int(100*(myTurn + self.overSteer))
+        t_low = int(1000*(myTurn - self.overSteer))
+        t_high = int(1000*(myTurn + self.overSteer))
+
+        print("Turning.")
 
         while True:
             chassisIncrement = self.getChassis(self.getWheelIncrements())            # get latest chassis travel
             x = x + chassisIncrement[0]                 # add the latest advancement(m) to the total
             t = t + chassisIncrement[1]
 
-            print("turn, deg):", math.degrees(t))       # print theta in radians
+            print("turning, deg):", round(math.degrees(t), 2), "\tTarget:", math.degrees(myTurn))       # print theta in radians
             time.sleep(0.08)
 
-            if int(t*100) in range(t_low, t_high):      # check if we reached our target range
+            if int(t*1000) in range(t_low, t_high):      # check if we reached our target range
                 stop()
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
-                print("Stopping")
+                    print("Stopping Turning.")
                 if (time.time() - stopTime) > 0.200:
                     break
         print("turning completed.")
@@ -189,12 +191,15 @@ class SCUTTLE:
 
         stopped = False     # reset the stopped flag
         goStraight()        # begin the driving forward
+
+        print("Driving Forward.")
+
         while True:
             chassisIncrement = self.getChassis(self.getWheelIncrements())            # get latest chassis travel
             x = x + chassisIncrement[0]                 # add the latest advancement(m) to the total
             t = t + chassisIncrement[1]
 
-            print("x(m)", x)                        # print x in meters
+            print("x(m)", round(x,3), "\t\tTarget:", myDistance )                        # print x in meters
             time.sleep(0.08)
 
             if x > (myDistance-self.rampDown):
@@ -202,27 +207,25 @@ class SCUTTLE:
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
-                print("Stopping")
+                    print("Stopping Forward")
                 if (time.time() - stopTime) > 0.200:
                     break
         self.globalPosition = np.array(point)
         self.heading = 0
 
-# waypoints = [
-#             [   0,  0.2],
-#             [ 0.2,  0.2],
-#             [ 0.2, -0.2],
-#             [-0.2, -0.2],
-#             [-0.2,  0.2],
-#             [   0,  0.2],
-#             [   0,    0],
-#             ]
-
 waypoints = [
-            [   0,  0],
+            [   0,  0.2],
+            [ 0.2,  0.2],
+            [ 0.2, -0.2],
+            [-0.2, -0.2],
+            [-0.2,  0.2],
+            [   0,  0.2],
+            [   0,    0],
             ]
 
 scuttle = SCUTTLE()
 
 for waypoint in waypoints:
+    print("DRIVING TO POINT", waypoint)
     scuttle.move(waypoint)
+    print("COMPLETED POINT", waypoint)

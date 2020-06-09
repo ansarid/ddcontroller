@@ -75,9 +75,9 @@ class SCUTTLE:
 
 
 scuttle = SCUTTLE()
-scuttle.globalPosition = np.array([0, 0])     # set an initial position for testing
 
-myPoint = np.array([0.5, -0.5])                    # x, y destination in meters
+
+myPoint = np.array([-0.5, 0.5])                    # x, y destination in meters
 myVector = myPoint - scuttle.globalPosition
 print("myVector:", myVector)                    # in meters, x & y
 
@@ -163,8 +163,7 @@ stopped = False
 
 turn(myTurn) # myTurn argument is for choosing direction, starts turning
 
-# this loop continuously adds up the x forward movement originating from the encoders.
-while True:
+def trackMovement():
     encL0 = encL1                           # transfer previous reading.
     encR0 = encR1                           # transfer previous reading.
     # encoders = [scuttle.l_wheel.getSpeed(), scuttle.r_wheel.getSpeed()]                   # grabs the current encoder readings, raw
@@ -185,16 +184,39 @@ while True:
     chass = getChassis(travs)               # convert the wheel travels to chassis travel
     x = x + chass[0]                        # add the latest advancement(m) to the total
     t = t + chass[1]
-    scuttle.heading = t
-    # print("x(m)", x)                        # print x in meters
-    # print("turn, rad):", t)                              # print theta in radians
+
+# this loop continuously adds up the x forward movement originating from the encoders.
+while True:
+    trackMovement()
+    # encL0 = encL1                           # transfer previous reading.
+    # encR0 = encR1                           # transfer previous reading.
+    # # encoders = [scuttle.l_wheel.getSpeed(), scuttle.r_wheel.getSpeed()]                   # grabs the current encoder readings, raw
+    # encL1 = round(scuttle.l_wheel.encoder.readPos(), 1)           # reading, raw.
+    # encR1 = round(scuttle.r_wheel.encoder.readPos(), 1)           # reading, raw.
+
+    # # ---- movement calculations
+    # travL = getTravel(encL0, encL1) * res   # grabs travel of left wheel, degrees
+    # # travL = -1 * travL                    # this wheel is inverted from the right side
+    # travR = getTravel(encR0, encR1) * res   # grabs travel of right wheel, degrees
+
+    # # build an array of wheel travels in rad/s
+    # travs = np.array([travL, travR])        # store wheels travel in degrees
+    # travs = travs * 0.5                     # pulley ratio = 0.5 wheel turns per pulley turn
+    # travs = travs * 3.14 / 180              # convert degrees to radians
+    # travs = np.round(travs, decimals=3)     # round the array
+
+    # chass = getChassis(travs)               # convert the wheel travels to chassis travel
+    # x = x + chass[0]                        # add the latest advancement(m) to the total
+    # t = t + chass[1]
+    # scuttle.heading = t
+
     print("turn, deg):", math.degrees(t))                              # print theta in radians
     time.sleep(0.08)
     # if x > (myDistance-rampDown) and not stopped:
     #     stop()
     #     stopped = True
     #     print("Stopping")
-    # if t > (myTurn - overSteer):
+
     t_low = int(100*(myTurn - overSteer))
     t_high = int(100*(myTurn + overSteer))
     # print(t_low, t_high, int(t*100))
@@ -216,29 +238,9 @@ goStraight() # begin the driving forward
 
 # this loop continuously adds up the x forward movement originating from the encoders.
 while True:
-    encL0 = encL1                           # transfer previous reading.
-    encR0 = encR1                           # transfer previous reading.
-    # encoders = [scuttle.l_wheel.getSpeed(), scuttle.r_wheel.getSpeed()]                   # grabs the current encoder readings, raw
-    encL1 = round(scuttle.l_wheel.encoder.readPos(), 1)           # reading, raw.
-    encR1 = round(scuttle.r_wheel.encoder.readPos(), 1)           # reading, raw.
-
-    # ---- movement calculations
-    travL = getTravel(encL0, encL1) * res   # grabs travel of left wheel, degrees
-    # travL = -1 * travL                    # this wheel is inverted from the right side
-    travR = getTravel(encR0, encR1) * res   # grabs travel of right wheel, degrees
-
-    # build an array of wheel travels in rad/s
-    travs = np.array([travL, travR])        # store wheels travel in degrees
-    travs = travs * 0.5                     # pulley ratio = 0.5 wheel turns per pulley turn
-    travs = travs * 3.14 / 180              # convert degrees to radians
-    travs = np.round(travs, decimals=3)     # round the array
-
-    chass = getChassis(travs)               # convert the wheel travels to chassis travel
-    x = x + chass[0]                        # add the latest advancement(m) to the total
-    t = t + chass[1]
+    trackMovement()
     print("x(m)", x)                        # print x in meters
-    # print("turn, rad):", t)                              # print theta in radians
-    # print("turn, deg):", math.degrees(t))                              # print theta in radians
+
     time.sleep(0.08)
     if x > (myDistance-rampDown) and not stopped:
         stop()

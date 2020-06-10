@@ -102,12 +102,11 @@ class SCUTTLE:
         self.r_wheel.setSpeed(C[1])                         # Set angularVelocity = [rad/s]
 
 
-
     def move(self, point):
 
         def goStraight():
-            self.l_wheel.motor.setDuty(0.735)
-            self.r_wheel.motor.setDuty(0.75)
+            self.l_wheel.motor.setDuty(0.635)
+            self.r_wheel.motor.setDuty(0.65)
 
         def turnL():
             self.l_wheel.motor.setDuty(-0.63)
@@ -143,9 +142,9 @@ class SCUTTLE:
 
         # initialize variables at zero
         x = 0                                   # x
-        t = 0                                   # theta
+        rotation = 0                            # rotation along theta direction
 
-        vector = point - self.globalPosition
+        vector = point - self.globalPosition    # the vector describing the next step
 
         vectorLength = math.sqrt(vector[0]**2 + vector[1]**2) # length in m
 
@@ -162,30 +161,36 @@ class SCUTTLE:
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
         # this loop continuously adds up the x forward movement originating from the encoders.
 
-        t_low = int(1000*(myTurn - self.overSteer))
-        t_high = int(1000*(myTurn + self.overSteer))
+        rotation_low = int(1000*(myTurn - self.overSteer))      # For defining acceptable range for turn accuracy.
+        rotation_high = int(1000*(myTurn + self.overSteer))     # Need to be redone with better solution
 
         print("Turning.")
 
-        while True:
+        while True:                 # Needs to be turned into a dp while loop instead of while break.
             chassisIncrement = self.getChassis(self.getWheelIncrements())            # get latest chassis travel
             x = x + chassisIncrement[0]                 # add the latest advancement(m) to the total
-            t = t + chassisIncrement[1]
+            rotation = rotation + chassisIncrement[1]
 
-            print("turning, deg):", round(math.degrees(t), 2), "\tTarget:", math.degrees(myTurn))       # print theta in radians
+            # print("turning, deg):", round(math.degrees(t), 2), "\tTarget:", math.degrees(myTurn))       # print theta in radians
             time.sleep(0.08)
 
-            if int(t*1000) in range(t_low, t_high):      # check if we reached our target range
+            if int(rotation*1000) in range(rotation_low, rotation_high):      # check if we reached our target range
                 stop()
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
-                    print("Stopping Turning.")
-                if (time.time() - stopTime) > 0.200:
+                    # print("Stopping Turning.")
+                if (time.time() - stopTime) > 0.200:                    # give 200 ms for turning to settle
                     break
-        print("turning completed.")
-        self.heading = self.heading + myTurn
-        print("heading:", math.degrees(self.heading))
+
+        print("Turning completed.")
+        self.heading = self.heading + rotation  # update heading by the turn amount executed
+        if self.heading > math.pi:
+            self.heading += (2 * math.pi)
+        if self.heading < -math.pi:
+            self.heading += (2 * math.pi)
+        print("Rotation:", int(math.degrees(rotation)), "   Heading:", round(math.degrees(self.heading),1))
+        print("__DRIVING__")
 
         # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
         # this loop continuously adds up the x forward movement originating from the encoders.
@@ -193,14 +198,14 @@ class SCUTTLE:
         stopped = False     # reset the stopped flag
         goStraight()        # begin the driving forward
 
-        print("Driving Forward.")
+        # print("Driving Forward.")
 
         while True:
             chassisIncrement = self.getChassis(self.getWheelIncrements())            # get latest chassis travel
             x = x + chassisIncrement[0]                 # add the latest advancement(m) to the total
-            t = t + chassisIncrement[1]
+            rotation = rotation + chassisIncrement[1]
 
-            print("x(m)", round(x,3), "\t\tTarget:", myDistance )                        # print x in meters
+            # print("x(m)", round(x,3), "\t\tTarget:", myDistance )                        # print x in meters
             time.sleep(0.08)
 
             if x > (myDistance-self.rampDown):
@@ -208,10 +213,15 @@ class SCUTTLE:
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
-                    print("Stopping Forward")
+                    # print("Stopping Forward")
                 if (time.time() - stopTime) > 0.200:
                     break
-        self.globalPosition = np.array(point)
+
+        myMovementX =  x * math.cos(self.heading)
+        myMovementY =  x * math.sin(self.heading)
+        self.globalPosition = self.globalPosition + np.array([myMovementX, myMovementY])           # update the position of robot in global frame
+        print("driving completed (m):", round(x, 3))
+        print("x advanced:", round(myMovementX, 3), "  y advanced:", round(myMovementY, 3), "  global pos:", np.round(self.globalPosition, 3))
 
 waypoints = [
             [   0,  0.2],
@@ -229,3 +239,4 @@ for waypoint in waypoints:
     print("DRIVING TO POINT", waypoint)
     scuttle.move(waypoint)
     print("COMPLETED POINT", waypoint)
+    print("\n")

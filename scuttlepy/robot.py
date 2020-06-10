@@ -124,18 +124,18 @@ class SCUTTLE:
             self.l_wheel.motor.setDuty(0)
             self.r_wheel.motor.setDuty(0)
 
-        def calculateTurn(theta12):
+        def calculateTurn(vectorDirection):
 
-            turn = theta12 - self.heading                # calculate required turn, rad
-            turn = math.degrees(turn)                       # convert to degrees
+            turn = vectorDirection - self.heading                # calculate required turn, rad
+            turn = math.degrees(turn)                    # convert to degrees
 
             if turn > 180:                                  # large turns should be reversed
-                turn = turn - 180 * -1
+                turn = (turn -180)*-1
             myTurn = math.radians(turn)
 
             return myTurn
 
-        def turn(val):
+        def getTurnDirection(val):
             if val > 0:
                 turnL()
             else:
@@ -145,19 +145,19 @@ class SCUTTLE:
         x = 0                                   # x
         t = 0                                   # theta
 
-        myVector = point - self.globalPosition
+        vector = point - self.globalPosition
 
-        vectorLength = math.sqrt(myVector[0]**2 + myVector[1]**2) # length in m
+        vectorLength = math.sqrt(vector[0]**2 + vector[1]**2) # length in m
 
-        theta12 = math.atan2(myVector[1], myVector[0])
+        vectorDirection = math.atan2(vector[1], vector[0])
 
-        myTurn = calculateTurn(theta12)
+        myTurn = calculateTurn(vectorDirection)
 
         myDistance = vectorLength       # m
 
         stopped = False
 
-        turn(myTurn)                            # myTurn argument is for choosing direction and initiating the turn
+        getTurnDirection(myTurn)                            # myTurn argument is for choosing direction and initiating the turn
 
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
         # this loop continuously adds up the x forward movement originating from the encoders.
@@ -184,7 +184,8 @@ class SCUTTLE:
                 if (time.time() - stopTime) > 0.200:
                     break
         print("turning completed.")
-        print("heading:", self.heading)
+        self.heading = self.heading + myTurn
+        print("heading:", math.degrees(self.heading))
 
         # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
         # this loop continuously adds up the x forward movement originating from the encoders.
@@ -211,8 +212,6 @@ class SCUTTLE:
                 if (time.time() - stopTime) > 0.200:
                     break
         self.globalPosition = np.array(point)
-        self.heading = myTurn
-        # self.heading = 0
 
 waypoints = [
             [   0,  0.2],

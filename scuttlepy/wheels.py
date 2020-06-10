@@ -61,7 +61,7 @@ class Wheel:
 
         return(travel)
 
-    def getSpeed(self):
+    def getAngularVelocity(self):
         encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
         position0 = round(encoder_deg, 1)                       # reading in degrees.
         timeInitial = time.time()                               # time.time() reports in seconds
@@ -82,7 +82,7 @@ class Wheel:
         self.speed = wheelSpeed
         return self.speed                                       # returns current phi dot in radians/second
 
-    def setSpeed(self, pdt):
+    def setAngularVelocity(self, pdt):
         self.pid.SetPoint = pdt
         self.speed = self.getSpeed()
         self.pid.update(self.speed)
@@ -103,14 +103,15 @@ class Wheel:
 if __name__ == "__main__":
 
     r_wheel = Wheel(2, 0x40) 	                                # Right Motor (ch2)
-    l_wheel = Wheel(1, 0x43, invert_encoder=True)               # Left Motor  (ch1)
+    # l_wheel = Wheel(1, 0x43, invert_encoder=True)               # Left Motor  (ch1)
 
     print("Left Wheel, Right Wheel")
 
     while True:
 
-        print(l_wheel.getSpeed(), ",", r_wheel.getSpeed())
+        # print(l_wheel.getSpeed(), ",", r_wheel.getSpeed())
+        print(r_wheel.getSpeed())
 
         # Set Wheel Speed to 6.28 rad/s
         r_wheel.setSpeed(6.28)
-        l_wheel.setSpeed(6.28)
+        # l_wheel.setSpeed(6.28)

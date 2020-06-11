@@ -11,6 +11,10 @@ socket.bind(("", port))
 l_wheel = wheels.Wheel(1, 0x43, KP=0.004, KI=0.12, KD=0.0005, invert_encoder=True) 	                # Right Motor (ch2)
 r_wheel = wheels.Wheel(2, 0x40, KP=0.004, KI=0.12, KD=0.0005) 	                                    # Left Motor (ch1)
 
+# max p contribution is 0.004*6 = 0.024
+# max i contribution is 0.12*6*(dt) where dt is 0.080 = 0.058 * (number of samples)
+# power required to achieve 0.8 duty cycle = 13 samples * 0.058 = 0.75
+
 start_time = time.time()
 
 packet = ''

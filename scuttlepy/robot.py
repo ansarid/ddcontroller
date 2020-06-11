@@ -104,25 +104,6 @@ class SCUTTLE:
 
     def move(self, point):
 
-        def goStraight():
-            self.l_wheel.motor.setDuty(0.635)
-            self.r_wheel.motor.setDuty(0.65)
-
-        def turnL():
-            self.l_wheel.motor.setDuty(-0.63)
-            self.r_wheel.motor.setDuty(0.65)
-
-        def turnR():
-            self.l_wheel.motor.setDuty(0.63)
-            self.r_wheel.motor.setDuty(-0.65)
-
-        def straightLine(myDistance):
-            goStraight()
-
-        def stop():
-            self.l_wheel.motor.setDuty(0)
-            self.r_wheel.motor.setDuty(0)
-
         def calculateTurn(vectorDirection):
 
             turn = vectorDirection - self.heading                # calculate required turn, rad
@@ -136,9 +117,9 @@ class SCUTTLE:
 
         def getTurnDirection(val):
             if val > 0:
-                turnL()
+                self.setMotion([0,  2])
             else:
-                turnR()
+                self.setMotion([0, -2])
 
         # initialize variables at zero
         x = 0                                   # x
@@ -161,8 +142,8 @@ class SCUTTLE:
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
         # this loop continuously adds up the x forward movement originating from the encoders.
 
-        rotation_low = int(1000*(myTurn - self.overSteer))      # For defining acceptable range for turn accuracy.
-        rotation_high = int(1000*(myTurn + self.overSteer))     # Need to be redone with better solution
+        rotation_low = int(100*(myTurn - self.overSteer))      # For defining acceptable range for turn accuracy.
+        rotation_high = int(100*(myTurn + self.overSteer))     # Needs to be redone with better solution
 
         print("Turning.")
 
@@ -174,8 +155,8 @@ class SCUTTLE:
             # print("turning, deg):", round(math.degrees(t), 2), "\tTarget:", math.degrees(myTurn))       # print theta in radians
             time.sleep(0.08)
 
-            if int(rotation*1000) in range(rotation_low, rotation_high):      # check if we reached our target range
-                stop()
+            if int(rotation*100) in range(rotation_low, rotation_high):      # check if we reached our target range
+                self.setMotion([0, 0])
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
@@ -196,7 +177,8 @@ class SCUTTLE:
         # this loop continuously adds up the x forward movement originating from the encoders.
 
         stopped = False     # reset the stopped flag
-        goStraight()        # begin the driving forward
+        self.setMotion([1, 0])
+        # begin the driving forward
 
         # print("Driving Forward.")
 
@@ -209,7 +191,7 @@ class SCUTTLE:
             time.sleep(0.08)
 
             if x > (myDistance-self.rampDown):
-                stop()
+                self.setMotion([0, 0])
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
@@ -222,21 +204,3 @@ class SCUTTLE:
         self.globalPosition = self.globalPosition + np.array([myMovementX, myMovementY])           # update the position of robot in global frame
         print("driving completed (m):", round(x, 3))
         print("x advanced:", round(myMovementX, 3), "  y advanced:", round(myMovementY, 3), "  global pos:", np.round(self.globalPosition, 3))
-
-waypoints = [
-            [   0,  0.2],
-            [ 0.2,  0.2],
-            [ 0.2, -0.2],
-            [-0.2, -0.2],
-            [-0.2,  0.2],
-            [   0,  0.2],
-            [   0,    0],
-            ]
-
-scuttle = SCUTTLE()
-
-for waypoint in waypoints:
-    print("DRIVING TO POINT", waypoint)
-    scuttle.move(waypoint)
-    print("COMPLETED POINT", waypoint)
-    print("\n")

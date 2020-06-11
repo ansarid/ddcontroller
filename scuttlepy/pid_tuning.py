@@ -7,15 +7,21 @@ port = 9999
 socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 socket.bind(("", port))
 
-wheel = wheels.Wheel(1, 0x43) 	                                # Right Motor (ch2)
-# wheel = wheels.Wheel(2, 0x40) 	                                # Left Motor (ch1)
+# l_wheel = wheels.Wheel(1, 0x43, KP=0.008, KI=0.5, KD=0.0005, invert_encoder=True) 	                # Right Motor (ch2)
+l_wheel = wheels.Wheel(1, 0x43, KP=0.004, KI=0.12, KD=0.0005, invert_encoder=True) 	                # Right Motor (ch2)
+r_wheel = wheels.Wheel(2, 0x40, KP=0.004, KI=0.12, KD=0.0005) 	                                    # Left Motor (ch1)
 
 start_time = time.time()
 
 packet = ''
 
 while 1:
-    # request, ip = socket.recvfrom(1024)
-    # packet = str(round(time.time() - start_time,3))+","+str(wheel.getSpeed())
-    print(wheel.getSpeed())
-    # socket.sendto(packet.encode(), ip)
+    request, ip = socket.recvfrom(1024)
+    if request.decode('utf-8') == 'q':
+        exit()
+
+    l_wheel.setAngularVelocity(float(request))
+    # r_wheel.setAngularVelocity(float(request))
+
+    packet = str(round(time.time() - start_time,3))+","+str(l_wheel.getAngularVelocity())+","+str(r_wheel.getAngularVelocity())
+    socket.sendto(packet.encode(), ip)

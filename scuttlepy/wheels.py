@@ -17,7 +17,7 @@ from scuttlepy import motor                                     # for controllin
 
 class Wheel:
 
-    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False):
+    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.04, KI=0.04, KD=0):
         self.speed = 0                                          # (rad/s)
         self.radius = wheel_radius                              # mm
         self.motor = motor.Motor(motor_channel, invert=invert_motor)
@@ -30,8 +30,12 @@ class Wheel:
 
         self.pulleyRatio = 0.5                                  # pulley ratio = 0.5 wheel turns per pulley turn
 
+        self.KP = KP
+        self.KI = KI
+        self.KD = KD
+
         # self.pid = PID.PID(0.06, 0.9, 0.000009)
-        self.pid = PID.PID(0.04, 0.04, 0.0)
+        self.pid = PID.PID(self.KP, self.KI, self.KD)
 
         self.pdCurrents = 0
 
@@ -57,34 +61,39 @@ class Wheel:
 
         travel = travel * self.encoder.resolution
         travel = travel * self.pulleyRatio
-        travel = math.radians(travel)
+        # travel = math.radians(travel)
 
         return(travel)
 
     def getAngularVelocity(self):
-        encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
-        position0 = round(encoder_deg, 1)                       # reading in degrees.
-        timeInitial = time.time()                               # time.time() reports in seconds
-        time.sleep(self.wait)                                   # delay specified amount
-        encoder_deg = self.encoder.readPos()                    # grabs the current encoder readings in integer values
-        position1 = round(encoder_deg, 1)                       # reading in degrees.
-        timeFinal = time.time()                                 # reading about .003 seconds
+            encoder_deg = self.encoder.readPos()            # grabs the current encoder readings in integer values
+            pos0 = round(encoder_deg, 1)                    # reading in degrees.
+            t1 = time.time()                                # time.time() reports in seconds
+            time.sleep(self.wait)                           # delay specified amount
+            encoder_deg = self.encoder.readPos()            # grabs the current encoder readings in integer values
+            pos1 = round(encoder_deg, 1)                    # reading in degrees.
+            t2 = time.time()                                # reading about .003 seconds
+            deltaT = round((t2 - t1), 3)                    # new scalar dt value
 
-        # ---- movement calculations
-        travel = self.getTravel(position0, position1) * self.encoder.resolution           # grabs travel of left wheel, degrees
+            # ---- movement calculations
+            trav = self.getTravel(pos0, pos1) * self.encoder.resolution     # grabs travel of left wheel, degrees
+            # trav = self._getTravel(pos0, pos1)                  # grabs travel of left wheel, degrees
+            # travL = -1 * travL                                # this wheel is inverted from the right side
 
-        # build an array of wheel speeds in rad/s
-        travel = travel * self.pulleyRatio
-        travel = math.radians(travel)                           # convert degrees to radians
-        travel = round(travel, 3)                               # round the array
-        wheelSpeed = travel / (timeFinal - timeInitial)
-        wheelSpeed = round(wheelSpeed, 3)
-        self.speed = wheelSpeed
-        return self.speed                                       # returns current phi dot in radians/second
+            # build an array of wheel speeds in rad/s
+            trav1 = trav
+            trav = trav * 0.5                             # pulley ratio = 0.5 wheel turns per pulley turn
+            # trav = math.radians(trav)                     # convert degrees to radians
+            trav = round(trav, 3)                         # round the array
+            wheelSpeed = trav / deltaT
+            wheelSpeed = round(wheelSpeed, 3)
+            deg1 = round(pos1 * self.encoder.resolution, 1)
+            deg0 = round(pos0 * self.encoder.resolution, 1)
+            return(wheelSpeed)                              # returns pdc in radians/second
 
     def setAngularVelocity(self, pdt):
         self.pid.SetPoint = pdt
-        self.speed = self.getSpeed()
+        self.speed = self.getAngularVelocity()
         self.pid.update(self.speed)
         duty = self.pid.output
 
@@ -103,15 +112,15 @@ class Wheel:
 if __name__ == "__main__":
 
     r_wheel = Wheel(2, 0x40) 	                                # Right Motor (ch2)
-    # l_wheel = Wheel(1, 0x43, invert_encoder=True)               # Left Motor  (ch1)
+    l_wheel = Wheel(1, 0x43, invert_encoder=True)               # Left Motor  (ch1)
 
-    print("Left Wheel, Right Wheel")
+    # print("Left Wheel, Right Wheel")
 
     while True:
 
-        # print(l_wheel.getSpeed(), ",", r_wheel.getSpeed())
-        print(r_wheel.getSpeed())
+        print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
+        # print(r_wheel.getAngularVelocity())
 
         # Set Wheel Speed to 6.28 rad/s
-        r_wheel.setSpeed(6.28)
-        # l_wheel.setSpeed(6.28)
+        l_wheel.setAngularVelocity(6.28)
+        r_wheel.setAngularVelocity(6.28)

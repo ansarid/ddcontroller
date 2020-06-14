@@ -44,6 +44,8 @@ class PID:
         self.current_time = current_time if current_time is not None else time.time()
         self.last_time = self.current_time
 
+        self.error = 0
+
         self.clear()
 
     def clear(self):
@@ -73,15 +75,15 @@ class PID:
            Test PID with Kp=1.2, Ki=1, Kd=0.001 (test_pid.py)
 
         """
-        error = self.SetPoint - feedback_value
+        self.error = self.SetPoint - feedback_value
 
         self.current_time = current_time if current_time is not None else time.time()
         delta_time = self.current_time - self.last_time
-        delta_error = error - self.last_error
+        delta_error = self.error - self.last_error
 
         if (delta_time >= self.sample_time):
-            self.PTerm = self.Kp * error
-            self.ITerm += error * delta_time
+            self.PTerm = self.Kp * self.error
+            self.ITerm += self.error * delta_time
 
             if (self.ITerm < -self.windup_guard):
                 self.ITerm = -self.windup_guard
@@ -94,7 +96,7 @@ class PID:
 
             # Remember last time and last error for next calculation
             self.last_time = self.current_time
-            self.last_error = error
+            self.last_error = self.error
 
             self.output = self.PTerm + (self.Ki * self.ITerm) + (self.Kd * self.DTerm)
 

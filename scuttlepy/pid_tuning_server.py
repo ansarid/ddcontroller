@@ -14,6 +14,8 @@ start_time = time.time()
 
 packet = ''
 
+request = [0,0,0,0]
+
 while 1:
     request, ip = socket.recvfrom(1024)
     if request.decode('utf-8') == 'q':
@@ -23,6 +25,8 @@ while 1:
 
         request = request.decode('utf-8').split(',')
 
+        # print(request)
+
         r_wheel.pid.setKp(float(request[1]))
         r_wheel.pid.setKi(float(request[2]))
         r_wheel.pid.setKd(float(request[3]))
@@ -31,10 +35,21 @@ while 1:
         l_wheel.pid.setKi(float(request[2]))
         l_wheel.pid.setKd(float(request[3]))
 
-        l_wheel.setAngularVelocity(float(request[0]))
+        # l_wheel.setAngularVelocity(float(request[0]))
+        l_wheel.setAngularVelocity(0)
         r_wheel.setAngularVelocity(float(request[0]))
         # l_wheel.motor.setDuty(0.6)
 
 
-    packet = str(round(time.time() - start_time,3))+","+str(l_wheel.getAngularVelocity())+","+str(r_wheel.getAngularVelocity())+","+str(l_wheel.motor.duty)
+    packet = str(round(time.time() - start_time,3))+\
+        ","+str(l_wheel.speed)+\
+        ","+str(r_wheel.speed)+\
+        ","+str(l_wheel.motor.duty)+\
+        ","+str(r_wheel.motor.duty)+\
+        ","+str(l_wheel.pid.error)+\
+        ","+str(r_wheel.pid.error)
+
     socket.sendto(packet.encode(), ip)
+
+    if (time.time() - start_time) >= 10:
+        break

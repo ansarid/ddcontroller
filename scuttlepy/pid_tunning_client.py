@@ -34,24 +34,32 @@ r_speed_av = [0]
 l_dutys = [0]
 r_dutys = [0]
 
+l_targets = [0]
+r_targets = [0]
+
+l_error = [0]
+r_error = [0]
+
 timestamps = [0]
 
+speedTarget = round(4.0, 2) #6.28 rad/sec
 
 def animate(i):
+
+    global speedTarget
 
     try:
 
         p = 0.07
-        i = 1.5
+        i = 2
         d = 0
 
-        speed = round(math.pi*2, 2) #6.28 rad/sec
-        message = (str(speed)+","+str(p)+","+str(i)+","+str(d)).encode()
+        message = (str(speedTarget)+","+str(p)+","+str(i)+","+str(d)).encode()
         socket.sendto(message, (network.ip, network.port))
         data, ip = socket.recvfrom(4000)
         data = data.decode('utf-8').split(',')
 
-        print(data[0])
+        # print(data[0])
 
         if float(data[0]) >= 3:
             message = str(0).encode()
@@ -60,14 +68,21 @@ def animate(i):
         timestamps.append(float(data[0]))
         l_speeds.append(float(data[1]))
         r_speeds.append(float(data[2]))
-        l_dutys.append(float(data[3])*speed)
+        l_dutys.append(float(data[3])*4)
+        r_dutys.append(float(data[4])*4)
 
-        if len(l_speeds) > 500:
+        l_error.append(float(data[5]))
+        r_error.append(float(data[6]))
+
+        l_targets.append(float(speedTarget))
+        r_targets.append(float(speedTarget))
+
+        if len(l_speeds) > 1000:
             l_speeds.pop(0)
             r_speeds.pop(0)
 
             l_dutys.pop(0)
-            # r_dutys.pop(0)
+            r_dutys.pop(0)
 
             timestamps.pop(0)
 
@@ -77,6 +92,9 @@ def animate(i):
         else:
             l_speed_av.append(np.average(l_speeds))
             r_speed_av.append(np.average(r_speeds))
+
+        if timestamps[-1] >= 4:
+            speedTarget = 0
 
         pid_plot.clear()
 
@@ -102,21 +120,28 @@ def animate(i):
         plt.text(2, 1.5, textstr, fontsize=15,
                 verticalalignment='top', bbox=props)
 
+        # pid_plot.axhline(speed, color='blue', lw=2)
 
-        pid_plot.axhline(speed, color='red', lw=2)
 
+        # pid_plot.plot(timestamps, l_speeds, color='red')   # Colored Points
+        pid_plot.scatter(timestamps, r_speeds, color='red')   # Colored Points
+        pid_plot.plot(   timestamps, r_speeds, color='red')   # Colored Points
 
-        pid_plot.plot(timestamps, l_speeds, color='red')   # Colored Points
-        #pid_plot.scatter(timestamps, l_speeds, color='red')   # Colored Points
-        # pid_plot.plot(timestamps, r_speeds)   # Colored Points
+        pid_plot.plot(timestamps, r_targets, color='blue')   # Colored Points
+        # pid_plot.plot(timestamps, l_targets, color='blue')   # Colored Points
 
-        pid_plot.plot(timestamps, l_dutys, color='green')   # Colored Points
+        pid_plot.plot(timestamps, r_dutys, color='green')   # Colored Points
+        # pid_plot.plot(timestamps, l_dutys, color='green')   # Colored Points
 
-        pid_plot.plot(timestamps, l_speed_av, color='yellow')   # Colored Points
+        # pid_plot.plot(timestamps, l_speed_av, color='yellow')   # Colored Points
         # pid_plot.plot(timestamps, r_speed_av)   # Colored Points
 
+        pid_plot.plot(timestamps, r_error, color='yellow')   # Colored Points
+        pid_plot.scatter(timestamps, r_error, color='yellow')   # Colored Points
+
     except Exception as e:
-        print(e)
+        # print(e)
+        pass
 
 ani = animation.FuncAnimation(fig, animate, interval=50)
 

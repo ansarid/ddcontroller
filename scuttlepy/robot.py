@@ -17,8 +17,8 @@ class SCUTTLE:
         self.l_motorChannel = 1
         self.r_motorChannel = 2
 
-        self.l_encoderAddress = 0x43
-        self.r_encoderAddress = 0x40
+        self.l_encoderAddress = 0x40
+        self.r_encoderAddress = 0x41
 
         self.wheelBase = 0.201                          # L - meters
         self.wheelRadius = 0.041                        # R - meters
@@ -98,8 +98,8 @@ class SCUTTLE:
 
         C = np.matmul(A, B)                                 # Perform matrix multiplication
 
-        self.l_wheel.setSpeed(C[0])                         # Set speed of SCUTTLE [m/s]
-        self.r_wheel.setSpeed(C[1])                         # Set angularVelocity = [rad/s]
+        self.l_wheel.setAngularVelocity(C[0])                         # Set speed of SCUTTLE [m/s]
+        self.r_wheel.setAngularVelocity(C[1])                         # Set angularVelocity = [rad/s]
 
 
     def move(self, point):
@@ -152,7 +152,7 @@ class SCUTTLE:
             x = x + chassisIncrement[0]                 # add the latest advancement(m) to the total
             rotation = rotation + chassisIncrement[1]
 
-            # print("turning, deg):", round(math.degrees(t), 2), "\tTarget:", math.degrees(myTurn))       # print theta in radians
+            print("turning, deg):", round(math.degrees(rotation), 2), " \t Target:", math.degrees(myTurn))       # print theta in radians
             time.sleep(0.08)
 
             if int(rotation*100) in range(rotation_low, rotation_high):      # check if we reached our target range

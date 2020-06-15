@@ -51,7 +51,7 @@ def animate(i):
     try:
 
         p = 0.07
-        i = 2
+        i = 1.15
         d = 0
 
         message = (str(speedTarget)+","+str(p)+","+str(i)+","+str(d)).encode()
@@ -97,11 +97,6 @@ def animate(i):
             speedTarget = 0
 
         pid_plot.clear()
-
-
-        mu = 1
-        median = 2
-        sigma = 3
 
         textstr = '\n'.join((
             r'P = %.2f' % (p, ),

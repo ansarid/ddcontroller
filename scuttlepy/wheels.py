@@ -103,16 +103,13 @@ if __name__ == "__main__":
     r_wheel = Wheel(2, 0x41) 	                                # Right Motor (ch2)
     l_wheel = Wheel(1, 0x40, invert_encoder=True)               # Left Motor  (ch1)
 
-    # print("Left Wheel, Right Wheel")
+    print("Left Wheel, Right Wheel")
 
     while True:
 
-        print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
-        # print(r_wheel.getAngularVelocity())
+        print(l_wheel.speed, ",", r_wheel.speed)
 
         # Set Wheel Speed to 6.28 rad/s
-        # l_wheel.setAngularVelocity(6.28)
-        # r_wheel.setAngularVelocity(6.28)
+        l_wheel.setAngularVelocity(6.28)
+        r_wheel.setAngularVelocity(6.28)
 
-        l_wheel.motor.setDuty(1)
-        r_wheel.motor.setDuty(1)

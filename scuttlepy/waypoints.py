@@ -1,10 +1,14 @@
 from robot import SCUTTLE
 
+# waypoints = [
+#             [0.3,     0],
+#             [ 0.3,  0.3],
+#             [ 0.0,  0.3],
+#             [0,       0],
+#             ]
+
 waypoints = [
-            [0.3,     0],
-            [ 0.3,  0.3],
-            [ 0.0,  0.3],
-            [0,       0],
+            [1, 0],
             ]
 
 scuttle = SCUTTLE()

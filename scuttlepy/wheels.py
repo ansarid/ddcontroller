@@ -17,7 +17,7 @@ from scuttlepy import motor                                     # for controllin
 
 class Wheel:
 
-    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.04, KI=0.04, KD=0):
+    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.07, KI=1.15, KD=0):
         self.speed = 0                                          # (rad/s)
         self.radius = wheel_radius                              # mm
         self.motor = motor.Motor(motor_channel, invert=invert_motor)
@@ -34,23 +34,21 @@ class Wheel:
         self.KI = KI
         self.KD = KD
 
-        # self.pid = PID.PID(0.06, 0.9, 0.000009)
         self.pid = PID.PID(self.KP, self.KI, self.KD)
-
-        self.pdCurrents = 0
+        # self.pid.setWindup(1)
 
         self.roll = int(360/self.encoder.resolution)            # variable for rollover logic
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
 
-    def getTravel(self, position0, position1):                  # calculate the increment of a wheel in radians
+    def _getTravel(self, position0, position1):                 # calculate the increment of a wheel in radians
         diff = position1 - position0
         if not self.invert_encoder:
-            travel = diff                          # reset the travel reading
-            if((-travel) >= self.gap):             # if movement is large (has rollover)
-                travel = (diff + self.roll)        # handle forward rollover
+            travel = diff                                       # reset the travel reading
+            if((-travel) >= self.gap):                          # if movement is large (has rollover)
+                travel = (diff + self.roll)                     # handle forward rollover
             if(travel >= self.gap):
-                travel = (diff - self.roll)        # handle reverse rollover
+                travel = (diff - self.roll)                     # handle reverse rollover
         else:
             diff = position0 - position1
             travel = diff
@@ -61,7 +59,6 @@ class Wheel:
 
         travel = travel * self.encoder.resolution
         travel = travel * self.pulleyRatio
-        # travel = math.radians(travel)
 
         return(travel)
 
@@ -75,7 +72,7 @@ class Wheel:
         deltaTime = round((finalTime - initialTime), 3)         # new scalar delta time value
 
         # ---- movement calculations
-        travel = self.getTravel(initialPosition, finalPosition) * self.encoder.resolution
+        travel = self._getTravel(initialPosition, finalPosition) * self.encoder.resolution
 
         self.speed = round((travel * self.pulleyRatio) / deltaTime, 3)
         return self.speed                                       # returns pdc in radians/second
@@ -107,9 +104,12 @@ if __name__ == "__main__":
 
     while True:
 
-        print(l_wheel.speed, ",", r_wheel.speed)
+        # print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
 
         # Set Wheel Speed to 6.28 rad/s
-        l_wheel.setAngularVelocity(6.28)
-        r_wheel.setAngularVelocity(6.28)
+        # l_wheel.setAngularVelocity(6.28)
+        # r_wheel.setAngularVelocity(6.28)
 
+        r_angle = round(r_wheel.encoder.readAngle(),2)
+        l_angle = round(l_wheel.encoder.readAngle(),2)
+        print(r_angle,",", l_angle)

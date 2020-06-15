@@ -26,7 +26,11 @@ while 1:
         request = request.decode('utf-8').split(',')
 
         # print(request)
-
+        # l_wheel.setAngularVelocity(-1*float(request[0]))
+        l_wheel.setAngularVelocity(float(request[0]))
+        # l_wheel.setAngularVelocity(0)
+        r_wheel.setAngularVelocity(float(request[0]))
+        # l_wheel.motor.setDuty(0.6)
         r_wheel.pid.setKp(float(request[1]))
         r_wheel.pid.setKi(float(request[2]))
         r_wheel.pid.setKd(float(request[3]))
@@ -35,10 +39,7 @@ while 1:
         l_wheel.pid.setKi(float(request[2]))
         l_wheel.pid.setKd(float(request[3]))
 
-        # l_wheel.setAngularVelocity(float(request[0]))
-        l_wheel.setAngularVelocity(0)
-        r_wheel.setAngularVelocity(float(request[0]))
-        # l_wheel.motor.setDuty(0.6)
+
 
 
     packet = str(round(time.time() - start_time,3))+\

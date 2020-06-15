@@ -72,7 +72,7 @@ class SCUTTLE:
         L = self.wheelBase
         R = self.wheelRadius
 
-        A = np.array([[     R/2,    R/2],
+        A = np.array([[     R/2,    R/2 ],
                       [-R/(2*L), R/(2*L)]])                 # This matrix relates phi dot left and phi dot right to x dot and theta dot.
 
         B = np.array([self.l_wheel.speed,
@@ -90,7 +90,7 @@ class SCUTTLE:
         R = self.wheelRadius
 
         A = np.array([[ 1/R, -L/R],                         # This matrix relates chassis to wheels
-                      [ 1/R,  L/R]])                        
+                      [ 1/R,  L/R]])
 
         B = np.array([targetMotion[0],                      # Create an array for chassis speed
                       targetMotion[1]])
@@ -104,10 +104,10 @@ class SCUTTLE:
     def move(self, point):
 
         def calculateTurn(vectorDirection):
-            turn = vectorDirection - self.heading                # calculate required turn, rad
-            if turn > math.rad(180):                             # large turns should be reversed
-                turn = turn - math.rad(360)                      
-            return myTurn
+            turn = vectorDirection - self.heading           # calculate required turn, rad
+            if turn > math.radians(180):                    # large turns should be reversed
+                turn = turn - math.radians(360)
+            return turn
 
         def getTurnDirection(val):
             if val > 0:
@@ -115,12 +115,13 @@ class SCUTTLE:
             else:
                 self.setMotion([0, -2])
 
-        def generateCurve(myTurn)
-            alpha = vectorDirection - self.heading      # alpha is the curve amount
-            L2 = abs(curveRadius * math.tan(alpha / 2)) # abs for right hand turns
-            arcLen = curveRadius * alpha                # the arc length of the curve, meters
-            return alpha
-        
+
+        # def generateCurve(myTurn):
+        #     alpha = vectorDirection - self.heading      # alpha is the curve amount
+        #     L2 = abs(curveRadius * math.tan(alpha / 2)) # abs for right hand turns
+        #     arcLen = curveRadius * alpha                # the arc length of the curve, meters
+        #     return alpha
+
         # initialize variables at zero
         x = 0                                   # x
         rotation = 0                            # rotation along theta direction

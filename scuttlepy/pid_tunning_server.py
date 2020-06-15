@@ -9,7 +9,7 @@ socket.bind(("", port))
 
 l_wheel = wheels.Wheel(1, 0x40, KP=0, KI=0, KD=0, invert_encoder=True) 	                # Right Motor (ch2)
 r_wheel = wheels.Wheel(2, 0x41, KP=0, KI=0, KD=0) 	                                    # Left Motor (ch1)
-
+# r_wheel.pid.setWindup(1)
 start_time = time.time()
 
 packet = ''
@@ -48,10 +48,11 @@ while 1:
         ","+str(r_wheel.motor.duty)+\
         ","+str(l_wheel.pid.error)+\
         ","+str(r_wheel.pid.error)+\
-        ","+str(l_wheel.pid.setPoint)+\     # must plot setPoint because it does not agree with speed
-        ","+str(r_wheel.pid.setPoint)
+        ","+str(l_wheel.pid.SetPoint)+\
+        ","+str(r_wheel.pid.SetPoint)
 
     socket.sendto(packet.encode(), ip)
 
     if (time.time() - start_time) >= 10:
         break
+

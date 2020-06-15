@@ -41,8 +41,8 @@ class Wheel:
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
 
-    def _getTravel(self, position0, position1):                 # calculate the increment of a wheel in radians
-        diff = position1 - position0
+    def getTravel(self, position0, position1):                  # calculate the increment of a wheel in radians
+        diff = position1 - position0                            # take in the values in raw encoder position
         if not self.invert_encoder:
             travel = diff                                       # reset the travel reading
             if((-travel) >= self.gap):                          # if movement is large (has rollover)
@@ -57,10 +57,10 @@ class Wheel:
             if(travel >= self.gap):
                 travel = (diff - self.roll)
 
-        travel = travel * self.encoder.resolution
-        travel = travel * self.pulleyRatio
-
-        return(travel)
+        travel = travel * self.encoder.resolution               # go from raw value to radians
+        travel = travel * self.pulleyRatio                      # go from motor pulley to wheel pulley
+        # print(travel)
+        return(travel)                                          # return in radians of wheel advancement
 
     def getAngularVelocity(self):
 
@@ -72,7 +72,7 @@ class Wheel:
         deltaTime = round((finalTime - initialTime), 3)         # new scalar delta time value
 
         # ---- movement calculations
-        travel = self._getTravel(initialPosition, finalPosition) * self.encoder.resolution
+        travel = self.getTravel(initialPosition, finalPosition)
 
         self.speed = round((travel * self.pulleyRatio) / deltaTime, 3)
         return self.speed                                       # returns pdc in radians/second

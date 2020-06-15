@@ -17,8 +17,8 @@ class SCUTTLE:
         self.l_motorChannel = 1
         self.r_motorChannel = 2
 
-        self.l_encoderAddress = 0x40
-        self.r_encoderAddress = 0x41
+        self.l_encoderAddress = 0x43
+        self.r_encoderAddress = 0x40
 
         self.wheelBase = 0.201                          # L - meters
         self.wheelRadius = 0.041                        # R - meters
@@ -45,16 +45,19 @@ class SCUTTLE:
     def setHeading(self, heading):
         self.heading = heading
 
-    def getChassis(self, disp):                                         # this function returns the chassis displacement
+    def getChassis(self, displacement):                                 # this function returns the chassis displacement
         A = np.array([[          self.R/2,         self.R/2],
                       [-self.R/(2*self.L), self.R/(2*self.L)]])         # This matrix relates [PDL, PDR] to [XD,TD]
-        B = disp                                                        # this array should store phi displacements (in radians)
+        B = displacement                                                # this array should store phi displacements (in radians)
         C = np.matmul(A, B)                                             # perform matrix multiplication
         C = np.round(C, decimals=3)                                     # round the matrix
-        return(C)                                                       # returns a matrix containing [dx, dTheta]
 
+        print("Delta Phi's (rad): ",B)
+        # print(C)
 
-    def getWheelIncrements(self):
+        return(C)                                                       # returns a matrix containing [dx (m), dTheta (rad)]
+
+    def getWheelIncrements(self):                                       # get the wheel increment in radians
 
         self.l_wheel.positionInitial = self.l_wheel.positionFinal                           # transfer previous reading.
         self.r_wheel.positionInitial = self.r_wheel.positionFinal                           # transfer previous reading.
@@ -63,7 +66,7 @@ class SCUTTLE:
         self.r_wheel.positionFinal = self.r_wheel.encoder.readPos()                         # reading, raw.
 
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial, self.l_wheel.positionFinal),
-                                    self.r_wheel.getTravel(self.r_wheel.positionInitial, self.r_wheel.positionFinal)])        # store wheels travel in degrees
+                                    self.r_wheel.getTravel(self.r_wheel.positionInitial, self.r_wheel.positionFinal)])        # store wheels travel in radians
 
         return wheelIncrements
 
@@ -99,7 +102,6 @@ class SCUTTLE:
 
         self.l_wheel.setAngularVelocity(C[0])               # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])               # Set angularVelocity = [rad/s]
-
 
     def move(self, point):
 
@@ -149,7 +151,7 @@ class SCUTTLE:
         print("Turning.")
 
         while True:                 # Needs to be turned into a dp while loop instead of while break.
-            chassisIncrement = self.getChassis(self.getWheelIncrements())            # get latest chassis travel
+            chassisIncrement = self.getChassis(self.getWheelIncrements())            # get latest chassis travel (m, rad)
             x = x + chassisIncrement[0]                 # add the latest advancement(m) to the total
             rotation = rotation + chassisIncrement[1]
 

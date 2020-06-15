@@ -9,6 +9,7 @@
 
 # Import external libraries
 import time
+import math
 from smbus2 import SMBus
 
 
@@ -19,7 +20,7 @@ class Encoder:
         self.bus = SMBus(bus)
         self.address = address
         self.invert = invert
-        self.resolution = (360/2**14)
+        self.resolution = ((math.pi*2)/2**14)
         self.position = self.readPos()
         self.angle = self.readAngle()
         self.magnitude = self.readMagnitude()

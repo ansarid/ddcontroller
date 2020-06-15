@@ -67,7 +67,7 @@ class SCUTTLE:
 
         return wheelIncrements
 
-    def getChassisVelocity(self):                                   # Forward Kinematics
+    def getChassisVelocity(self):                          # Forward Kinematics
                                                            # Function to update and return [x_dot,theta_dot]
         L = self.wheelBase
         R = self.wheelRadius
@@ -84,35 +84,29 @@ class SCUTTLE:
 
         return [self.speed, self.angularVelocity]           # return [speed, angularVelocity]
 
-    def setMotion(self, targetMotion):                      # Inverse Kinematics
-                                                            # Function to update and return [phi_dot_left, phi_dot_right]
+    def setMotion(self, targetMotion):                      # Take chassis speed and command wheel speeds
+                                                            # argument: [x_dot, theta_dot]
         L = self.wheelBase
         R = self.wheelRadius
 
+        A = np.array([[ 1/R, -L/R],                         # This matrix relates chassis to wheels
+                      [ 1/R,  L/R]])                        
 
-        A = np.array([[ 1/R, -L/R],
-                      [ 1/R,  L/R]])                        # This matrix relates
-
-        B = np.array([targetMotion[0],
+        B = np.array([targetMotion[0],                      # Create an array for chassis speed
                       targetMotion[1]])
 
         C = np.matmul(A, B)                                 # Perform matrix multiplication
 
-        self.l_wheel.setAngularVelocity(C[0])                         # Set speed of SCUTTLE [m/s]
-        self.r_wheel.setAngularVelocity(C[1])                         # Set angularVelocity = [rad/s]
+        self.l_wheel.setAngularVelocity(C[0])               # Set angularVelocity = [rad/s]
+        self.r_wheel.setAngularVelocity(C[1])               # Set angularVelocity = [rad/s]
 
 
     def move(self, point):
 
         def calculateTurn(vectorDirection):
-
             turn = vectorDirection - self.heading                # calculate required turn, rad
-            turn = math.degrees(turn)                    # convert to degrees
-
-            if turn > 180:                                  # large turns should be reversed
-                turn = (turn -180)*-1
-            myTurn = math.radians(turn)
-
+            if turn > math.rad(180):                             # large turns should be reversed
+                turn = turn - math.rad(360)                      
             return myTurn
 
         def getTurnDirection(val):
@@ -121,6 +115,12 @@ class SCUTTLE:
             else:
                 self.setMotion([0, -2])
 
+        def generateCurve(myTurn)
+            alpha = vectorDirection - self.heading      # alpha is the curve amount
+            L2 = abs(curveRadius * math.tan(alpha / 2)) # abs for right hand turns
+            arcLen = curveRadius * alpha                # the arc length of the curve, meters
+            return alpha
+        
         # initialize variables at zero
         x = 0                                   # x
         rotation = 0                            # rotation along theta direction

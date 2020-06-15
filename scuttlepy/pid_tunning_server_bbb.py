@@ -47,7 +47,9 @@ while 1:
         ","+str(l_wheel.motor.duty)+\
         ","+str(r_wheel.motor.duty)+\
         ","+str(l_wheel.pid.error)+\
-        ","+str(r_wheel.pid.error)
+        ","+str(r_wheel.pid.error)+\
+        ","+str(l_wheel.pid.setPoint)+\     # must plot setPoint because it does not agree with speed
+        ","+str(r_wheel.pid.setPoint)
 
     socket.sendto(packet.encode(), ip)
 

@@ -52,7 +52,7 @@ class SCUTTLE:
         C = np.matmul(A, B)                                             # perform matrix multiplication
         C = np.round(C, decimals=3)                                     # round the matrix
 
-        print("Delta Phi's (rad): ",B)
+        # print("Delta Phi's (rad): ",B)
         # print(C)
 
         return(C)                                                       # returns a matrix containing [dx (m), dTheta (rad)]
@@ -190,7 +190,7 @@ class SCUTTLE:
             x = x + chassisIncrement[0]                 # add the latest advancement(m) to the total
             rotation = rotation + chassisIncrement[1]
 
-            # print("x(m)", round(x,3), "\t\tTarget:", myDistance )                        # print x in meters
+            print("x(m)", round(x,3), "\t\tTarget:", myDistance )                        # print x in meters
             time.sleep(0.08)
 
             if x > (myDistance-self.rampDown):

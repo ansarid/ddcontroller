@@ -6,7 +6,7 @@
 # Import external libraries
 import time
 import math
-# import numpy as np                                            # for handling arrays
+import numpy as np                                            # for handling arrays
 
 # Import local files
 
@@ -37,7 +37,7 @@ class Wheel:
         self.pid = PID.PID(self.KP, self.KI, self.KD)
         # self.pid.setWindup(1)
 
-        self.roll = int(360/self.encoder.resolution)            # variable for rollover logic
+        self.roll = 2 * math.pi / self.encoder.resolution
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
 
@@ -97,19 +97,31 @@ class Wheel:
 
 if __name__ == "__main__":
 
-    r_wheel = Wheel(2, 0x41) 	                                # Right Motor (ch2)
-    l_wheel = Wheel(1, 0x40, invert_encoder=True)               # Left Motor  (ch1)
+    r_wheel = Wheel(2, 0x40) 	                                # Right Motor (ch2)
+    l_wheel = Wheel(1, 0x43, invert_encoder=True)               # Left Motor  (ch1)
 
     print("Left Wheel, Right Wheel")
 
-    while True:
+    speeds = []
 
-        # print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
+    try:
 
-        # Set Wheel Speed to 6.28 rad/s
-        # l_wheel.setAngularVelocity(6.28)
-        # r_wheel.setAngularVelocity(6.28)
+        while True:
 
-        r_angle = round(r_wheel.encoder.readAngle(),2)
-        l_angle = round(l_wheel.encoder.readAngle(),2)
-        print(r_angle,",", l_angle)
+            # print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
+
+            # Set Wheel Speed to 6.28 rad/s
+            # l_wheel.setAngularVelocity(3.14)
+            # r_wheel.setAngularVelocity(3.14)
+
+            l_wheel.motor.setDuty(0.7)
+            # r_wheel.motor.setDuty(-0.7)
+
+            l_angle = round(l_wheel.getAngularVelocity(),2)
+            speeds.append(l_angle)
+            # r_angle = round(r_wheel.getAngularVelocity(),2)
+            print(l_angle)
+
+    except KeyboardInterrupt:
+
+        print("Average: ", np.average(speeds))

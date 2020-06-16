@@ -37,7 +37,7 @@ class Wheel:
         self.pid = PID.PID(self.KP, self.KI, self.KD)
         # self.pid.setWindup(1)
 
-        self.roll = int(360/self.encoder.resolution)            # variable for rollover logic
+        self.roll = 2 * math.pi / self.encoder.resolution       # variable for rollover logic
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
 

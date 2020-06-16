@@ -9,7 +9,7 @@ import matplotlib.animation as animation
 plt.style.use('dark_background')
 class network:
 
-    ip = "192.168.1.83"
+    ip = "scuttle"
     port = 9999
 
 try:
@@ -44,6 +44,8 @@ timestamps = [0]
 
 speedTarget = round(4.0, 2) #6.28 rad/sec
 
+startTime = time.time()
+
 def animate(i):
 
     global speedTarget
@@ -74,8 +76,8 @@ def animate(i):
         l_error.append(float(data[5]))
         r_error.append(float(data[6]))
 
-        l_targets.append(float(speedTarget))
-        r_targets.append(float(speedTarget))
+        l_targets.append(float(data[7]))
+        r_targets.append(float(data[8]))
 
         if len(l_speeds) > 1000:
             l_speeds.pop(0)
@@ -133,6 +135,8 @@ def animate(i):
 
         pid_plot.plot(timestamps, r_error, color='yellow')   # Colored Points
         pid_plot.scatter(timestamps, r_error, color='yellow')   # Colored Points
+
+        print(timestamps[-1], ",", speedTarget)
 
     except Exception as e:
         # print(e)

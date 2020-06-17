@@ -1,15 +1,16 @@
+import time
 from robot import SCUTTLE
 
-# waypoints = [
-#             [0.3,     0],
-#             [ 0.3,  0.3],
-#             [ 0.0,  0.3],
-#             [0,       0],
-#             ]
-
 waypoints = [
-            [1, 0],
+            [0.3,     0],
+            [ 0.3,  0.3],
+            [ 0.0,  0.3],
+            [0,       0],
             ]
+
+# waypoints = [
+#             [0.3, 0],
+#             ]
 
 scuttle = SCUTTLE()
 
@@ -18,3 +19,15 @@ for waypoint in waypoints:
     scuttle.move(waypoint)
     print("COMPLETED POINT", waypoint)
     print("\n")
+
+# startTime = time.time()
+
+# try:
+#     while 1:
+#         if (time.time() - startTime) <= 5:
+#             scuttle.setMotion([0.15, 0])
+#         else:
+#             scuttle.setMotion([0, 0])
+
+# except:
+#     pass

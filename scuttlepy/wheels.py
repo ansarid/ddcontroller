@@ -91,8 +91,9 @@ class Wheel:
         else:
             duty = ((duty * 0.778) - 0.222)
         ### THIS NEEDS TO BE REFACTORED ###
-
-        self.motor.setDuty(duty)
+        duty = sorted([-1, duty, 1])[1]               # place bounds on the motor commands
+        print("motorDuty:", duty)
+        self.motor.setDuty(round(duty,2))                      # must round to ensure driver handling!
 
 
 if __name__ == "__main__":

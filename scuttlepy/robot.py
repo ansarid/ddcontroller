@@ -2,6 +2,12 @@ import time
 import math
 import numpy as np
 from scuttlepy import wheels
+import logging 
+
+#Create and configure logger 
+logging.basicConfig(filename="newfile.log", format='%(asctime)s %(message)s', filemode='w') 
+logger=logging.getLogger()          # create an object
+logger.setLevel(logging.DEBUG)      # set threshold of logger to DEBUG
 
 
 class SCUTTLE:
@@ -67,7 +73,7 @@ class SCUTTLE:
 
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial, self.l_wheel.positionFinal),
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial, self.r_wheel.positionFinal)])        # store wheels travel in radians
-
+        logger.debug("Latest Wheel Increments:", wheelIncrements) 
         return wheelIncrements
 
     def getChassisVelocity(self):                          # Forward Kinematics

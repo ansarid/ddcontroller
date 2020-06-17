@@ -19,7 +19,9 @@ class SCUTTLE:
         self.compass = 0
         self.angularVelocity = 0
         self.globalPosition = np.array([0, 0])
-
+        self.angularDisp = 0                        # for tracking displacement between waypoints
+        self.forwardDisp = 0                        # for tracking displacement between waypoints
+        
         self.l_motorChannel = 1
         self.r_motorChannel = 2
 
@@ -122,7 +124,11 @@ class SCUTTLE:
                 self.setMotion([0,  2])
             else:
                 self.setMotion([0, -2])
-
+    
+    def displacement():
+        chassisIncrement = self.getChassis(self.getWheelIncrements())     # get latest chassis travel (m, rad)
+        self.forwardDisp += chassisIncrement[0]                           # add the latest advancement(m) to the total
+        self.angularDisp += chassisIncrement[1]
 
         # def generateCurve(myTurn):
         #     alpha = vectorDirection - self.heading      # alpha is the curve amount
@@ -149,8 +155,7 @@ class SCUTTLE:
         getTurnDirection(myTurn)                            # myTurn argument is for choosing direction and initiating the turn
 
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
-        # this loop continuously adds up the x forward movement originating from the encoders.
-
+        
         rotation_low = int(100*(myTurn - self.overSteer))      # For defining acceptable range for turn accuracy.
         rotation_high = int(100*(myTurn + self.overSteer))     # Needs to be redone with better solution
 
@@ -183,8 +188,7 @@ class SCUTTLE:
         print("__DRIVING__")
 
         # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
-        # this loop continuously adds up the x forward movement originating from the encoders.
-
+        
         stopped = False     # reset the stopped flag
         self.setMotion([1, 0])
         # begin the driving forward

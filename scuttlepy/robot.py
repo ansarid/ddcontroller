@@ -142,22 +142,17 @@ class SCUTTLE:
         #     arcLen = curveRadius * alpha                # the arc length of the curve, meters
         #     return alpha
 
-        # populate encoder values for startup
         self.getWheelIncrements()   # get the very first nonzero readings fron enconders
-
-        # initialize variables at zero
-        # x = 0                                   # x
-        # rotation = 0                            # rotation along theta direction
 
         vector = point - self.globalPosition    # the vector describing the next step
 
         vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)   # length in m
 
-        vectorDirection = math.atan2(vector[1], vector[0])
+        vectorDirection = math.atan2(vector[1], vector[0]) # discover vector direction
 
-        myTurn = calculateTurn(vectorDirection)
+        myTurn = calculateTurn(vectorDirection)            # discover required turning (rad)
 
-        stopped = False
+        stopped = False                          # clear the "stopped" flag
 
         getTurnDirection(myTurn)                 # myTurn argument is for choosing direction and initiating the turn
 
@@ -220,4 +215,3 @@ class SCUTTLE:
 
 
         print("x advanced:", round(myMovementX, 3), "  y advanced:", round(myMovementY, 3), "  global pos:", np.round(self.globalPosition, 3))
-

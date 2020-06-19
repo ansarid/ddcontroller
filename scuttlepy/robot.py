@@ -18,6 +18,7 @@ class SCUTTLE:
         self.heading = 0
         self.compass = 0
         self.angularVelocity = 0
+        self.turnRate = 0
         self.globalPosition = np.array([0, 0])
         self.angularDisp = 0                        # for tracking displacement between waypoints
         self.forwardDisp = 0                        # for tracking displacement between waypoints
@@ -125,10 +126,13 @@ class SCUTTLE:
         def getTurnDirection(val):                                      # check direction of turn and initiate turning
             if val == 0:
                 self.setMotion([0, 0])
+                self.turnRate = 0
             elif val > 0:
                 self.setMotion([0,  1.5])
+                self.turnRate = 1.5
             elif val < 0:
                 self.setMotion([0, -1.5])
+                self.turnRate = -1.5
 
         def trimHeading():                                              # ensure heading doesn't exceed 360
             if self.heading > math.pi:
@@ -170,6 +174,7 @@ class SCUTTLE:
         print("Turning.")
 
         while True:                         # Needs to be turned into a dp while loop instead of while break.
+            self.setMotion([0,self.turnRate])    # closed loop command for turning
             self.displacement()             # increment the displacements (update robot attributes)
 
             print("turning, (deg):", round(math.degrees(self.angularDisp), 2), " \t Target:", math.degrees(myTurn))       # print theta in radians
@@ -197,6 +202,8 @@ class SCUTTLE:
         self.setMotion([0.15, 0])    # begin driving forward 
 
         while True:
+            self.setMotion([0.15, 0])    # closed loop driving forward 
+
             self.displacement()     # update the displacements
 
             print("ForwardDisp(m):", round(self.forwardDisp, 3), "\t\tTarget distance:", vectorLength)                   # print x in meters
@@ -220,4 +227,3 @@ class SCUTTLE:
 
 
         print("x advanced:", round(myMovementX, 3), "  y advanced:", round(myMovementY, 3), "  global pos:", np.round(self.globalPosition, 3))
-

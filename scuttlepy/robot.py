@@ -3,12 +3,13 @@ import math
 import numpy as np
 from scuttlepy import wheels
 import logging
-
+from scuttlepy import gpio
 # Create and configure logger
 logging.basicConfig(filename="robot.log", format='%(asctime)s %(message)s', filemode='w')
 logger = logging.getLogger()          # create an object
 logger.setLevel(logging.DEBUG)      # set threshold of logger to DEBUG
 
+gpio.write(1, 3, 0)
 
 class SCUTTLE:
 
@@ -39,7 +40,7 @@ class SCUTTLE:
         # For Open Loop Control
 
         self.rampDown = 0.020                # m
-        self.overSteer = math.radians(5)     # deg
+        self.overSteer = math.radians(10)    # deg
 
         self.cruiseRate = 0.15               # fwd driving speed, m/s
 
@@ -130,9 +131,9 @@ class SCUTTLE:
             if val == 0:
                 self.turnRate = 0
             elif val > 0:
-                self.turnRate = 1.5
+                self.turnRate = 0.3                                     # rad/s
             elif val < 0:
-                 self.turnRate = -1.5
+                 self.turnRate = -0.3                                   # rad/s
 
         def trimHeading():                                              # ensure heading doesn't exceed 360
             if self.heading > math.pi:
@@ -166,7 +167,7 @@ class SCUTTLE:
         rotation_low = int(100*(myTurn - self.overSteer))      # For defining acceptable range for turn accuracy.
         rotation_high = int(100*(myTurn + self.overSteer))     # Needs to be redone with better solution
 
-        print("Turning.")
+        print("Turning, range(x100):", rotation_low,  rotation_high)
 
         while True:                         # Needs to be turned into a dp while loop instead of while break.
 
@@ -178,6 +179,9 @@ class SCUTTLE:
 
             if int(self.angularDisp*100) in range(rotation_low, rotation_high):      # check if we reached our target range
                 self.setMotion([0, 0])
+                gpio.write(1, 3, 1)
+                print("settling, (deg):", round(math.degrees(self.angularDisp), 2), " \t Target:", math.degrees(myTurn))
+                self.turnRate = 0   # maintain turnRate 0 for possible overshoot
                 if not stopped:
                     stopTime = time.time()
                     stopped = True

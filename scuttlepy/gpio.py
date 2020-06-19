@@ -95,3 +95,11 @@ pin_setup()                                                     # set up all pin
 #         write(0, 0, 1)
 #         time.sleep(1)
 #         write(0, 0, 0)
+
+
+if __name__ == "__main__":
+    while True:                                 # a loop to blink the red LED.
+        time.sleep(1)
+        write(1, 3, 1)
+        time.sleep(1)
+        write(1, 3, 0)

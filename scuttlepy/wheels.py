@@ -41,6 +41,8 @@ class Wheel:
         self.gap = 0.5 * self.roll                              # degrees specified as limit for rollover
         self.wait = 0.02                                        # wait time between encoder measurements (s)
 
+        # self.pid.setSampleTime(self.wait)
+
     def getTravel(self, position0, position1):                  # calculate the increment of a wheel in radians
         diff = position1 - position0                            # take in the values in raw encoder position
         if not self.invert_encoder:
@@ -92,7 +94,7 @@ class Wheel:
             duty = ((duty * 0.778) - 0.222)
         ### THIS NEEDS TO BE REFACTORED ###
         duty = sorted([-1, duty, 1])[1]               # place bounds on the motor commands
-        print("motorDuty:", duty)
+        print("motorDuty:", round(duty,2))
         self.motor.setDuty(round(duty,2))                      # must round to ensure driver handling!
 
 

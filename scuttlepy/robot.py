@@ -41,6 +41,8 @@ class SCUTTLE:
         self.rampDown = 0.020                # m
         self.overSteer = math.radians(5)     # deg
 
+        self.cruiseRate = 0.15               # fwd driving speed, m/s
+
         self.batteryVoltage = 0
 
         self.r_wheel = wheels.Wheel(self.r_motorChannel, self.r_encoderAddress)
@@ -63,7 +65,7 @@ class SCUTTLE:
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial, self.l_wheel.positionFinal),
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial, self.r_wheel.positionFinal)])        # store wheels travel in radians
 
-        logger.debug("Latest Wheel Increments: "+str(wheelIncrements))
+        logger.debug("Wheel Increments: "+str(wheelIncrements))
 
         return wheelIncrements
 
@@ -101,13 +103,14 @@ class SCUTTLE:
 
         C = np.matmul(A, B)                                             # Perform matrix multiplication
 
-        logger.debug("Closed Loop Phi Targets: "+str(C))                # indicate wheelspeed targets in log
+        logger.debug("Phi-dot Targets, closedLoop: "+str(C))                # indicate wheelspeed targets in log
 
         self.l_wheel.setAngularVelocity(C[0])                           # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])                           # Set angularVelocity = [rad/s]
 
     def displacement(self):
         chassisIncrement = self.getChassis(self.getWheelIncrements())     # get latest chassis travel (m, rad)
+        logger.debug("chassisIncrement TIMESTAMP")
         self.forwardDisp += chassisIncrement[0]                           # add the latest advancement(m) to the total
         self.angularDisp += chassisIncrement[1]
 
@@ -123,16 +126,13 @@ class SCUTTLE:
                 turn = turn - math.radians(360)
             return turn
 
-        def getTurnDirection(val):                                      # check direction of turn and initiate turning
+        def getTurnDirection(val):                                      # check direction of turn
             if val == 0:
-                self.setMotion([0, 0])
                 self.turnRate = 0
             elif val > 0:
-                self.setMotion([0,  1.5])
                 self.turnRate = 1.5
             elif val < 0:
-                self.setMotion([0, -1.5])
-                self.turnRate = -1.5
+                 self.turnRate = -1.5
 
         def trimHeading():                                              # ensure heading doesn't exceed 360
             if self.heading > math.pi:
@@ -169,11 +169,12 @@ class SCUTTLE:
         print("Turning.")
 
         while True:                         # Needs to be turned into a dp while loop instead of while break.
+
             self.setMotion([0,self.turnRate])    # closed loop command for turning
             self.displacement()             # increment the displacements (update robot attributes)
 
             print("turning, (deg):", round(math.degrees(self.angularDisp), 2), " \t Target:", math.degrees(myTurn))       # print theta in radians
-            time.sleep(0.08)
+            time.sleep(0.035)  # aiming for 100ms period
 
             if int(self.angularDisp*100) in range(rotation_low, rotation_high):      # check if we reached our target range
                 self.setMotion([0, 0])
@@ -193,16 +194,13 @@ class SCUTTLE:
         self.resetDisp()            # reset displacements
         stopped = False             # reset the stopped flag
 
-        # NEED TO MODIFY THIS COMMAND TO CONTINUOUSLY DRIVE IN CLOSED LOOP MANNER
-        self.setMotion([0.15, 0])    # begin driving forward 
-
         while True:
-            self.setMotion([0.15, 0])    # closed loop driving forward 
+            self.setMotion([self.cruiseRate, 0])    # closed loop driving forward 
 
             self.displacement()     # update the displacements
 
             print("ForwardDisp(m):", round(self.forwardDisp, 3), "\t\tTarget distance:", vectorLength)                   # print x in meters
-            time.sleep(0.08)
+            time.sleep(0.035)   # aiming for 100ms period
 
             if self.forwardDisp > (vectorLength-self.rampDown):
                 self.setMotion([0, 0])

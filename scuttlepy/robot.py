@@ -32,7 +32,8 @@ class SCUTTLE:
         self.l_encoderAddress = 0x43
         self.r_encoderAddress = 0x40
 
-        self.wheelBase = 0.201                                              # L - meters
+        # self.wheelBase = 0.201                                              # L - meters
+        self.wheelBase = 0.180                                              # L - meters
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
 

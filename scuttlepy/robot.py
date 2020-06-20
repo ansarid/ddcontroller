@@ -1,9 +1,10 @@
 import time
 import math
-import numpy as np
-from scuttlepy import wheels
 import logging
+import numpy as np
 from scuttlepy import gpio
+from scuttlepy import wheels
+
 # Create and configure logger
 logging.basicConfig(filename="robotTest.log", format='%(asctime)s %(message)s', filemode='w')
 logger = logging.getLogger()          # create an object
@@ -207,12 +208,13 @@ class SCUTTLE:
         logger.debug("Stopped_Flag_Low " + "START_DRIVING " + str(time.time()))
 
         print("START DRIVING")
+        self.setMotion([0, self.turnRate])   # closed loop command for turning
 
         while True:
             self.setMotion([self.cruiseRate, 0])    # closed loop driving forward
             self.displacement()                     # update the displacements
 
-            logger.debug("Forward_Displacement(m) " +str(round(self.forwardDisp, 3)) + " Target_Distance(m) " + str(vectorLength)) 
+            logger.debug("Forward_Displacement(m) " + str(round(self.forwardDisp, 3)) + " Target_Distance(m) " + str(vectorLength))
 
             time.sleep(0.035)                       # aiming for 100ms loop
 
@@ -221,7 +223,7 @@ class SCUTTLE:
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
-                    logger.debug("Stopped_Flag_High")
+                    logger.debug("Stopped_Flag_High " + "STOP_DRIVING " + str(time.time()))
                 if (time.time() - stopTime) > 0.200:
                     break
 

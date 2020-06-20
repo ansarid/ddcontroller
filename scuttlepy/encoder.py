@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
-# This example reads left and right encoders and outputs the position (deg) to the terminal
-# Left has address 40 and right has 41
+# This example reads left & right encoders & outputs the position (deg) to the terminal
+# Left has address 40 & right has 41
 # Code for Beagle Hardware
 
-# Import internal libraries
-# from scuttlepy.L1 import log
+# from adafruit_platformdetect import Detector
+# detector = Detector()
+# if detector.board.BEAGLEBONE_BLUE:
 
 # Import external libraries
 import time
@@ -27,38 +28,36 @@ class Encoder:
 
     def readPos(self):
 
-        # The AS5048B encoder gives a 14 bit angular reading
-        pos = self.bus.read_i2c_block_data(self.address, 0xFE, 2)  # Takes ~700 microseconds.
-
+        pos = self.bus.read_i2c_block_data(self.address, 0xFE, 2)           # Request data from registers 0xFE & 0xFF of the encoder
+                                                                            # Takes ~700 microseconds.
         if not self.invert:
-            self.position = (pos[0] << 6) | pos[1]
+            self.position = (pos[0] << 6) | pos[1]                          # Remove unused bits 6 & 7 from byte 0xFF creating 14 bit value
         else:
-            self.position = (2**14)-((pos[0] << 6) | pos[1])
+            self.position = (2**14)-((pos[0] << 6) | pos[1])                # Remove unused bits 6 & 7 from byte 0xFF creating 14 bit value & invert the value
 
-        return self.position
+        return self.position                                                # Return Raw encoder position (0 to 16384)
 
     def readAngle(self):
 
-        # The AS5048B encoder gives a 14 bit angular reading
-        angle = self.bus.read_i2c_block_data(self.address, 0xFE, 2)
-
-        angle = (angle[0] << 6) | angle[1]
+        angle = self.bus.read_i2c_block_data(self.address, 0xFE, 2)         # Request data from registers 0xFE & 0xFF of the encoder
+                                                                            # Takes ~700 microseconds.
+        angle = (angle[0] << 6) | angle[1]                                  # Remove unused bits 6 & 7 from byte 0xFF creating 14 bit value
 
         if not self.invert:
-            self.angle = angle * (360 / 2**14)              # scale values to get degrees
+            self.angle = angle * (360 / 2**14)                              # scale values to get degrees
         else:
-            self.angle = 360 - (angle * (360 / 2**14))      # scale values to get degrees
+            self.angle = 360 - (angle * (360 / 2**14))                      # scale values to get degrees
 
-        return self.angle
+        return self.angle                                                   # Return encoder angle (0 to 359.97802734375)
 
     def readMagnitude(self):
 
-        # The AS5048B encoder gives a 14 bit angular reading
-        magnitude = self.bus.read_i2c_block_data(self.address, 0xFC, 2)
+        magnitude = self.bus.read_i2c_block_data(self.address, 0xFC, 2)     # Request data from registers 0xFE & 0xFF of the encoder
+                                                                            # Takes ~700 microseconds.
 
-        self.magnitude = (magnitude[0] << 6) | magnitude[1]
+        self.magnitude = (magnitude[0] << 6) | magnitude[1]                 # Remove unused bits 6 & 7 from byte 0xFF creating 14 bit value
 
-        return self.magnitude
+        return self.magnitude                                               # Return encoder magnitude
 
 
 if __name__ == "__main__":
@@ -71,8 +70,8 @@ if __name__ == "__main__":
         rightAngle = round(rightEncoder.readAngle(), 2)
         leftAngle = round(leftEncoder.readAngle(), 2)
 
-        rightMag = round(rightEncoder.readMagnitude(), 2)
-        leftMag = round(leftEncoder.readMagnitude(), 2)
+        # rightMag = round(rightEncoder.readMagnitude(), 2)
+        # leftMag = round(leftEncoder.readMagnitude(), 2)
 
         print(leftAngle, "\t", rightAngle)
         # print(leftMag, "\t", rightMag)

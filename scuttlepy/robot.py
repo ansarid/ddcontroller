@@ -11,6 +11,7 @@ logger.setLevel(logging.DEBUG)      # set threshold of logger to DEBUG
 
 gpio.write(1, 3, 0)
 
+
 class SCUTTLE:
 
     def __init__(self):
@@ -19,7 +20,7 @@ class SCUTTLE:
         self.heading = 0
         self.compass = 0
         self.angularVelocity = 0
-        self.turnRate = 0               
+        self.turnRate = 0
         self.globalPosition = np.array([0, 0])
         self.angularDisp = 0                        # for tracking displacement between waypoints
         self.forwardDisp = 0                        # for tracking displacement between waypoints
@@ -39,7 +40,7 @@ class SCUTTLE:
 
         self.rampDown = 0.020                # m
         self.overSteer = math.radians(10)    # deg
-        
+
         self.cruiseRate = 0.15               # fwd driving speed, m/s
 
         self.batteryVoltage = 0
@@ -89,7 +90,7 @@ class SCUTTLE:
         return [self.speed, self.angularVelocity]                       # return [speed, angularVelocity]
 
     def getWheels(self, chassisValues):                                 # Inverse Kinematic function. Take x_dot, theta_dot as arguments
-        
+
         L = self.wheelBase
         R = self.wheelRadius
 
@@ -100,12 +101,12 @@ class SCUTTLE:
                       chassisValues[1]])
 
         C = np.matmul(A, B)                                             # Perform matrix multiplication
-        
+
         return(C)                                                       # Returns Phi_dots, (rad or rad/s)
-    
+
     def setMotion(self, targetMotion):                                  # Take chassis speed and command wheels
                                                                         # argument: [x_dot, theta_dot]
-        C = getWheels(targetMotion)                                     # Perform matrix multiplication
+        C = self.getWheels(targetMotion)                                     # Perform matrix multiplication
 
         logger.debug("PhiTargetLeft "+str(C[0]))                        # indicate wheelspeed targets in log
         logger.debug("PhiTargetRight "+str(C[1]))                       # indicate wheelspeed targets in log
@@ -114,10 +115,10 @@ class SCUTTLE:
         self.r_wheel.setAngularVelocity(C[1])                           # Set angularVelocity = [rad/s]
 
     def displacement(self):
-        chassisIncrement = self.getChassis(self.getWheelIncrements())     # get latest chassis travel (m, rad)         
+        chassisIncrement = self.getChassis(self.getWheelIncrements())     # get latest chassis travel (m, rad)
         self.forwardDisp += chassisIncrement[0]                           # add the latest advancement(m) to the total
         self.angularDisp += chassisIncrement[1]
-        logger.debug("Chassis_Increment " + str(self.forwardDisp) + " " + str(self.angularDisp) + " " + str(time.time()))                                  
+        logger.debug("Chassis_Increment " + str(self.forwardDisp) + " " + str(self.angularDisp) + " " + str(time.time()))
 
     def resetDisp(self):
         self.angularDisp = 0                                            # reset the attribute for counting up angular displacement
@@ -131,15 +132,15 @@ class SCUTTLE:
                 turn = turn - math.radians(360)
             return turn
 
-        def getTurnDirection(val):                                      # check direction of turn and initiate turning
+        def getTurnDirection(self, val):                                      # check direction of turn and initiate turning
             if val == 0:
                 self.turnRate = 0
             elif val > 0:
                 self.turnRate = 0.3                                     # rad/s
             elif val < 0:
-                 self.turnRate = -0.3                                   # rad/s
+                self.turnRate = -0.3                                   # rad/s
 
-        def trimHeading():                                              # ensure heading doesn't exceed 360
+        def trimHeading(self):                                              # ensure heading doesn't exceed 360
             if self.heading > math.pi:
                 self.heading += (2 * math.pi)
             if self.heading < -math.pi:
@@ -161,60 +162,61 @@ class SCUTTLE:
 
         myTurn = calculateTurn(vectorDirection)            # discover required turning (rad)
 
-        getTurnDirection(myTurn)                 # myTurn argument is for choosing direction and initiating the turn
+        getTurnDirection(self, myTurn)                 # myTurn argument is for choosing direction and initiating the turn
 
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
         self.resetDisp()                                       # reset displacements
         stopped = False             # reset the stopped flag
         logger.debug("Stopped_Flag_Low " + "START_TURNING " + str(time.time()))
-        
+
         rotation_low = int(100*(myTurn - self.overSteer))      # For defining acceptable range for turn accuracy.
         rotation_high = int(100*(myTurn + self.overSteer))     # Needs to be redone with better solution
 
         print("START_TURNING")
-        
+
         while True:                             # Needs to be turned into a dp while loop instead of while break.
-            self.setMotion([0,self.turnRate])   # closed loop command for turning                                                                      
+            self.setMotion([0, self.turnRate])   # closed loop command for turning
             self.displacement()                 # increment the displacements (update robot attributes)
-            logger.debug("Turning_Displacement(deg) ", str(round(math.degrees(self.angularDisp), 1)), "Target(deg) ", str(round(math.degrees(myTurn),1))
+            logger.debug("Turning_Displacement(deg) ", str(round(math.degrees(self.angularDisp), 1)), "Target(deg) ", str(round(math.degrees(myTurn),1)))
+
             time.sleep(0.035)                   # aim for 100ms loops
 
             if int(self.angularDisp*100) in range(rotation_low, rotation_high):      # check if we reached our target range
                 self.setMotion([0, 0])
-                gpio.write(1, 3, 1)                                                                                                        
-                
-                logger.debug("Settling_Displacement(deg) ", str(round(math.degrees(self.angularDisp), 1)), "Target(deg) ", str(round(math.degrees(myTurn),1))
-                self.turnRate = 0   # maintain turnRate 0 for possible overshoot                                                                               
+                gpio.write(1, 3, 1)
+
+                logger.debug("Settling_Displacement(deg) ", str(round(math.degrees(self.angularDisp), 1)), "Target(deg) ", str(round(math.degrees(myTurn),1)))
+                self.turnRate = 0   # maintain turnRate 0 for possible overshoot
                 if not stopped:
                     stopTime = time.time()
                     stopped = True
-                    logger.debug("Stopped_Flag_High" + " FINISH_TURNING " + str(time.time())
+                    logger.debug("Stopped_Flag_High" + " FINISH_TURNING " + str(time.time()))
                 if (time.time() - stopTime) > 0.200:        # give 200 ms for turning to settle
                     break
 
         logger.debug("TURN_COMPLETED " + str(time.time()))
         self.heading = self.heading + self.angularDisp      # update heading by the turn amount executed
-        logger.debug("Angular_displacement " + str(round(math.degrees(self.angularDisp),1)) # degrees rounded to 1 decimal
-        logger.debug("Heading " + str(round(math.degrees(self.heading),1))) # degrees rounded to 1 decimal
-        
+        logger.debug("Angular_displacement " + str(round(math.degrees(self.angularDisp),1))) # degrees rounded to 1 decimal
+        logger.debug("Heading " + str(round(math.degrees(self.heading), 1)))     # degrees rounded to 1 decimal
+
 
         # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
 
         self.resetDisp()            # reset displacements
         stopped = False             # reset the stopped flag
         logger.debug("Stopped_Flag_Low " + "START_DRIVING " + str(time.time()))
-        
+
         print("START DRIVING")
 
         while True:
-            self.setMotion([self.cruiseRate, 0])    # closed loop driving forward                                                                       
+            self.setMotion([self.cruiseRate, 0])    # closed loop driving forward
             self.displacement()                     # update the displacements
 
             logger.debug("Forward_Displacement(m) " +str(round(self.forwardDisp, 3)) + " Target_Distance(m) " + str(vectorLength)) 
-            
+
             time.sleep(0.035)                       # aiming for 100ms loop
 
-            if self.forwardDisp > (vectorLength-self.rampDown):
+            if self.forwardDisp > (vectorLength - self.rampDown):
                 self.setMotion([0, 0])
                 if not stopped:
                     stopTime = time.time()
@@ -229,8 +231,8 @@ class SCUTTLE:
 
         logger.debug("Distance_Achieved(m) " + str(round(self.forwardDisp, 3)))
         self.resetDisp()        # reset displacements
-        
+
         logger.debug("Advancement_x " + str(round(myMovementX,3)) + " Advancement_y " + str(round(myMovementY,3)))
         logger.debug("Global_Position " + str(round(self.globalPosition[0],3)) + " " + str(round(self.globalPosition[1],3)))
         logger.debug("Log_completed " + str(time.time()))
-        print("Move finished. Log file: robotTest.log")         
+        print("Move finished. Log file: robotTest.log")

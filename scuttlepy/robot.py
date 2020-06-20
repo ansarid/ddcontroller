@@ -177,7 +177,7 @@ class SCUTTLE:
         while True:                             # Needs to be turned into a dp while loop instead of while break.
             self.setMotion([0, self.turnRate])   # closed loop command for turning
             self.displacement()                 # increment the displacements (update robot attributes)
-            logger.debug("Turning_Displacement(deg) ", str(round(math.degrees(self.angularDisp), 1)), "Target(deg) ", str(round(math.degrees(myTurn),1)))
+            logger.debug("Turning_Displacement(deg) "+ str(round(math.degrees(self.angularDisp), 1))+ "Target(deg) "+ str(round(math.degrees(myTurn),1)))
 
             time.sleep(0.035)                   # aim for 100ms loops
 
@@ -185,7 +185,7 @@ class SCUTTLE:
                 self.setMotion([0, 0])
                 gpio.write(1, 3, 1)
 
-                logger.debug("Settling_Displacement(deg) ", str(round(math.degrees(self.angularDisp), 1)), "Target(deg) ", str(round(math.degrees(myTurn),1)))
+                logger.debug("Settling_Displacement(deg) "+ str(round(math.degrees(self.angularDisp), 1))+ "Target(deg) "+ str(round(math.degrees(myTurn),1)))
                 self.turnRate = 0   # maintain turnRate 0 for possible overshoot
                 if not stopped:
                     stopTime = time.time()

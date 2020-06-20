@@ -65,7 +65,7 @@ class SCUTTLE:
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial, self.l_wheel.positionFinal),
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial, self.r_wheel.positionFinal)])        # store wheels travel in radians
 
-        logger.debug("Latest_Wheel_Increments: "+str(wheelIncrements))
+        logger.debug("Latest_Wheel_Increments: "+ str(wheelIncrements[0]) + " " + str(wheelIncrements[1]))
 
         return wheelIncrements
 
@@ -108,8 +108,8 @@ class SCUTTLE:
                                                                         # argument: [x_dot, theta_dot]
         C = self.getWheels(targetMotion)                                     # Perform matrix multiplication
 
-        logger.debug("PhiTargetLeft "+str(C[0]))                        # indicate wheelspeed targets in log
-        logger.debug("PhiTargetRight "+str(C[1]))                       # indicate wheelspeed targets in log
+        logger.debug("PhiTargetLeft " + str(round(C[0],3)))                        # indicate wheelspeed targets in log
+        logger.debug("PhiTargetRight " + str(round(C[1],3)))                       # indicate wheelspeed targets in log
 
         self.l_wheel.setAngularVelocity(C[0])                           # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])                           # Set angularVelocity = [rad/s]
@@ -118,7 +118,7 @@ class SCUTTLE:
         chassisIncrement = self.getChassis(self.getWheelIncrements())     # get latest chassis travel (m, rad)
         self.forwardDisp += chassisIncrement[0]                           # add the latest advancement(m) to the total
         self.angularDisp += chassisIncrement[1]
-        logger.debug("Chassis_Increment " + str(self.forwardDisp) + " " + str(self.angularDisp) + " " + str(time.time()))
+        logger.debug("Chassis_Increment(m,rad) " + str(self.forwardDisp) + " " + str(self.angularDisp) + " " + str(time.time()))
 
     def resetDisp(self):
         self.angularDisp = 0                                            # reset the attribute for counting up angular displacement
@@ -177,7 +177,7 @@ class SCUTTLE:
         while True:                             # Needs to be turned into a dp while loop instead of while break.
             self.setMotion([0, self.turnRate])   # closed loop command for turning
             self.displacement()                 # increment the displacements (update robot attributes)
-            logger.debug("Turning_Displacement(deg) "+ str(round(math.degrees(self.angularDisp), 1))+ "Target(deg) "+ str(round(math.degrees(myTurn),1)))
+            logger.debug("Turning_Displacement(deg) "+ str(round(math.degrees(self.angularDisp), 1))+ " Target(deg) "+ str(round(math.degrees(myTurn),1)))
 
             time.sleep(0.035)                   # aim for 100ms loops
 

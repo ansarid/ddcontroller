@@ -119,7 +119,7 @@ class SCUTTLE:
         chassisIncrement = self.getChassis(self.getWheelIncrements())     # get latest chassis travel (m, rad)
         self.forwardDisp += chassisIncrement[0]                           # add the latest advancement(m) to the total
         self.angularDisp += chassisIncrement[1]
-        logger.debug("Chassis_Increment(m,rad) " + str(self.forwardDisp) + " " + str(self.angularDisp) + " " + str(time.time()))
+        logger.debug("Chassis_Increment(m,rad) " + str(round(chassisIncrement[0],3)) + " " + str(round(chassisIncrement[1],3)) + " " + str(time.time()))
 
     def resetDisp(self):
         self.angularDisp = 0                                            # reset the attribute for counting up angular displacement
@@ -178,7 +178,7 @@ class SCUTTLE:
         while True:                             # Needs to be turned into a dp while loop instead of while break.
             self.setMotion([0, self.turnRate])   # closed loop command for turning
             self.displacement()                 # increment the displacements (update robot attributes)
-            logger.debug("Turning_Displacement(deg) "+ str(round(math.degrees(self.angularDisp), 1))+ " Target(deg) "+ str(round(math.degrees(myTurn),1)))
+            logger.debug("Turning_Displacement(deg) " + str(round(math.degrees(self.angularDisp), 1))+ " Target(deg) "+ str(round(math.degrees(myTurn),1)))
 
             time.sleep(0.035)                   # aim for 100ms loops
 
@@ -186,7 +186,7 @@ class SCUTTLE:
                 self.setMotion([0, 0])
                 gpio.write(1, 3, 1)
 
-                logger.debug("Settling_Displacement(deg) "+ str(round(math.degrees(self.angularDisp), 1))+ "Target(deg) "+ str(round(math.degrees(myTurn),1)))
+                logger.debug("Settling_Displacement(deg) " + str(round(math.degrees(self.angularDisp), 1))+ " Target(deg) "+ str(round(math.degrees(myTurn),1)))
                 self.turnRate = 0   # maintain turnRate 0 for possible overshoot
                 if not stopped:
                     stopTime = time.time()
@@ -204,6 +204,7 @@ class SCUTTLE:
         # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
 
         self.resetDisp()            # reset displacements
+        self.cruiseRate = 0.15      # m/s
         stopped = False             # reset the stopped flag
         logger.debug("Stopped_Flag_Low " + "START_DRIVING " + str(time.time()))
 
@@ -219,7 +220,8 @@ class SCUTTLE:
             time.sleep(0.035)                       # aiming for 100ms loop
 
             if self.forwardDisp > (vectorLength - self.rampDown):
-                self.setMotion([0, 0])
+                self.cruiseRate = 0 # ensure target speed stays at zero
+                self.setMotion([self.cruiseRate, 0])
                 if not stopped:
                     stopTime = time.time()
                     stopped = True

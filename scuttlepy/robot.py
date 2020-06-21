@@ -4,6 +4,9 @@ import logging
 import numpy as np
 from scuttlepy import gpio
 from scuttlepy import wheels
+from scuttlepy import mpu
+
+
 
 # Create and configure logger
 logging.basicConfig(filename="robotTest.log", format='%(asctime)s %(message)s', filemode='w')
@@ -34,6 +37,8 @@ class SCUTTLE:
 
         # self.wheelBase = 0.201                                              # L - meters
         self.wheelBase = 0.180                                              # L - meters
+        # self.wheelBase = 0.170                                              # L - meters
+
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
 
@@ -53,6 +58,8 @@ class SCUTTLE:
         self.l_wheel = wheels.Wheel(self.l_motorChannel,
                                     self.l_encoderAddress,
                                     invert_encoder=True)
+
+        self.imu = mpu.MPU()
 
     def setGlobal(self, pos):
 
@@ -131,7 +138,14 @@ class SCUTTLE:
         self.forwardDisplacement += chassisIncrement[0]                     # add the latest advancement(m) to the total
         self.angularDisplacement += chassisIncrement[1]                     # add the latest advancement(rad) to the total
 
-        logger.debug("Chassis_Increment(m,rad) " + str(round(chassisIncrement[0], 3)) + " " + str(round(chassisIncrement[1], 3)) + " " + str(time.time()))
+        logger.debug("Chassis_Increment(m,rad) " +
+                    str(round(chassisIncrement[0], 3)) + " " +
+                    str(round(chassisIncrement[1], 3)) + " " +
+                    str(time.time()))
+
+        logger.debug("Gyro_raw(deg/s) " +
+            str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
+            str(time.time()))
 
     def resetDisplacement(self):
 
@@ -198,7 +212,6 @@ class SCUTTLE:
                          str(round(math.degrees(self.angularDisplacement), 1)) +
                          " Target(deg) " +
                          str(round(math.degrees(myTurn), 1)))
-
             time.sleep(0.035)                                               # aim for 100ms loops
 
             if int(self.angularDisplacement*100) in range(rotation_low, rotation_high):     # check if we reached our target range
@@ -272,3 +285,5 @@ class SCUTTLE:
         logger.debug("Global_Position " + str(round(self.globalPosition[0],3)) + " " + str(round(self.globalPosition[1],3)))
         logger.debug("Log_completed " + str(time.time()))
         print("Move finished. Log file: robotTest.log")
+
+

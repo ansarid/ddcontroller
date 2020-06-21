@@ -110,5 +110,5 @@ if __name__ == "__main__":
         print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
 
         # Set Wheel Speed to 6.28 rad/s
-        l_wheel.setAngularVelocity(3.14)
-        r_wheel.setAngularVelocity(3.14)
+        l_wheel.setAngularVelocity(6.28)
+        r_wheel.setAngularVelocity(6.28)

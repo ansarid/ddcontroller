@@ -12,6 +12,7 @@ from scuttlepy import mpu
 logging.basicConfig(filename="robotTest.log", format='%(asctime)s %(message)s', filemode='w')
 logger = logging.getLogger()                                                # create an object
 logger.setLevel(logging.DEBUG)                                              # set threshold of logger to DEBUG
+logger.debug("ColumnA ColumnB ColumnC ColumnD")
 
 gpio.write(1, 3, 0)
 

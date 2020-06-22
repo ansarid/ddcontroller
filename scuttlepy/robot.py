@@ -269,7 +269,7 @@ class SCUTTLE:
         logger.debug("Stopped_Flag_Low START_DRIVING " + str(time.time()))
 
         print("START DRIVING")
-        self.setMotion([0, self.turnRate])                                  # closed loop command for turning
+        self.setMotion([self.cruiseRate, 0])                                # closed loop command for turning
 
         while True:
 
@@ -284,7 +284,7 @@ class SCUTTLE:
             time.sleep(0.035)                                               # aiming for 100ms loop0?
 
             if self.forwardDisplacement > (vectorLength - self.rampDown):
-                self.cruiseRate = 0                                         # ensure target speed stays at zero
+                #self.cruiseRate = 0                                         # ensure target speed stays at zero
                 self.setMotion([self.cruiseRate, 0])
                 if not stopped:
                     stopTime = time.time()
@@ -309,6 +309,7 @@ class SCUTTLE:
 
         self.resetDisplacement()                                            # reset displacements
         self.cruiseRate = 0.15                                              # m/s
+        self.curveRate = self.cruiseRate / self.curveRadius
         stopped = False                                                     # reset the stopped flag
 
         logger.debug("Stopped_Flag_Low START_CURVING " + str(time.time()))
@@ -329,7 +330,8 @@ class SCUTTLE:
             time.sleep(0.035)                                               # aiming for 100ms loop0?
 
             if self.forwardDisplacement > (self.arcLen - self.rampDown):
-                self.cruiseRate = 0                                         # ensure target speed stays at zero
+                self.cruiseRate = 0
+                self.curveRate = 0                                         # ensure target speed stays at zero
                 self.setMotion([self.cruiseRate, self.curveRate])
                 if not stopped:
                     stopTime = time.time()

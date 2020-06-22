@@ -49,7 +49,11 @@ class SCUTTLE:
         self.rampDown = 0.020                                               # m
         self.overSteer = math.radians(10)                                   # deg
 
-        self.cruiseRate = 0.15                                              # fwd driving speed, m/s
+        self.cruiseRate = 0.150                                             # fwd driving speed, m/s
+        self.curveRadius = 0.300                                            # curve radius (m)
+        self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
+        self.L2 = 0                                                         # amount to cut from straight path
+        self.arcLen = 0
 
         self.batteryVoltage = 0
 
@@ -153,7 +157,7 @@ class SCUTTLE:
         self.angularDisplacement = 0                                        # reset the attribute for counting up angular displacement
         self.forwardDisplacement = 0                                        # reset the attribute for counting up forward displacement
 
-    def move(self, point):
+    def move(self, point, point2=none):
 
         def calculateTurn(vectorDirection):
             turn = vectorDirection - self.heading                           # calculate required turn, rad
@@ -175,11 +179,11 @@ class SCUTTLE:
             if self.heading < -math.pi:
                 self.heading += (2 * math.pi)
 
-        # def generateCurve(myTurn):
-        #     alpha = vectorDirection - self.heading                        # alpha is the curve amount
-        #     L2 = abs(curveRadius * math.tan(alpha / 2))                   # abs for right hand turns
-        #     arcLen = curveRadius * alpha                                  # the arc length of the curve, meters
-        #     return alpha
+        def generateCurve(vectorDirection2):
+            #alpha = vectorDirection2 - self.heading                       # alpha is the curve amount
+            self.L2 = abs(self.curveRadius * math.tan(alpha / 2))         # abs for right hand turns
+            self.arcLen = self.curveRadius * alpha                             # the arc length of the curve, meters
+            return arcLen
 
         self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
 
@@ -193,6 +197,17 @@ class SCUTTLE:
 
         getTurnDirection(self, myTurn)                                      # myTurn argument is for choosing direction and initiating the turn
 
+        #________SECOND VECTOR__________
+        
+        vector2 = point2 - point
+        
+        vectorDirection2 = math.atan2(vector2[1], vector2[0])
+        
+        myTurn2 = vectorDirection2 - vectorDirection    # turn amount, radians
+        
+        self.arcLen = generateCurve(myTurn2) # arc length will be criteria for finishing curve
+        
+        
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
 
         self.resetDisplacement()                                            # reset displacements
@@ -287,4 +302,43 @@ class SCUTTLE:
         logger.debug("Log_completed " + str(time.time()))
         print("Move finished. Log file: robotTest.log")
 
+# ---------------THIRD STEP, CURVE THEN STOP-------------------------------------------------------------
 
+        self.resetDisplacement()                                            # reset displacements
+        self.cruiseRate = 0.15                                              # m/s
+        stopped = False                                                     # reset the stopped flag
+
+        logger.debug("Stopped_Flag_Low START_CURVING " + str(time.time()))
+
+        print("START CURVING")
+        self.setMotion([self.cruiseRate, self.curveRate])                   # closed loop command for curving
+
+        while True:
+
+            self.setMotion([self.cruiseRate, self.curveRate])               # closed loop driving forward
+            self.displacement()                                             # update the displacements
+
+            logger.debug("Curve_Fwd_Displacement(m) " +
+                         str(round(self.forwardDisplacement, 3)) +
+                         " Target_Distance(m) " +
+                         str(self.arcLen))
+
+            time.sleep(0.035)                                               # aiming for 100ms loop0?
+
+            if self.forwardDisplacement > (self.arcLen - self.rampDown):
+                self.cruiseRate = 0                                         # ensure target speed stays at zero
+                self.setMotion([self.cruiseRate, self.curveRate])
+                if not stopped:
+                    stopTime = time.time()
+                    stopped = True
+                    logger.debug("Stopped_Flag_High STOP_CURVING " + str(time.time()))
+                if (time.time() - stopTime) > 0.200:
+                    break
+
+        #self.globalPosition = self.globalPosition + np.array([myMovementX, myMovementY])           # update the position of robot in global frame
+
+        logger.debug("Curve_Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)))
+        self.resetDisplacement()        # reset displacements
+        
+        logger.debug("Log_completed " + str(time.time()))
+        print("Move finished. Log file: robotTest.log")

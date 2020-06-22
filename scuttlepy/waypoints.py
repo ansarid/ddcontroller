@@ -30,11 +30,14 @@ waypoints = [
 
 scuttle = SCUTTLE()
 
-for waypoint in waypoints:
-    print("DRIVING TO POINT", waypoint)
-    scuttle.move(waypoint)
-    print("COMPLETED POINT", waypoint)
-    print("\n")
+scuttle.move([0.5, 0.5], point2=[0,1])
+
+
+# for waypoint in waypoints:
+#     print("DRIVING TO POINT", waypoint)
+#     scuttle.move(waypoint)
+#     print("COMPLETED POINT", waypoint)
+#     print("\n")
 
 # startTime = time.time()
 

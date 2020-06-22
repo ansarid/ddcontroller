@@ -157,7 +157,10 @@ class SCUTTLE:
         self.angularDisplacement = 0                                        # reset the attribute for counting up angular displacement
         self.forwardDisplacement = 0                                        # reset the attribute for counting up forward displacement
 
-    def move(self, point, point2=none):
+    def move(self, point, point2):
+
+        point = np.array(point)
+        point2 = np.array(point2)
 
         def calculateTurn(vectorDirection):
             turn = vectorDirection - self.heading                           # calculate required turn, rad
@@ -179,11 +182,11 @@ class SCUTTLE:
             if self.heading < -math.pi:
                 self.heading += (2 * math.pi)
 
-        def generateCurve(vectorDirection2):
-            #alpha = vectorDirection2 - self.heading                       # alpha is the curve amount
-            self.L2 = abs(self.curveRadius * math.tan(alpha / 2))         # abs for right hand turns
-            self.arcLen = self.curveRadius * alpha                             # the arc length of the curve, meters
-            return arcLen
+        # def generateCurve(vectorDirection2):
+        #     alpha = vectorDirection2 - self.heading                       # alpha is the curve amount
+        #     self.L2 = abs(self.curveRadius * math.tan(alpha / 2))         # abs for right hand turns
+        #     self.arcLen = self.curveRadius * alpha                             # the arc length of the curve, meters
+        #     return arcLen
 
         self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
 
@@ -198,16 +201,16 @@ class SCUTTLE:
         getTurnDirection(self, myTurn)                                      # myTurn argument is for choosing direction and initiating the turn
 
         #________SECOND VECTOR__________
-        
+
         vector2 = point2 - point
-        
+
         vectorDirection2 = math.atan2(vector2[1], vector2[0])
-        
+
         myTurn2 = vectorDirection2 - vectorDirection    # turn amount, radians
-        
-        self.arcLen = generateCurve(myTurn2) # arc length will be criteria for finishing curve
-        
-        
+
+        self.arcLen = self.curveRadius * myTurn2 # arc length will be criteria for finishing curve
+
+
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
 
         self.resetDisplacement()                                            # reset displacements

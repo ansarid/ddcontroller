@@ -242,7 +242,7 @@ class SCUTTLE:
                              " Target(deg) " +
                              str(round(math.degrees(myTurn), 1)))
 
-                self.turnRate = 0                                           # maintain turnRate 0 for possible overshoot
+                # self.turnRate = 0                                           # maintain turnRate 0 for possible overshoot
                 if not stopped:
                     stopTime = time.time()
                     stopped = True

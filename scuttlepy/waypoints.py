@@ -1,5 +1,5 @@
 import time
-from scuttlepy.robot import SCUTTLE
+from robot import SCUTTLE
 
 # waypoints = [
 #             [ 0.3,    0],

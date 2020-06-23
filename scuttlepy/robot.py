@@ -156,13 +156,15 @@ class SCUTTLE:
 
         self.angularDisplacement = 0                                        # reset the attribute for counting up angular displacement
         self.forwardDisplacement = 0                                        # reset the attribute for counting up forward displacement
-        
+
     def updatePosition(self):                                               # add latest displacements to global position
-    
+
         myMovementX = self.forwardDisplacement * math.cos(self.heading)
         myMovementY = self.forwardDisplacement * math.sin(self.heading)
-        self.globalPosition = self.globalPosition + 
-            np.array([myMovementX, myMovementY])                            # update the position of robot in global frame
+        self.globalPosition = (self.globalPosition + 
+            np.array([myMovementX, myMovementY]))                           # update the position of robot in global frame
+
+        return(myMovementX, myMovementY)
 
     def move(self, point, point2):
 
@@ -189,10 +191,10 @@ class SCUTTLE:
             if self.heading < -math.pi:
                 self.heading += (2 * math.pi)
 
-        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders        
-        
+        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
+
         # FIRST VECTOR HANDLING
-        
+
         vector = point - self.globalPosition                                # the vector describing the next step
 
         vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)               # length in m
@@ -202,11 +204,11 @@ class SCUTTLE:
         myTurn = calculateTurn(vectorDirection)                             # discover required turning (rad)
 
         getTurnDirection(self, myTurn)                                      # myTurn argument is for choosing direction and initiating the turn
-                
+
         rotation_low = int(100*(myTurn - self.overSteer))                   # For defining acceptable range for turn accuracy.
-        
+
         rotation_high = int(100*(myTurn + self.overSteer))                  # Needs to be redone with better solution
-              
+
         # SECOND VECTOR HANDLING
 
         vector2 = point2 - point
@@ -216,9 +218,9 @@ class SCUTTLE:
         myTurn2 = vectorDirection2 - vectorDirection                        # turn amount, radians
 
         self.arcLen = self.curveRadius * myTurn2                            # arc length will be criteria for finishing curve
-        
+
         self.L2 = abs(self.curveRadius * math.tan(myTurn2 / 2))             # abs for right hand turns
-        
+
         vectorLength -= self.L2                                             # reduce first vector by amount L2
 
 
@@ -231,25 +233,17 @@ class SCUTTLE:
 
         print("START_TURNING")
 
-        while True:                                                         
+        while int(self.angularDisplacement*100) not in range(rotation_low, rotation_high):
 
             self.setMotion([0, self.turnRate])                              # closed loop command for turning
             time.sleep(0.035)                                               # aim for 100ms loops
             self.displacement()                                             # increment the displacements (update robot attributes)
-            
+
             logger.debug("Turning_Displacement(deg) " +
                          str(round(math.degrees(self.angularDisplacement), 1)) +
                          " Target(deg) " +
                          str(round(math.degrees(myTurn), 1)))
-            
 
-            if int(self.angularDisplacement*100) in range(rotation_low, rotation_high):     # check if we reached our target range
-                
-                gpio.write(1, 3, 1)                                         # port 1, pin 3, state ON: activate green LED
-
-                stopped = True
-                logger.debug("Stopped_Flag_High" + " FINISHED_TURNING " + str(time.time()))
-                break
 
         self.heading = self.heading + self.angularDisplacement              # update heading by the turn amount executed
 
@@ -262,14 +256,14 @@ class SCUTTLE:
         # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
 
         self.resetDisplacement()                                            # reset displacements
-        
+
         stopped = False                                                     # reset the stopped flag
 
         logger.debug("Stopped_Flag_Low START_DRIVING " + str(time.time()))
 
         print("START DRIVING")
-        
-        while True:
+
+        while self.forwardDisplacement < (vectorLength - self.rampDown):
 
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
             time.sleep(0.035)                                               # aiming for 100ms loop0?
@@ -280,17 +274,12 @@ class SCUTTLE:
                          " Target_Distance(m) " +
                          str(vectorLength))
 
-            if self.forwardDisplacement > (vectorLength - self.rampDown):
-                stopped = True
-                logger.debug("Stopped_Flag_High FINISHED_DRIVING " + str(time.time()))
-                break
-
         logger.debug("Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)))
 
-        self.updatePosition()                                               # update global position by displacement amounts
+        myMovementX, myMovementY = self.updatePosition()                                               # update global position by displacement amounts
 
-        logger.debug("Advancement_x " + str(round(myMovementX,3)) + " Advancement_y " + str(round(myMovementY,3)))
-        logger.debug("Global_Position " + str(round(self.globalPosition[0],3)) + " " + str(round(self.globalPosition[1],3)))
+        logger.debug("Advancement_x " + str(round(myMovementX, 3)) + " Advancement_y " + str(round(myMovementY,3)))
+        logger.debug("Global_Position " + str(round(self.globalPosition[0], 3)) + " " + str(round(self.globalPosition[1],3)))
         logger.debug("Log_completed " + str(time.time()))
 
         # ---------------THIRD STEP, CURVE THEN STOP-------------------------------------------------------------
@@ -303,7 +292,7 @@ class SCUTTLE:
 
         print("START CURVING")
 
-        while True:
+        while self.forwardDisplacement < (self.arcLen - self.rampDown):
 
             self.setMotion([self.cruiseRate, self.curveRate])               # closed loop driving forward
             time.sleep(0.035)                                               # aiming for 100ms loop
@@ -312,31 +301,22 @@ class SCUTTLE:
             logger.debug("Curve_Fwd_Displacement(m) " +
                          str(round(self.forwardDisplacement, 3)) +
                          " Target_Distance(m) " +
-                         str(self.arcLen))      
-
-            if self.forwardDisplacement > (self.arcLen - self.rampDown):
-                stopped = True
-                break
+                         str(self.arcLen))
 
         logger.debug("Curve_Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)) +
             " Target_Distance(m) " + str(self.arcLen))
-            
-        self.resetDisplacement()        # reset displacements      
-        
-        
+
+        self.resetDisplacement()        # reset displacements
+
+
         # -------------- FOURTH STEP, STOPPING ---------------------
-        
-        while True:
-            self.setMotion([0,0])
+
+        while self.speed != 0 and self.angularVelocity != 0:
+            self.setMotion([0, 0])
+            print( self.speed,  self.angularVelocity)
             time.sleep(0.035)
-            if not stopped:
-                stoptime = time.time()
-                stopped = True
-                logger.debug("Stopped_Flag_High STOP_CURVING " + str(time.time()))
-            if (time.time() - stopTime) > 0.500:
-                break
-        
+
        # -------------- END OF PROCESS ------------------------------
-        
+
         logger.debug("Log_completed " + str(time.time()))
         print("Movements finished. Log file: robotTest.log")

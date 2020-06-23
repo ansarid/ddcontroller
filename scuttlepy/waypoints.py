@@ -30,6 +30,8 @@ waypoints = [
 
 scuttle = SCUTTLE()
 
+# print(dir(scuttle))
+
 scuttle.move([0.5, 0.5], point2=[0,1])
 
 

@@ -165,26 +165,19 @@ class SCUTTLE:
             np.array([myMovementX, myMovementY]))                           # update the position of robot in global frame
 
         return(myMovementX, myMovementY)
-        
+
     def curvePosition(self):                                                # update the robot position after a curve
-        
+
         r = self.curveRadius
-        
-        alpha = self.angularDisplacement()                                  # can be pos or negative
-        
+        alpha = self.angularDisplacement                                    # can be pos or negative
         curveX = r * ( math.cos(alpha) - 1)                                 # only gives positive values for small alphas
-        
         curveY = r * math.sin(alpha)                                        # will give negative values for negative alpha
-        
         beta = math.atan(curveX/curveY)                                     # use regular atan to generate negative beta as needed
-        
-        d = sqrt(curveX**2 + curveY**2)                                     
-        
+        d = math.sqrt(curveX**2 + curveY**2)
         myMovementX = d * math.cos(self.heading + beta)                     # not validated for turns >90 degrees
-        
         myMovementY = d * math.sin(self.heading + beta)
-        
-        self.globalPosition = (self.globalPosition + 
+
+        self.globalPosition = (np.array(self.globalPosition) +
             np.array([myMovementX, myMovementY]))                           # update the position of robot in global frame
 
     def move(self, point, point2):
@@ -248,7 +241,6 @@ class SCUTTLE:
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
 
         self.resetDisplacement()                                            # reset displacements
-        stopped = False                                                     # reset the stopped flag
 
         logger.debug("Stopped_Flag_Low START_TURNING " + str(time.time()))
 
@@ -278,8 +270,6 @@ class SCUTTLE:
 
         self.resetDisplacement()                                            # reset displacements
 
-        stopped = False                                                     # reset the stopped flag
-
         logger.debug("Stopped_Flag_Low START_DRIVING " + str(time.time()))
 
         print("START DRIVING")
@@ -307,7 +297,6 @@ class SCUTTLE:
 
         self.resetDisplacement()                                            # reset displacements                                             # m/s
         self.curveRate = self.cruiseRate / self.curveRadius
-        stopped = False                                                     # reset the stopped flag
 
         logger.debug("Stopped_Flag_Low START_CURVING " + str(time.time()))
 

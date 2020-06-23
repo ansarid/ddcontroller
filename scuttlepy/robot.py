@@ -156,6 +156,13 @@ class SCUTTLE:
 
         self.angularDisplacement = 0                                        # reset the attribute for counting up angular displacement
         self.forwardDisplacement = 0                                        # reset the attribute for counting up forward displacement
+        
+    def updatePosition(self):                                               # add latest displacements to global position
+    
+        myMovementX = self.forwardDisplacement * math.cos(self.heading)
+        myMovementY = self.forwardDisplacement * math.sin(self.heading)
+        self.globalPosition = self.globalPosition + 
+            np.array([myMovementX, myMovementY])                            # update the position of robot in global frame
 
     def move(self, point, point2):
 
@@ -182,14 +189,10 @@ class SCUTTLE:
             if self.heading < -math.pi:
                 self.heading += (2 * math.pi)
 
-        # def generateCurve(vectorDirection2):
-        #     alpha = vectorDirection2 - self.heading                       # alpha is the curve amount
-        #     self.L2 = abs(self.curveRadius * math.tan(alpha / 2))         # abs for right hand turns
-        #     self.arcLen = self.curveRadius * alpha                             # the arc length of the curve, meters
-        #     return arcLen
-
-        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
-
+        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders        
+        
+        # FIRST VECTOR HANDLING
+        
         vector = point - self.globalPosition                                # the vector describing the next step
 
         vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)               # length in m
@@ -199,16 +202,24 @@ class SCUTTLE:
         myTurn = calculateTurn(vectorDirection)                             # discover required turning (rad)
 
         getTurnDirection(self, myTurn)                                      # myTurn argument is for choosing direction and initiating the turn
-
-        #________SECOND VECTOR__________
+                
+        rotation_low = int(100*(myTurn - self.overSteer))                   # For defining acceptable range for turn accuracy.
+        
+        rotation_high = int(100*(myTurn + self.overSteer))                  # Needs to be redone with better solution
+              
+        # SECOND VECTOR HANDLING
 
         vector2 = point2 - point
 
         vectorDirection2 = math.atan2(vector2[1], vector2[0])
 
-        myTurn2 = vectorDirection2 - vectorDirection    # turn amount, radians
+        myTurn2 = vectorDirection2 - vectorDirection                        # turn amount, radians
 
-        self.arcLen = self.curveRadius * myTurn2 # arc length will be criteria for finishing curve
+        self.arcLen = self.curveRadius * myTurn2                            # arc length will be criteria for finishing curve
+        
+        self.L2 = abs(self.curveRadius * math.tan(myTurn2 / 2))             # abs for right hand turns
+        
+        vectorLength -= self.L2                                             # reduce first vector by amount L2
 
 
         # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
@@ -218,39 +229,27 @@ class SCUTTLE:
 
         logger.debug("Stopped_Flag_Low START_TURNING " + str(time.time()))
 
-        rotation_low = int(100*(myTurn - self.overSteer))                   # For defining acceptable range for turn accuracy.
-        rotation_high = int(100*(myTurn + self.overSteer))                  # Needs to be redone with better solution
-
         print("START_TURNING")
 
-        while True:                                                         # Needs to be turned into a do while loop instead of while break.
+        while True:                                                         
 
             self.setMotion([0, self.turnRate])                              # closed loop command for turning
+            time.sleep(0.035)                                               # aim for 100ms loops
             self.displacement()                                             # increment the displacements (update robot attributes)
+            
             logger.debug("Turning_Displacement(deg) " +
                          str(round(math.degrees(self.angularDisplacement), 1)) +
                          " Target(deg) " +
                          str(round(math.degrees(myTurn), 1)))
-            time.sleep(0.035)                                               # aim for 100ms loops
+            
 
             if int(self.angularDisplacement*100) in range(rotation_low, rotation_high):     # check if we reached our target range
-                self.setMotion([0, 0])
-                gpio.write(1, 3, 1)
+                
+                gpio.write(1, 3, 1)                                         # port 1, pin 3, state ON: activate green LED
 
-                logger.debug("Settling_Displacement(deg) " +
-                             str(round(math.degrees(self.angularDisplacement), 1)) +
-                             " Target(deg) " +
-                             str(round(math.degrees(myTurn), 1)))
-
-                # self.turnRate = 0                                           # maintain turnRate 0 for possible overshoot
-                if not stopped:
-                    stopTime = time.time()
-                    stopped = True
-                    logger.debug("Stopped_Flag_High" + " FINISH_TURNING " + str(time.time()))
-                if (time.time() - stopTime) > 0.200:                        # give 200 ms for turning to settle
-                    break
-
-        logger.debug("TURN_COMPLETED " + str(time.time()))
+                stopped = True
+                logger.debug("Stopped_Flag_High" + " FINISHED_TURNING " + str(time.time()))
+                break
 
         self.heading = self.heading + self.angularDisplacement              # update heading by the turn amount executed
 
@@ -263,17 +262,17 @@ class SCUTTLE:
         # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
 
         self.resetDisplacement()                                            # reset displacements
-        self.cruiseRate = 0.15                                              # m/s
+        
         stopped = False                                                     # reset the stopped flag
 
         logger.debug("Stopped_Flag_Low START_DRIVING " + str(time.time()))
 
         print("START DRIVING")
-        self.setMotion([self.cruiseRate, 0])                                # closed loop command for turning
-
+        
         while True:
 
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
+            time.sleep(0.035)                                               # aiming for 100ms loop0?
             self.displacement()                                             # update the displacements
 
             logger.debug("Forward_Displacement(m) " +
@@ -281,69 +280,63 @@ class SCUTTLE:
                          " Target_Distance(m) " +
                          str(vectorLength))
 
-            time.sleep(0.035)                                               # aiming for 100ms loop0?
-
             if self.forwardDisplacement > (vectorLength - self.rampDown):
-                #self.cruiseRate = 0                                         # ensure target speed stays at zero
-                self.setMotion([self.cruiseRate, 0])
-                if not stopped:
-                    stopTime = time.time()
-                    stopped = True
-                    logger.debug("Stopped_Flag_High STOP_DRIVING " + str(time.time()))
-                if (time.time() - stopTime) > 0.200:
-                    break
-
-        myMovementX = self.forwardDisplacement * math.cos(self.heading)
-        myMovementY = self.forwardDisplacement * math.sin(self.heading)
-        self.globalPosition = self.globalPosition + np.array([myMovementX, myMovementY])           # update the position of robot in global frame
+                stopped = True
+                logger.debug("Stopped_Flag_High FINISHED_DRIVING " + str(time.time()))
+                break
 
         logger.debug("Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)))
-        self.resetDisplacement()        # reset displacements
+
+        self.updatePosition()                                               # update global position by displacement amounts
 
         logger.debug("Advancement_x " + str(round(myMovementX,3)) + " Advancement_y " + str(round(myMovementY,3)))
         logger.debug("Global_Position " + str(round(self.globalPosition[0],3)) + " " + str(round(self.globalPosition[1],3)))
         logger.debug("Log_completed " + str(time.time()))
-        print("Move finished. Log file: robotTest.log")
 
-# ---------------THIRD STEP, CURVE THEN STOP-------------------------------------------------------------
+        # ---------------THIRD STEP, CURVE THEN STOP-------------------------------------------------------------
 
-        self.resetDisplacement()                                            # reset displacements
-        self.cruiseRate = 0.15                                              # m/s
+        self.resetDisplacement()                                            # reset displacements                                             # m/s
         self.curveRate = self.cruiseRate / self.curveRadius
         stopped = False                                                     # reset the stopped flag
 
         logger.debug("Stopped_Flag_Low START_CURVING " + str(time.time()))
 
         print("START CURVING")
-        self.setMotion([self.cruiseRate, self.curveRate])                   # closed loop command for curving
 
         while True:
 
             self.setMotion([self.cruiseRate, self.curveRate])               # closed loop driving forward
+            time.sleep(0.035)                                               # aiming for 100ms loop
             self.displacement()                                             # update the displacements
 
             logger.debug("Curve_Fwd_Displacement(m) " +
                          str(round(self.forwardDisplacement, 3)) +
                          " Target_Distance(m) " +
-                         str(self.arcLen))
-
-            time.sleep(0.035)                                               # aiming for 100ms loop0?
+                         str(self.arcLen))      
 
             if self.forwardDisplacement > (self.arcLen - self.rampDown):
-                self.cruiseRate = 0
-                self.curveRate = 0                                         # ensure target speed stays at zero
-                self.setMotion([self.cruiseRate, self.curveRate])
-                if not stopped:
-                    stopTime = time.time()
-                    stopped = True
-                    logger.debug("Stopped_Flag_High STOP_CURVING " + str(time.time()))
-                if (time.time() - stopTime) > 0.200:
-                    break
+                stopped = True
+                break
 
-        #self.globalPosition = self.globalPosition + np.array([myMovementX, myMovementY])           # update the position of robot in global frame
-
-        logger.debug("Curve_Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)))
-        self.resetDisplacement()        # reset displacements
+        logger.debug("Curve_Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)) +
+            " Target_Distance(m) " + str(self.arcLen))
+            
+        self.resetDisplacement()        # reset displacements      
+        
+        
+        # -------------- FOURTH STEP, STOPPING ---------------------
+        
+        while True:
+            self.setMotion([0,0])
+            time.sleep(0.035)
+            if not stopped:
+                stoptime = time.time()
+                stopped = True
+                logger.debug("Stopped_Flag_High STOP_CURVING " + str(time.time()))
+            if (time.time() - stopTime) > 0.500:
+                break
+        
+       # -------------- END OF PROCESS ------------------------------
         
         logger.debug("Log_completed " + str(time.time()))
-        print("Move finished. Log file: robotTest.log")
+        print("Movements finished. Log file: robotTest.log")

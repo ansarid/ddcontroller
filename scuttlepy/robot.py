@@ -170,7 +170,7 @@ class SCUTTLE:
 
         r = self.curveRadius
         alpha = self.angularDisplacement                                    # can be pos or negative
-        curveX = r * ( math.cos(alpha) - 1)                                 # only gives positive values for small alphas
+        curveX = r * (1 - math.cos(alpha))                                  # only gives positive values for small alphas
         curveY = r * math.sin(alpha)                                        # will give negative values for negative alpha
         beta = math.atan(curveX/curveY)                                     # use regular atan to generate negative beta as needed
         d = math.sqrt(curveX**2 + curveY**2)

@@ -87,7 +87,8 @@ class SCUTTLE:
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial,
                                                            self.r_wheel.positionFinal)])        # store wheels travel in radians
 
-        logger.debug("Latest_Wheel_Increments: " + str(wheelIncrements[0]) + " " + str(wheelIncrements[1]))
+        logger.debug("Latest_Wheel_Increments: " + str(round(wheelIncrements[0],4)) 
+                     + " " + str(round(wheelIncrements[1]),4))
 
         return wheelIncrements
 

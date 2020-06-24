@@ -33,8 +33,8 @@ class SCUTTLE:
         self.l_motorChannel = 1
         self.r_motorChannel = 2
 
-        self.l_encoderAddress = 0x43
-        self.r_encoderAddress = 0x40
+        self.l_encoderAddress = 0x40
+        self.r_encoderAddress = 0x41
 
         # self.wheelBase = 0.201                                              # L - meters
         self.wheelBase = 0.180                                              # L - meters
@@ -87,8 +87,8 @@ class SCUTTLE:
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial,
                                                            self.r_wheel.positionFinal)])        # store wheels travel in radians
 
-        logger.debug("Latest_Wheel_Increments: " + str(round(wheelIncrements[0],4)) 
-                     + " " + str(round(wheelIncrements[1]),4))
+        logger.debug("Latest_Wheel_Increments: " + str(round(wheelIncrements[0], 4))
+                     + " " + str(round(wheelIncrements[1], 4)))
 
         return wheelIncrements
 
@@ -316,11 +316,11 @@ class SCUTTLE:
 
         logger.debug("Curve_Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)) +
             " Target_Distance(m) " + str(self.arcLen))
-        
+
         self.curvePosition() # add the curve to the global position 
 
         self.resetDisplacement()        # reset displacements
-        
+
         logger.debug("Global_Position " + str(round(self.globalPosition[0], 3)) + " " + str(round(self.globalPosition[1],3)))
         logger.debug("Log_completed " + str(time.time()))
 

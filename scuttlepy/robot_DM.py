@@ -172,7 +172,7 @@ class SCUTTLE:
         logger.debug("vectorLength(m) " +
                          str(round(self.vectorLength, 3)) +
                          " vectorDirection(deg) " +
-                         str(round(math.degrees(self.vectorDirection), 1))
+                         str(round(math.degrees(self.vectorDirection), 1)))
 
     def trajectory(self):
         span = math.radians(5)
@@ -185,7 +185,7 @@ class SCUTTLE:
             self.flip = 1 # positive turn needed
         else:
             self.flip = 0 # go straight
-        logger.debug("CurveFlip " + str(self.flip) )                 
+        logger.debug("CurveFlip " + str(self.flip) )
         return self.flip
 
     def stackHeading(self):                                              # increment heading & ensure heading doesn't exceed 180
@@ -194,8 +194,8 @@ class SCUTTLE:
             self.heading += (2 * math.pi)
         if self.heading < -math.pi:
             self.heading += (2 * math.pi)
-                logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3) ) 
-                     
+        logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
+
     def move(self, point):
 
         self.getWheelIncrements()      # get the very first nonzero readings fron enconders

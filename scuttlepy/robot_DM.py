@@ -179,10 +179,10 @@ class SCUTTLE:
         gap = self.vectorDirection - self.heading
         if gap > math.radians(180):                                    # large turns should be reversed
                 gap = gap - math.radians(360)
-        if gap < span:
-            self.flip = -1 # negative turn needed
-        elif gap < -span:
+        if gap > span:
             self.flip = 1 # positive turn needed
+        elif gap < -span:
+            self.flip = -1 # negative turn needed
         else:
             self.flip = 0 # go straight
         logger.debug("CurveFlip " + str(self.flip) )

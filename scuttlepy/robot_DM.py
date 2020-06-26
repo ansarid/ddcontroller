@@ -161,17 +161,18 @@ class SCUTTLE:
         localVector = np.array([self.forwardDisplacement, 0])  # x value is increment and y value is always 0
         globalVector = np.matmul(R, localVector)
         self.globalPosition = self.globalPosition + globalVector # add the increment to the global position
+        logger.debug("global_x(m) " +
+                    str(round(self.globalPosition[0], 3)) + " global_y(m) " +
+                    str(round(self.globalPosition[1], 3) ) )
 
     def drawVector(self):    # argument is an np array
         vector = self.point - self.globalPosition                                # the vector describing the next step
         self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)               # length in m
         self.vectorDirection = math.atan2(vector[1], vector[0])                  # discover vector direction
         logger.debug("vectorLength(m) " +
-                         str(round(math.degrees(self.angularDisplacement), 1)) +
-                         "vectorDirection(deg) " +
-                         str(round(math.degrees(vector[0]), 1)) +
-                         "," +
-                         str(round(math.degrees(vector[1]), 1)))
+                         str(round(self.vectorLength, 3)) +
+                         " vectorDirection(deg) " +
+                         str(round(math.degrees(self.vectorDirection), 1))
 
     def trajectory(self):
         span = math.radians(5)
@@ -184,6 +185,7 @@ class SCUTTLE:
             self.flip = 1 # positive turn needed
         else:
             self.flip = 0 # go straight
+        logger.debug("CurveFlip " + str(self.flip) )                 
         return self.flip
 
     def stackHeading(self):                                              # increment heading & ensure heading doesn't exceed 180
@@ -192,7 +194,8 @@ class SCUTTLE:
             self.heading += (2 * math.pi)
         if self.heading < -math.pi:
             self.heading += (2 * math.pi)
-
+                logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3) ) 
+                     
     def move(self, point):
 
         self.getWheelIncrements()      # get the very first nonzero readings fron enconders

@@ -47,7 +47,7 @@ class SCUTTLE:
         self.rampDown = 0.020                                               # m
         self.overSteer = math.radians(10)                                   # deg
 
-        self.cruiseRate = 0.150                                             # fwd driving speed, m/s
+        self.cruiseRate = 0.120                                             # fwd driving speed, m/s
         self.curveRadius = 0.300                                            # curve radius (m)
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
         self.L2 = 0                                                         # amount to cut from straight path
@@ -142,8 +142,8 @@ class SCUTTLE:
     def displacement(self):
 
         chassisIncrement = self.getChassis(self.getWheelIncrements())       # get latest chassis travel (m, rad)
-        self.forwardDisplacement += chassisIncrement[0]                     # add the latest advancement(m) to the total
-        self.angularDisplacement += chassisIncrement[1]                     # add the latest advancement(rad) to the total
+        self.forwardDisplacement = chassisIncrement[0]                     # add the latest advancement(m) to the total
+        self.angularDisplacement = chassisIncrement[1]                     # add the latest advancement(rad) to the total
 
         logger.debug("Chassis_Increment(m,rad) " +
                     str(round(chassisIncrement[0], 4)) + " " +

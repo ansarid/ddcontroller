@@ -1,5 +1,6 @@
 import time
-from robot import SCUTTLE
+#from robot import SCUTTLE
+from robot_DM import SCUTTLE
 
 # waypoints = [
 #             [ 0.3,    0],
@@ -32,7 +33,7 @@ scuttle = SCUTTLE()
 
 # print(dir(scuttle))
 
-scuttle.move([0.5, 0.5], point2=[0,1])
+scuttle.move([0.5, 0.5])
 
 
 # for waypoint in waypoints:

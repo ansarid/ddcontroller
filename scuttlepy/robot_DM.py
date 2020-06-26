@@ -52,7 +52,7 @@ class SCUTTLE:
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
         self.L2 = 0                                                         # amount to cut from straight path
         self.arcLen = 0
-        self.tolerance = 0.025  # 25mm for first test
+        self.tolerance = 0.100  # 25mm for first test
         self.flip = 0 # go straight
         self.vectorLength = 0
 
@@ -180,9 +180,9 @@ class SCUTTLE:
         if gap > math.radians(180):                                    # large turns should be reversed
                 gap = gap - math.radians(360)
         if gap > span:
-            self.flip = 1 # positive turn needed
-        elif gap < -span:
             self.flip = -1 # negative turn needed
+        elif gap < -span:
+            self.flip = 1 # positive turn needed
         else:
             self.flip = 0 # go straight
         logger.debug("CurveFlip " + str(self.flip) )

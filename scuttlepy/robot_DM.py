@@ -169,7 +169,9 @@ class SCUTTLE:
         logger.debug("vectorLength(m) " +
                          str(round(math.degrees(self.angularDisplacement), 1)) +
                          "vectorDirection(deg) " +
-                         str(round(math.degrees(vector), 1)))
+                         str(round(math.degrees(vector[0]), 1)) +
+                         "," +
+                         str(round(math.degrees(vector[1]), 1)))
 
     def trajectory(self):
         span = math.radians(5)
@@ -193,8 +195,13 @@ class SCUTTLE:
 
     def move(self, point):
 
-        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
+        self.getWheelIncrements()      # get the very first nonzero readings fron enconders
         self.point = np.array(point)
+        self.displacement()      # increment the displacements (update robot attributes)
+        self.stackDisplacement() # add the new displacement to global position
+        self.stackHeading() # add up the new heading
+        self.drawVector() # draw vector to the destination
+        self.trajectory() # recompute if turning is needed
 
         logger.debug("START_CURVING " + str(time.time()))
 

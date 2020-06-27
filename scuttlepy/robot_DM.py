@@ -40,6 +40,8 @@ class SCUTTLE:
 
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
+        self.axleTimeStamp = time.time()                                    # timeStamp for spd calculation
+        self.wheelSpeeds = 0
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
@@ -82,14 +84,20 @@ class SCUTTLE:
 
         self.l_wheel.positionFinal = self.l_wheel.encoder.readPos()         # reading, raw.
         self.r_wheel.positionFinal = self.r_wheel.encoder.readPos()         # reading, raw.
-
+        
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial,
                                                            self.l_wheel.positionFinal),
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial,
                                                            self.r_wheel.positionFinal)])        # store wheels travel in radians
+        
+        self.wheelSpeeds = wheelIncrements / (time.time() - self.axleTimeStamp)
+        
+        self.axleTimeStamp = time.time()                                    # axle info to be available globally
 
         logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
                      + " " + str(round(wheelIncrements[1], 4)))
+        logger.debug("Wheel_Speeds(rad/s) " + str(round(wheelSpeeds[0], 4))
+                     + " " + str(round(wheelSpeeds[1], 4)))        
 
         return wheelIncrements
 

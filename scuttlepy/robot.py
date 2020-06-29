@@ -50,7 +50,7 @@ class SCUTTLE:
         self.rampDown = 0.020                                               # m
         self.overSteer = math.radians(10)                                   # deg
 
-        self.cruiseRate = 0.120                                             # fwd driving speed, m/s
+        self.cruiseRate = 0.240                                             # fwd driving speed, m/s
         self.curveRadius = 0.300                                            # curve radius (m)
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
         self.L2 = 0                                                         # amount to cut from straight path

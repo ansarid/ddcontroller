@@ -6,15 +6,13 @@ from scuttlepy import gpio
 from scuttlepy import wheels
 from scuttlepy import mpu
 
-
-
 # Create and configure logger
 logging.basicConfig(filename="robotTest.log", format='%(asctime)s %(message)s', filemode='w')
 logger = logging.getLogger()                                                # create an object
 logger.setLevel(logging.DEBUG)                                              # set threshold of logger to DEBUG
 logger.debug("ColumnA ColumnB ColumnC ColumnD")
 
-gpio.write(1, 3, 0)
+gpio.write(1, 3, 0) # port 1 pin 3 deactivate
 
 
 class SCUTTLE:
@@ -42,6 +40,8 @@ class SCUTTLE:
 
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
+        self.axleTimeStamp = time.time()                                    # timeStamp for spd calculation
+        self.wheelSpeeds = 0
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
@@ -49,11 +49,14 @@ class SCUTTLE:
         self.rampDown = 0.020                                               # m
         self.overSteer = math.radians(10)                                   # deg
 
-        self.cruiseRate = 0.150                                             # fwd driving speed, m/s
+        self.cruiseRate = 0.120                                             # fwd driving speed, m/s
         self.curveRadius = 0.300                                            # curve radius (m)
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
         self.L2 = 0                                                         # amount to cut from straight path
         self.arcLen = 0
+        self.tolerance = 0.100  # 25mm for first test
+        self.flip = 0 # go straight
+        self.vectorLength = 0
 
         self.batteryVoltage = 0
 
@@ -81,14 +84,20 @@ class SCUTTLE:
 
         self.l_wheel.positionFinal = self.l_wheel.encoder.readPos()         # reading, raw.
         self.r_wheel.positionFinal = self.r_wheel.encoder.readPos()         # reading, raw.
-
+        
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial,
                                                            self.l_wheel.positionFinal),
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial,
                                                            self.r_wheel.positionFinal)])        # store wheels travel in radians
+        
+        self.wheelSpeeds = wheelIncrements / (time.time() - self.axleTimeStamp)
+        
+        self.axleTimeStamp = time.time()                                    # axle info to be available globally
 
-        logger.debug("Latest_Wheel_Increments: " + str(round(wheelIncrements[0], 4))
+        logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
                      + " " + str(round(wheelIncrements[1], 4)))
+        logger.debug("Wheel_Speeds(rad/s) " + str(round(wheelSpeeds[0], 4))
+                     + " " + str(round(wheelSpeeds[1], 4)))        
 
         return wheelIncrements
 
@@ -141,197 +150,100 @@ class SCUTTLE:
     def displacement(self):
 
         chassisIncrement = self.getChassis(self.getWheelIncrements())       # get latest chassis travel (m, rad)
-        self.forwardDisplacement += chassisIncrement[0]                     # add the latest advancement(m) to the total
-        self.angularDisplacement += chassisIncrement[1]                     # add the latest advancement(rad) to the total
+        self.forwardDisplacement = chassisIncrement[0]                     # add the latest advancement(m) to the total
+        self.angularDisplacement = chassisIncrement[1]                     # add the latest advancement(rad) to the total
 
         logger.debug("Chassis_Increment(m,rad) " +
-                    str(round(chassisIncrement[0], 3)) + " " +
-                    str(round(chassisIncrement[1], 3)) + " " +
+                    str(round(chassisIncrement[0], 4)) + " " +
+                    str(round(chassisIncrement[1], 4)) + " " +
                     str(time.time()))
 
         logger.debug("Gyro_raw(deg/s) " +
             str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
             str(time.time()))
 
-    def resetDisplacement(self):
+    def stackDisplacement(self): # add the latest displacement to the global position
+        theta = self.heading + ( self.angularDisplacement / 2 ) # use the "halfway" vector as the stackup heading
+        c, s = np.cos(theta), np.sin(theta)
+        R = np.array(((c, -s), (s, c))) # create the rotation matrix
+        localVector = np.array([self.forwardDisplacement, 0])  # x value is increment and y value is always 0
+        globalVector = np.matmul(R, localVector)
+        self.globalPosition = self.globalPosition + globalVector # add the increment to the global position
+        logger.debug("global_x(m) " +
+                    str(round(self.globalPosition[0], 3)) + " global_y(m) " +
+                    str(round(self.globalPosition[1], 3) ) )
 
-        self.angularDisplacement = 0                                        # reset the attribute for counting up angular displacement
-        self.forwardDisplacement = 0                                        # reset the attribute for counting up forward displacement
+    def drawVector(self):    # argument is an np array
+        vector = self.point - self.globalPosition                                # the vector describing the next step
+        self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)               # length in m
+        self.vectorDirection = math.atan2(vector[1], vector[0])                  # discover vector direction
+        logger.debug("vectorLength(m) " +
+                         str(round(self.vectorLength, 3)) +
+                         " vectorDirection(deg) " +
+                         str(round(math.degrees(self.vectorDirection), 1)))
 
-    def updatePosition(self):                                               # add latest displacements to global position
+    def trajectory(self):
+        span = math.radians(5)
+        gap = self.vectorDirection - self.heading
+        if gap > math.radians(180):                                    # large turns should be reversed
+                gap = gap - math.radians(360)
+        if gap > span:
+            self.flip = 1 # positive turn needed
+        elif gap < -span:
+            self.flip = -1 # negative turn needed
+        else:
+            self.flip = 0 # go straight
+        logger.debug("CurveFlip " + str(self.flip) )
+        return self.flip
 
-        myMovementX = self.forwardDisplacement * math.cos(self.heading)
-        myMovementY = self.forwardDisplacement * math.sin(self.heading)
-        self.globalPosition = (self.globalPosition + 
-            np.array([myMovementX, myMovementY]))                           # update the position of robot in global frame
+    def stackHeading(self):                                              # increment heading & ensure heading doesn't exceed 180
+        self.heading = self.heading + self.angularDisplacement              # update heading by the turn amount executed
+        if self.heading > math.pi:
+            self.heading += (2 * math.pi)
+        if self.heading < -math.pi:
+            self.heading += (2 * math.pi)
+        logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
 
-        return(myMovementX, myMovementY)
+    def move(self, point):
 
-    def curvePosition(self):                                                # update the robot position after a curve
+        self.getWheelIncrements()      # get the very first nonzero readings fron enconders
+        self.point = np.array(point)
+        self.displacement()      # increment the displacements (update robot attributes)
+        self.stackDisplacement() # add the new displacement to global position
+        self.stackHeading() # add up the new heading
+        self.drawVector() # draw vector to the destination
+        self.trajectory() # recompute if turning is needed
 
-        r = self.curveRadius
-        alpha = self.angularDisplacement                                    # can be pos or negative
-        curveX = r * (1 - math.cos(alpha))                                  # only gives positive values for small alphas
-        curveY = r * math.sin(alpha)                                        # will give negative values for negative alpha
-        beta = math.atan(curveX/curveY)                                     # use regular atan to generate negative beta as needed
-        d = math.sqrt(curveX**2 + curveY**2)
-        myMovementX = d * math.cos(self.heading + beta)                     # not validated for turns >90 degrees
-        myMovementY = d * math.sin(self.heading + beta)
+        logger.debug("START_CURVING " + str(time.time()))
 
-        self.globalPosition = (np.array(self.globalPosition) +
-            np.array([myMovementX, myMovementY]))                           # update the position of robot in global frame
+        while abs(self.flip): # flip is +/-1 for turning.  flip is zero when heading points to target
 
-    def move(self, point, point2):
-
-        point = np.array(point)
-        point2 = np.array(point2)
-
-        def calculateTurn(vectorDirection):
-            turn = vectorDirection - self.heading                           # calculate required turn, rad
-            if turn > math.radians(180):                                    # large turns should be reversed
-                turn = turn - math.radians(360)
-            return turn
-
-        def getTurnDirection(self, val):                                    # check direction of turn and initiate turning
-            if val == 0:
-                self.turnRate = 0
-            elif val > 0:
-                self.turnRate = 0.3                                         # rad/s
-            elif val < 0:
-                self.turnRate = -0.3                                        # rad/s
-
-        def trimHeading(self):                                              # ensure heading doesn't exceed 360
-            if self.heading > math.pi:
-                self.heading += (2 * math.pi)
-            if self.heading < -math.pi:
-                self.heading += (2 * math.pi)
-
-        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
-
-        # FIRST VECTOR HANDLING
-
-        vector = point - self.globalPosition                                # the vector describing the next step
-
-        vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)               # length in m
-
-        vectorDirection = math.atan2(vector[1], vector[0])                  # discover vector direction
-
-        myTurn = calculateTurn(vectorDirection)                             # discover required turning (rad)
-
-        getTurnDirection(self, myTurn)                                      # myTurn argument is for choosing direction and initiating the turn
-
-        rotation_low = int(100*(myTurn - self.overSteer))                   # For defining acceptable range for turn accuracy.
-
-        rotation_high = int(100*(myTurn + self.overSteer))                  # Needs to be redone with better solution
-
-        # SECOND VECTOR HANDLING
-
-        vector2 = point2 - point
-
-        vectorDirection2 = math.atan2(vector2[1], vector2[0])
-
-        myTurn2 = vectorDirection2 - vectorDirection                        # turn amount, radians
-
-        self.arcLen = self.curveRadius * myTurn2                            # arc length will be criteria for finishing curve
-
-        self.L2 = abs(self.curveRadius * math.tan(myTurn2 / 2))             # abs for right hand turns
-
-        vectorLength -= self.L2                                             # reduce first vector by amount L2
-
-
-        # ---------------FIRST STEP, TURN HEADING---------------------------------------------------------------------
-
-        self.resetDisplacement()                                            # reset displacements
-
-        logger.debug("Stopped_Flag_Low START_TURNING " + str(time.time()))
-
-        print("START_TURNING")
-
-        while int(self.angularDisplacement*100) not in range(rotation_low, rotation_high):
-
-            self.setMotion([0, self.turnRate])                              # closed loop command for turning
+            self.setMotion([self.cruiseRate, self.curveRate * self.flip])        # closed loop command for turning
             time.sleep(0.035)                                               # aim for 100ms loops
             self.displacement()                                             # increment the displacements (update robot attributes)
+            self.stackDisplacement() # add the new displacement to global position
+            self.stackHeading() # add up the new heading
+            self.drawVector() # draw vector to the destination
+            self.trajectory() # recompute if turning is needed
 
-            logger.debug("Turning_Displacement(deg) " +
-                         str(round(math.degrees(self.angularDisplacement), 1)) +
-                         " Target(deg) " +
-                         str(round(math.degrees(myTurn), 1)))
+        logger.debug("START_DRIVING " + str(time.time()))
 
-
-        self.heading = self.heading + self.angularDisplacement              # update heading by the turn amount executed
-
-        logger.debug("Angular_displacement " +
-                     str(round(math.degrees(self.angularDisplacement), 1)))         # degrees rounded to 1 decimal
-
-        logger.debug("Heading " +
-                     str(round(math.degrees(self.heading), 1)))             # degrees rounded to 1 decimal
-
-        # ---------------SECOND STEP, DRIVE FORWARD-------------------------------------------------------------
-
-        self.resetDisplacement()                                            # reset displacements
-
-        logger.debug("Stopped_Flag_Low START_DRIVING " + str(time.time()))
-
-        print("START DRIVING")
-
-        while self.forwardDisplacement < (vectorLength - self.rampDown):
+        while self.vectorLength > ( self.tolerance ):     # criteria to stop driving
 
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
             time.sleep(0.035)                                               # aiming for 100ms loop0?
             self.displacement()                                             # update the displacements
+            self.stackDisplacement()
+            self.stackHeading()
+            self.drawVector()
+            self.trajectory()
 
-            logger.debug("Forward_Displacement(m) " +
-                         str(round(self.forwardDisplacement, 3)) +
-                         " Target_Distance(m) " +
-                         str(vectorLength))
-
-        logger.debug("Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)))
-
-        myMovementX, myMovementY = self.updatePosition()                                               # update global position by displacement amounts
-
-        logger.debug("Advancement_x " + str(round(myMovementX, 3)) + " Advancement_y " + str(round(myMovementY,3)))
-        logger.debug("Global_Position " + str(round(self.globalPosition[0], 3)) + " " + str(round(self.globalPosition[1],3)))
-        logger.debug("Log_completed " + str(time.time()))
-
-        # ---------------THIRD STEP, CURVE THEN STOP-------------------------------------------------------------
-
-        self.resetDisplacement()                                            # reset displacements                                             # m/s
-        self.curveRate = self.cruiseRate / self.curveRadius
-
-        logger.debug("Stopped_Flag_Low START_CURVING " + str(time.time()))
-
-        print("START CURVING")
-
-        while self.forwardDisplacement < (self.arcLen - self.rampDown):
-
-            self.setMotion([self.cruiseRate, self.curveRate])               # closed loop driving forward
-            time.sleep(0.035)                                               # aiming for 100ms loop
-            self.displacement()                                             # update the displacements
-
-            logger.debug("Curve_Fwd_Displacement(m) " +
-                         str(round(self.forwardDisplacement, 3)) +
-                         " Target_Distance(m) " +
-                         str(self.arcLen))
-
-        logger.debug("Curve_Distance_Achieved(m) " + str(round(self.forwardDisplacement, 3)) +
-            " Target_Distance(m) " + str(self.arcLen))
-
-        self.curvePosition() # add the curve to the global position 
-
-        self.resetDisplacement()        # reset displacements
-
-        logger.debug("Global_Position " + str(round(self.globalPosition[0], 3)) + " " + str(round(self.globalPosition[1],3)))
-        logger.debug("Log_completed " + str(time.time()))
-
-        # -------------- FOURTH STEP, STOPPING ---------------------
+        logger.debug("SETTLE " + str(time.time()))
 
         while self.speed != 0 and self.angularVelocity != 0:
             self.setMotion([0, 0])
             print( self.speed,  self.angularVelocity)
             time.sleep(0.035)
-
-       # -------------- END OF PROCESS ------------------------------
 
         logger.debug("Log_completed " + str(time.time()))
         print("Movements finished. Log file: robotTest.log")

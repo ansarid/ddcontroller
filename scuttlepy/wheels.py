@@ -8,6 +8,7 @@
 import time
 import math
 import numpy as np                                                          # for handling arrays
+import logging
 
 # Import local files
 
@@ -15,12 +16,20 @@ from scuttlepy import PID                                                   # fo
 from scuttlepy import motor                                                 # for controlling motors
 from scuttlepy import encoder                                               # for reading encoders
 
+# Create and configure logger
+# logging.basicConfig(filename="wheelsTest.log", format='%(asctime)s %(message)s', filemode='w')
+# logger = logging.getLogger()                                                # create an object
+# logger.setLevel(logging.DEBUG)                                              # set threshold of logger to DEBUG
+# logger.disabled = True
+
+# logger.debug("ColumnA ColumnB ColumnC ColumnD")
+
 
 class Wheel:
 
     def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.07, KI=1.15, KD=0):
 
-        self.speed = 0                                                      # (rad/s)
+        self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                          # mm
         self.motor = motor.Motor(motor_channel, invert=invert_motor)
         self.encoder = encoder.Encoder(encoder_address)
@@ -65,7 +74,7 @@ class Wheel:
         travel = travel * self.pulleyRatio                                  # go from motor pulley to wheel pulley
         return(travel)                                                      # return in radians of wheel advancement
 
-    def getAngularVelocity(self):
+    def getAngularVelocity(self):                                           # Use self.speed instead when possible!
 
         initialPosition = self.encoder.readPos()
         initialTime = time.time()                                           # time.time() reports in seconds
@@ -77,6 +86,8 @@ class Wheel:
         travel = self.getTravel(initialPosition, finalPosition)             # movement calculations
 
         self.speed = round((travel * self.pulleyRatio) / deltaTime, 3)
+        # logger.debug("Wheel_speed(rad/s) " + str(round(self.speed, 3)) +
+        #     " timeStamp " + str(time.monotonic()) )
         return self.speed                                                   # returns pdc in radians/second
 
     def setAngularVelocity(self, pdt):
@@ -100,15 +111,30 @@ class Wheel:
 
 if __name__ == "__main__":
 
-    r_wheel = Wheel(2, 0x40) 	                                            # Right Motor (ch2)
-    l_wheel = Wheel(1, 0x43, invert_encoder=True)                           # Left Motor  (ch1)
+    r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
+    l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
 
     print("Left Wheel, Right Wheel")
 
-    while True:
+    startTime = time.time()
 
-        print(l_wheel.getAngularVelocity(), ",", r_wheel.getAngularVelocity())
+    try:
 
-        # Set Wheel Speed to 6.28 rad/s
-        l_wheel.setAngularVelocity(6.28)
-        r_wheel.setAngularVelocity(6.28)
+        while (time.time() - startTime) < 4:
+
+            print(l_wheel.speed, ",", r_wheel.speed)
+            l_wheel.setAngularVelocity(4.68)
+            r_wheel.setAngularVelocity(4.68)
+
+            time.sleep(0.060)
+
+        while (time.time() - startTime) > 4:
+
+            print(l_wheel.speed, ",", r_wheel.speed)
+            l_wheel.setAngularVelocity(2.92)
+            r_wheel.setAngularVelocity(2.92)
+
+            time.sleep(0.060)
+
+    except KeyboardInterrupt:
+        exit()

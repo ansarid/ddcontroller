@@ -1,23 +1,11 @@
 import time
-#from robot import SCUTTLE
-from robot_DM import SCUTTLE
+from robot import SCUTTLE
 
 # waypoints = [
 #             [ 0.3,    0],
 #             [ 0.3,  0.3],
 #             [ 0.0,  0.3],
 #             [   0,    0],
-#             ]
-
-# waypoints = [
-#             [ 0.3,    0],
-#             [ 0.3,  0.3],
-#             [ 0.0,  0.3],
-#             [   0,    0],
-#             ]
-
-# waypoints = [
-#             [0, 0.3],
 #             ]
 
 waypoints = [
@@ -27,7 +15,6 @@ waypoints = [
             [ 0.6, 0.6],
             [ 0.9, 0.6],
             ]
-
 
 scuttle = SCUTTLE()
 

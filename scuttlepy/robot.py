@@ -40,8 +40,9 @@ class SCUTTLE:
 
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
-        self.axleTimeStamp = time.time()                                    # timeStamp for spd calculation
         self.wheelSpeeds = 0
+        self.timeInitial = time.time()
+        self.timeFinal = 0
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
@@ -81,23 +82,27 @@ class SCUTTLE:
 
         self.l_wheel.positionInitial = self.l_wheel.positionFinal           # transfer previous reading.
         self.r_wheel.positionInitial = self.r_wheel.positionFinal           # transfer previous reading.
+        self.timeInitial = self.timeFinal
 
         self.l_wheel.positionFinal = self.l_wheel.encoder.readPos()         # reading, raw.
         self.r_wheel.positionFinal = self.r_wheel.encoder.readPos()         # reading, raw.
-        
+        self.timeFinal = time.time()
+
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial,
                                                            self.l_wheel.positionFinal),
                                     self.r_wheel.getTravel(self.r_wheel.positionInitial,
                                                            self.r_wheel.positionFinal)])        # store wheels travel in radians
-        
-        self.wheelSpeeds = wheelIncrements / (time.time() - self.axleTimeStamp)
-        
-        self.axleTimeStamp = time.time()                                    # axle info to be available globally
+        timeIncrement = self.timeFinal - self.timeInitial
 
+        self.wheelSpeeds = wheelIncrements / timeIncrement
+
+        logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
         logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
                      + " " + str(round(wheelIncrements[1], 4)))
-        logger.debug("Wheel_Speeds(rad/s) " + str(round(wheelSpeeds[0], 4))
-                     + " " + str(round(wheelSpeeds[1], 4)))        
+        logger.debug("Wheel_Speeds(rad/s) " + str(round(self.wheelSpeeds[0], 4))
+                     + " " + str(round(self.wheelSpeeds[1], 4)))
+        logger.debug("PID_Speeds(rad/s) " + str(round(self.l_wheel.speed, 4))
+                     + " " + str(round(self.r_wheel.speed, 4)))
 
         return wheelIncrements
 
@@ -141,17 +146,21 @@ class SCUTTLE:
                                                                             # argument: [x_dot, theta_dot]
         C = self.getWheels(targetMotion)                                    # Perform matrix multiplication
 
-        logger.debug("PhiTargetLeft " + str(round(C[0],3)))                 # indicate wheelspeed targets in log
-        logger.debug("PhiTargetRight " + str(round(C[1],3)))                # indicate wheelspeed targets in log
+        logger.debug("PhiTargets(rad/s) " + str(round(C[0],3))  +          # indicate wheelspeed targets in log
+            " " + str(round(C[1],3)))
 
         self.l_wheel.setAngularVelocity(C[0])                               # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])                               # Set angularVelocity = [rad/s]
 
+        logger.debug("PhiSetPoints(rad/s) " +                               # PID controller target (should match PhiTarget)
+            str(round(self.l_wheel.pid.SetPoint,3) ) + " " +
+            str(round(self.r_wheel.pid.SetPoint,3))  )
+
     def displacement(self):
 
         chassisIncrement = self.getChassis(self.getWheelIncrements())       # get latest chassis travel (m, rad)
-        self.forwardDisplacement = chassisIncrement[0]                     # add the latest advancement(m) to the total
-        self.angularDisplacement = chassisIncrement[1]                     # add the latest advancement(rad) to the total
+        self.forwardDisplacement = chassisIncrement[0]                      # add the latest advancement(m) to the total
+        self.angularDisplacement = chassisIncrement[1]                      # add the latest advancement(rad) to the total
 
         logger.debug("Chassis_Increment(m,rad) " +
                     str(round(chassisIncrement[0], 4)) + " " +
@@ -162,21 +171,21 @@ class SCUTTLE:
             str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
             str(time.time()))
 
-    def stackDisplacement(self): # add the latest displacement to the global position
-        theta = self.heading + ( self.angularDisplacement / 2 ) # use the "halfway" vector as the stackup heading
+    def stackDisplacement(self):                                            # add the latest displacement to the global position
+        theta = self.heading + ( self.angularDisplacement / 2 )             # use the "halfway" vector as the stackup heading
         c, s = np.cos(theta), np.sin(theta)
-        R = np.array(((c, -s), (s, c))) # create the rotation matrix
-        localVector = np.array([self.forwardDisplacement, 0])  # x value is increment and y value is always 0
+        R = np.array(((c, -s), (s, c)))                                     # create the rotation matrix
+        localVector = np.array([self.forwardDisplacement, 0])               # x value is increment and y value is always 0
         globalVector = np.matmul(R, localVector)
-        self.globalPosition = self.globalPosition + globalVector # add the increment to the global position
+        self.globalPosition = self.globalPosition + globalVector            # add the increment to the global position
         logger.debug("global_x(m) " +
                     str(round(self.globalPosition[0], 3)) + " global_y(m) " +
                     str(round(self.globalPosition[1], 3) ) )
 
-    def drawVector(self):    # argument is an np array
-        vector = self.point - self.globalPosition                                # the vector describing the next step
-        self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)               # length in m
-        self.vectorDirection = math.atan2(vector[1], vector[0])                  # discover vector direction
+    def drawVector(self):                                                   # argument is an np array
+        vector = self.point - self.globalPosition                           # the vector describing the next step
+        self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)          # length in m
+        self.vectorDirection = math.atan2(vector[1], vector[0])             # discover vector direction
         logger.debug("vectorLength(m) " +
                          str(round(self.vectorLength, 3)) +
                          " vectorDirection(deg) " +
@@ -185,18 +194,18 @@ class SCUTTLE:
     def trajectory(self):
         span = math.radians(5)
         gap = self.vectorDirection - self.heading
-        if gap > math.radians(180):                                    # large turns should be reversed
+        if gap > math.radians(180):                                         # large turns should be reversed
                 gap = gap - math.radians(360)
         if gap > span:
-            self.flip = 1 # positive turn needed
+            self.flip = 1                                                   # positive turn needed
         elif gap < -span:
-            self.flip = -1 # negative turn needed
+            self.flip = -1                                                  # negative turn needed
         else:
-            self.flip = 0 # go straight
+            self.flip = 0                                                   # go straight
         logger.debug("CurveFlip " + str(self.flip) )
         return self.flip
 
-    def stackHeading(self):                                              # increment heading & ensure heading doesn't exceed 180
+    def stackHeading(self):                                                 # increment heading & ensure heading doesn't exceed 180
         self.heading = self.heading + self.angularDisplacement              # update heading by the turn amount executed
         if self.heading > math.pi:
             self.heading += (2 * math.pi)
@@ -206,29 +215,29 @@ class SCUTTLE:
 
     def move(self, point):
 
-        self.getWheelIncrements()      # get the very first nonzero readings fron enconders
+        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
         self.point = np.array(point)
-        self.displacement()      # increment the displacements (update robot attributes)
-        self.stackDisplacement() # add the new displacement to global position
-        self.stackHeading() # add up the new heading
-        self.drawVector() # draw vector to the destination
-        self.trajectory() # recompute if turning is needed
+        self.displacement()                                                 # increment the displacements (update robot attributes)
+        self.stackDisplacement()                                            # add the new displacement to global position
+        self.stackHeading()                                                 # add up the new heading
+        self.drawVector()                                                   # draw vector to the destination
+        self.trajectory()                                                   # recompute if turning is needed
 
         logger.debug("START_CURVING " + str(time.time()))
 
-        while abs(self.flip): # flip is +/-1 for turning.  flip is zero when heading points to target
+        while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
 
-            self.setMotion([self.cruiseRate, self.curveRate * self.flip])        # closed loop command for turning
+            self.setMotion([self.cruiseRate, self.curveRate * self.flip])   # closed loop command for turning
             time.sleep(0.035)                                               # aim for 100ms loops
             self.displacement()                                             # increment the displacements (update robot attributes)
-            self.stackDisplacement() # add the new displacement to global position
-            self.stackHeading() # add up the new heading
-            self.drawVector() # draw vector to the destination
-            self.trajectory() # recompute if turning is needed
+            self.stackDisplacement()                                        # add the new displacement to global position
+            self.stackHeading()                                             # add up the new heading
+            self.drawVector()                                               # draw vector to the destination
+            self.trajectory()                                               # recompute if turning is needed
 
         logger.debug("START_DRIVING " + str(time.time()))
 
-        while self.vectorLength > ( self.tolerance ):     # criteria to stop driving
+        while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
 
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
             time.sleep(0.035)                                               # aiming for 100ms loop0?

@@ -92,7 +92,7 @@ class Wheel:
 
     def setAngularVelocity(self, phiDotTarget):
         self.pid.SetPoint = phiDotTarget
-        self.speed = self.getAngularVelocity()
+        # self.speed = self.getAngularVelocity()  # no update required - speed updated in navigation program
         self.pid.update(self.speed)
         duty = self.pid.output
 

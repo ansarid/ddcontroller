@@ -95,7 +95,10 @@ class SCUTTLE:
         timeIncrement = self.timeFinal - self.timeInitial
 
         self.wheelSpeeds = wheelIncrements / timeIncrement
-
+        self.l_wheel.speed = self.wheelSpeeds[0]                            # overwrite attribute of the actual wheel object
+        self.r_wheel.speed = self.wheelSpeeds[1] 
+        
+        
         logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
         logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
                      + " " + str(round(wheelIncrements[1], 4)))

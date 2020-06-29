@@ -1,33 +1,12 @@
 #!/usr/bin/python
-#
-# This file is part of IvPID.
-# Copyright (C) 2015 Ivmech Mechatronics Ltd. <bilgi@ivmech.com>
-#
-# IvPID is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# IvPID is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# title           :PID.py
+# origins:         
 # description     :python pid controller
 # author          :Caner Durmusoglu
 # date            :20151218
-# version         :0.1
-# notes           :
-# python_version  :2.7
+# more info       :en.wikipedia.org/wiki/PID_controller
 # ==============================================================================
 
-"""Ivmech PID Controller is simple implementation of a Proportional-Integral-Derivative (PID) Controller in the Python Programming Language.
-More information about PID Controller: http://en.wikipedia.org/wiki/PID_controller
-"""
 import time
 
 
@@ -84,7 +63,7 @@ class PID:
 
         if (delta_time >= self.sample_time):
             self.PTerm = self.Kp * self.error
-            self.ITerm += self.error * delta_time
+            self.ITerm += self.Ki * self.error
 
             if (self.ITerm < -self.windup_guard):
                 self.ITerm = -self.windup_guard
@@ -99,7 +78,7 @@ class PID:
             self.last_time = self.current_time
             self.last_error = self.error
 
-            self.output = self.PTerm + (self.Ki * self.ITerm) + (self.Kd * self.DTerm)
+            self.output = self.PTerm + self.ITerm + (self.Kd * self.DTerm)
 
     def setKp(self, proportional_gain):
         """Determines how aggressively the PID reacts to the current error with setting Proportional Gain"""

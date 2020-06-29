@@ -27,7 +27,7 @@ from scuttlepy import encoder                                               # fo
 
 class Wheel:
 
-    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.07, KI=1.15, KD=0):
+    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.05, KI=0.06, KD=0):
 
         self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                          # mm
@@ -85,13 +85,13 @@ class Wheel:
 
         travel = self.getTravel(initialPosition, finalPosition)             # movement calculations
 
-        self.speed = round((travel * self.pulleyRatio) / deltaTime, 3)
+        self.speed = round(travel / deltaTime, 3)                           # speed produced from true wheel travel (rad)
         # logger.debug("Wheel_speed(rad/s) " + str(round(self.speed, 3)) +
         #     " timeStamp " + str(time.monotonic()) )
         return self.speed                                                   # returns pdc in radians/second
 
-    def setAngularVelocity(self, pdt):
-        self.pid.SetPoint = pdt
+    def setAngularVelocity(self, phiDotTarget):
+        self.pid.SetPoint = phiDotTarget
         self.speed = self.getAngularVelocity()
         self.pid.update(self.speed)
         duty = self.pid.output

@@ -7,8 +7,8 @@ port = 9999
 socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 socket.bind(("", port))
 
-l_wheel = wheels.Wheel(1, 0x43, KP=0, KI=0, KD=0, invert_encoder=True) 	                # Right Motor (ch2)
-r_wheel = wheels.Wheel(2, 0x40, KP=0, KI=0, KD=0) 	                                    # Left Motor (ch1)
+l_wheel = wheels.Wheel(1, 0x40, KP=0, KI=0, KD=0, invert_encoder=True) 	                # Right Motor (ch2)
+r_wheel = wheels.Wheel(2, 0x41, KP=0, KI=0, KD=0) 	                                    # Left Motor (ch1)
 # r_wheel.pid.setWindup(1)
 start_time = time.time()
 
@@ -21,6 +21,8 @@ while 1:
     if request.decode('utf-8') == 'q':
         exit()
 
+        print(request[0])
+
     else:
 
         request = request.decode('utf-8').split(',')
@@ -29,14 +31,15 @@ while 1:
         # l_wheel.setAngularVelocity(-1*float(request[0]))
 
         if (time.time() - start_time) >= 4:
-            l_wheel.setAngularVelocity(0)
-            r_wheel.setAngularVelocity(0)
+            l_wheel.setAngularVelocity(float(request[0]))
+            r_wheel.setAngularVelocity(float(request[0]))
 
         else:
-            l_wheel.setAngularVelocity(-1*float(request[0]))
+            l_wheel.setAngularVelocity(float(request[0]))
             # l_wheel.setAngularVelocity(0)
             r_wheel.setAngularVelocity(float(request[0]))
             # l_wheel.motor.setDuty(0.6)
+        time.sleep(0.060)
 
         r_wheel.pid.setKp(float(request[1]))
         r_wheel.pid.setKi(float(request[2]))
@@ -58,7 +61,7 @@ while 1:
         ","+str(l_wheel.pid.SetPoint)+\
         ","+str(r_wheel.pid.SetPoint)
 
-    print(timestamp, ",", l_wheel.pid.SetPoint)
+    print(timestamp, ",", r_wheel.pid.SetPoint)
 
     socket.sendto(packet.encode(), ip)
 

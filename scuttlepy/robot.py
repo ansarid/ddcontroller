@@ -43,6 +43,7 @@ class SCUTTLE:
         self.wheelSpeeds = 0
         self.timeInitial = time.time()
         self.timeFinal = 0
+        loopPeriod = 0.085                                                  # how fast to make the loop (s)
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
@@ -229,26 +230,30 @@ class SCUTTLE:
         logger.debug("START_CURVING " + str(time.time()))
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
-
+            loopTime = time.time()
             self.setMotion([self.cruiseRate, self.curveRate * self.flip])   # closed loop command for turning
-            time.sleep(0.035)                                               # aim for 100ms loops
             self.displacement()                                             # increment the displacements (update robot attributes)
             self.stackDisplacement()                                        # add the new displacement to global position
             self.stackHeading()                                             # add up the new heading
             self.drawVector()                                               # draw vector to the destination
             self.trajectory()                                               # recompute if turning is needed
+            sleepTime = time.time() + loopPeriod - loopTime                 # calculate how much to sleep
+            if sleepTime > 0: 
+                time.sleep(sleepTime)
 
         logger.debug("START_DRIVING " + str(time.time()))
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
-
+            loopTime = time.time()
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
-            time.sleep(0.035)                                               # aiming for 100ms loop0?
             self.displacement()                                             # update the displacements
             self.stackDisplacement()
             self.stackHeading()
             self.drawVector()
             self.trajectory()
+            sleepTime = time.time() + loopPeriod - loopTime                 # calculate how much to sleep
+            if sleepTime > 0: 
+                time.sleep(sleepTime)
 
         logger.debug("SETTLE " + str(time.time()))
 

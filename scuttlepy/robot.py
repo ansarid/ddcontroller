@@ -237,7 +237,7 @@ class SCUTTLE:
             self.stackHeading()                                             # add up the new heading
             self.drawVector()                                               # draw vector to the destination
             self.trajectory()                                               # recompute if turning is needed
-            sleepTime = time.time() + self.loopPeriod - loopTime                 # calculate how much to sleep
+            sleepTime = self.loopPeriod - (time.time() - loopTime)          # calculate how much to sleep
             if sleepTime > 0: 
                 time.sleep(sleepTime)
 
@@ -251,7 +251,7 @@ class SCUTTLE:
             self.stackHeading()
             self.drawVector()
             self.trajectory()
-            sleepTime = time.time() + self.loopPeriod - loopTime                 # calculate how much to sleep
+            sleepTime = self.loopPeriod - (time.time() - loopTime)          # calculate how much to sleep
             if sleepTime > 0: 
                 time.sleep(sleepTime)
 

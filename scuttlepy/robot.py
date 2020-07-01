@@ -41,11 +41,11 @@ class SCUTTLE:
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
         self.wheelSpeeds = 0
-        self.timeInitial = time.time()
+        self.timeInitial = time.monotonic()
         self.timeFinal = 0
-        self.loopPeriod = 0.085                                                  # how fast to make the loop (s)
-        self.loopStart = time.monotonic() # updates when we grab chassis displacements
-        self.sleeptime = 0                  # time to sleep updated per loop
+        self.loopPeriod = 0.060                                             # how fast to make the loop (s)
+        self.loopStart = time.monotonic()                                   # updates when we grab chassis displacements
+        self.sleeptime = 0                                                  # time to sleep updated per loop
         
         self.L = self.wheelBase
         self.R = self.wheelRadius
@@ -89,7 +89,7 @@ class SCUTTLE:
 
         self.l_wheel.positionFinal = self.l_wheel.encoder.readPos()         # reading, raw.
         self.r_wheel.positionFinal = self.r_wheel.encoder.readPos()         # reading, raw.
-        self.timeFinal = time.time()
+        self.timeFinal = time.monotonic()
 
         wheelIncrements = np.array([self.l_wheel.getTravel(self.l_wheel.positionInitial,
                                                            self.l_wheel.positionFinal),
@@ -171,14 +171,14 @@ class SCUTTLE:
         logger.debug("Chassis_Increment(m,rad) " +
                     str(round(chassisIncrement[0], 4)) + " " +
                     str(round(chassisIncrement[1], 4)) + " " +
-                    str(time.time()))
+                    str(time.monotonic()))
         
         self.loopStart = time.monotonic()                                   # use for measuring loop time 
         logger.debug("TimeStamp(s) " + str(self.loopStart))
 
         logger.debug("Gyro_raw(deg/s) " +
             str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
-            str(time.time()))
+            str(time.monotonic()))
 
     def stackDisplacement(self):                                            # add the latest displacement to the global position
         theta = self.heading + ( self.angularDisplacement / 2 )             # use the "halfway" vector as the stackup heading
@@ -238,7 +238,7 @@ class SCUTTLE:
         self.drawVector()                                                   # draw vector to the destination
         self.trajectory()                                                   # recompute if turning is needed
 
-        logger.debug("START_CURVING " + str(time.time()))
+        logger.debug("START_CURVING " + str(time.monotonic()))
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
             self.setMotion([self.cruiseRate, self.curveRate * self.flip])   # closed loop command for turning
@@ -251,7 +251,7 @@ class SCUTTLE:
             if self.sleepTime > 0.001: 
                 time.sleep(self.sleepTime)
 
-        logger.debug("START_DRIVING " + str(time.time()))
+        logger.debug("START_DRIVING " + str(time.monotonic()))
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
@@ -264,12 +264,12 @@ class SCUTTLE:
             if self.sleepTime > 0.001: 
                 time.sleep(self.sleepTime)
 
-        logger.debug("SETTLE " + str(time.time()))
+        logger.debug("SETTLE " + str(time.monotonic()))
 
         while self.speed != 0 and self.angularVelocity != 0:
             self.setMotion([0, 0])
             print( self.speed,  self.angularVelocity)
             time.sleep(0.035)
 
-        logger.debug("Log_completed " + str(time.time()))
+        logger.debug("Log_completed " + str(time.monotonic()))
         print("Movements finished. Log file: robotTest.log")

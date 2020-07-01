@@ -47,13 +47,13 @@ class MPU:
 
 
 # if __name__ == "__main__":
+    
+#     mpu = MPU()
 #     while True:
 #         if rcpy.get_state() == rcpy.RUNNING:    # verify the rcpy package is running
-#             myTemp = getTemp()
-#             myMag = getMag()
-#             myGyro = getGyro()
-#             myAccel = getAccel()
-
-#             print("mag (μT):", myMag, "\t accel(m/s^2):", myAccel)
-
-#         time.sleep(0.2)
+#             myTemp = mpu.readTemp()
+#             myMag = mpu.readMag()
+#             myGyro = mpu.readGyro()
+#             myAccel = mpu.readAccel()
+#             print("temperature (C):", myTemp,"\t mag (μT):", myMag,"\t gyro(deg/s)",myGyro, "\t accel(m/s^2):", myAccel)
+#         time.sleep(0.5)

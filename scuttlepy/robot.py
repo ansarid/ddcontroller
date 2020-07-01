@@ -43,7 +43,7 @@ class SCUTTLE:
         self.wheelSpeeds = 0
         self.timeInitial = time.time()
         self.timeFinal = 0
-        loopPeriod = 0.085                                                  # how fast to make the loop (s)
+        self.loopPeriod = 0.085                                                  # how fast to make the loop (s)
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
@@ -237,7 +237,7 @@ class SCUTTLE:
             self.stackHeading()                                             # add up the new heading
             self.drawVector()                                               # draw vector to the destination
             self.trajectory()                                               # recompute if turning is needed
-            sleepTime = time.time() + loopPeriod - loopTime                 # calculate how much to sleep
+            sleepTime = time.time() + self.loopPeriod - loopTime                 # calculate how much to sleep
             if sleepTime > 0: 
                 time.sleep(sleepTime)
 
@@ -251,7 +251,7 @@ class SCUTTLE:
             self.stackHeading()
             self.drawVector()
             self.trajectory()
-            sleepTime = time.time() + loopPeriod - loopTime                 # calculate how much to sleep
+            sleepTime = time.time() + self.loopPeriod - loopTime                 # calculate how much to sleep
             if sleepTime > 0: 
                 time.sleep(sleepTime)
 

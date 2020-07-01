@@ -44,7 +44,9 @@ class SCUTTLE:
         self.timeInitial = time.time()
         self.timeFinal = 0
         self.loopPeriod = 0.085                                                  # how fast to make the loop (s)
-
+        self.loopStart = time.monotonic() # updates when we grab chassis displacements
+        self.sleeptime = 0                  # time to sleep updated per loop
+        
         self.L = self.wheelBase
         self.R = self.wheelRadius
 
@@ -170,6 +172,9 @@ class SCUTTLE:
                     str(round(chassisIncrement[0], 4)) + " " +
                     str(round(chassisIncrement[1], 4)) + " " +
                     str(time.time()))
+        
+        self.loopStart = time.monotonic()                                   # use for measuring loop time 
+        logger.debug("TimeStamp(s) " + str(self.loopStart))
 
         logger.debug("Gyro_raw(deg/s) " +
             str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
@@ -216,6 +221,12 @@ class SCUTTLE:
         if self.heading < -math.pi:
             self.heading += (2 * math.pi)
         logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
+        
+    def checkLoop(self):
+        self.loopFinish = time.monotonic()
+        self.sleepTime = self.loopPeriod - (self.loopFinish - self.loopStart)
+        logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)) )
+        return(self.sleepTime)
 
     def move(self, point):
 
@@ -230,30 +241,28 @@ class SCUTTLE:
         logger.debug("START_CURVING " + str(time.time()))
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
-            loopTime = time.time()
             self.setMotion([self.cruiseRate, self.curveRate * self.flip])   # closed loop command for turning
             self.displacement()                                             # increment the displacements (update robot attributes)
             self.stackDisplacement()                                        # add the new displacement to global position
             self.stackHeading()                                             # add up the new heading
             self.drawVector()                                               # draw vector to the destination
             self.trajectory()                                               # recompute if turning is needed
-            sleepTime = self.loopPeriod - (time.time() - loopTime)          # calculate how much to sleep
-            if sleepTime > 0: 
-                time.sleep(sleepTime)
+            self.checkLoop()                                                # calculate how much to sleep
+            if self.sleepTime > 0.001: 
+                time.sleep(self.sleepTime)
 
         logger.debug("START_DRIVING " + str(time.time()))
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
-            loopTime = time.time()
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
             self.displacement()                                             # update the displacements
             self.stackDisplacement()
             self.stackHeading()
             self.drawVector()
             self.trajectory()
-            sleepTime = self.loopPeriod - (time.time() - loopTime)          # calculate how much to sleep
-            if sleepTime > 0: 
-                time.sleep(sleepTime)
+            self.checkLoop()                                                # calculate how much to sleep
+            if self.sleepTime > 0.001: 
+                time.sleep(self.sleepTime)
 
         logger.debug("SETTLE " + str(time.time()))
 

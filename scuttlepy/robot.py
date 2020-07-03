@@ -1,16 +1,20 @@
 import time
 import math
-import logging
+# import logging
 import numpy as np
 from scuttlepy import gpio
 from scuttlepy import wheels
 from scuttlepy import mpu
+from fastlogging import LogInit
 
+logger = LogInit(pathName="robotTest.log")
+
+# logger.debug("This is a debug message.")
 # Create and configure logger
-logging.basicConfig(filename="robotTest.log", format='%(asctime)s %(message)s', filemode='w')
-logger = logging.getLogger()                                                # create an object
-logger.setLevel(logging.DEBUG)                                              # set threshold of logger to DEBUG
-# logger.debug("ColumnA ColumnB ColumnC ColumnD")
+# logging.basicConfig(filename="robotTest.log", format='%(asctime)s %(message)s', filemode='w')
+# logger = logging.getLogger()                                                # create an object
+# logger.setLevel(logging.DEBUG)                                              # set threshold of logger to DEBUG
+logger.debug("ColumnA ColumnB ColumnC ColumnD")
 
 gpio.write(1, 3, 0) # port 1 pin 3 deactivate
 
@@ -46,7 +50,7 @@ class SCUTTLE:
         self.loopPeriod = 0.060                                             # how fast to make the loop (s)
         self.loopStart = time.monotonic()                                   # updates when we grab chassis displacements
         self.sleeptime = 0                                                  # time to sleep updated per loop
-        
+
         self.L = self.wheelBase
         self.R = self.wheelRadius
 
@@ -58,8 +62,8 @@ class SCUTTLE:
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
         self.L2 = 0                                                         # amount to cut from straight path
         self.arcLen = 0
-        self.tolerance = 0.100  # 25mm for first test
-        self.flip = 0 # go straight
+        self.tolerance = 0.100                                              # 25mm for first test
+        self.flip = 0                                                       # go straight
         self.vectorLength = 0
 
         self.batteryVoltage = 0
@@ -99,16 +103,16 @@ class SCUTTLE:
 
         self.wheelSpeeds = wheelIncrements / timeIncrement
         self.l_wheel.speed = self.wheelSpeeds[0]                            # overwrite attribute of the actual wheel object
-        self.r_wheel.speed = self.wheelSpeeds[1] 
-        
-        
-        # logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
-        # logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
-        #              + " " + str(round(wheelIncrements[1], 4)))
-        # logger.debug("Wheel_Speeds(rad/s) " + str(round(self.wheelSpeeds[0], 4))
-        #              + " " + str(round(self.wheelSpeeds[1], 4)))
-        # logger.debug("PID_Speeds(rad/s) " + str(round(self.l_wheel.speed, 4))
-        #              + " " + str(round(self.r_wheel.speed, 4)))
+        self.r_wheel.speed = self.wheelSpeeds[1]
+
+
+        logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
+        logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
+                     + " " + str(round(wheelIncrements[1], 4)))
+        logger.debug("Wheel_Speeds(rad/s) " + str(round(self.wheelSpeeds[0], 4))
+                     + " " + str(round(self.wheelSpeeds[1], 4)))
+        logger.debug("PID_Speeds(rad/s) " + str(round(self.l_wheel.speed, 4))
+                     + " " + str(round(self.r_wheel.speed, 4)))
 
         return wheelIncrements
 
@@ -152,15 +156,15 @@ class SCUTTLE:
                                                                             # argument: [x_dot, theta_dot]
         C = self.getWheels(targetMotion)                                    # Perform matrix multiplication
 
-        # logger.debug("PhiTargets(rad/s) " + str(round(C[0],3))  +          # indicate wheelspeed targets in log
-        #     " " + str(round(C[1],3)))
+        logger.debug("PhiTargets(rad/s) " + str(round(C[0],3))  +          # indicate wheelspeed targets in log
+            " " + str(round(C[1],3)))
 
         self.l_wheel.setAngularVelocity(C[0])                               # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])                               # Set angularVelocity = [rad/s]
 
-        # logger.debug("PhiSetPoints(rad/s) " +                               # PID controller target (should match PhiTarget)
-        #     str(round(self.l_wheel.pid.SetPoint,3) ) + " " +
-        #     str(round(self.r_wheel.pid.SetPoint,3))  )
+        logger.debug("PhiSetPoints(rad/s) " +                               # PID controller target (should match PhiTarget)
+            str(round(self.l_wheel.pid.SetPoint,3) ) + " " +
+            str(round(self.r_wheel.pid.SetPoint,3))  )
 
     def displacement(self):
 
@@ -172,13 +176,13 @@ class SCUTTLE:
                     str(round(chassisIncrement[0], 4)) + " " +
                     str(round(chassisIncrement[1], 4)) + " " +
                     str(time.monotonic()))
-        
-        self.loopStart = time.monotonic()                                   # use for measuring loop time 
-        # logger.debug("TimeStamp(s) " + str(self.loopStart))
 
-        # logger.debug("Gyro_raw(deg/s) " +
-        #     str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
-        #     str(time.monotonic()))
+        self.loopStart = time.monotonic()                                   # use for measuring loop timehttps://prod.liveshare.vsengsaas.visualstudio.com/join?60A021E3072343B1F9E3A422F65353A190FD
+        logger.debug("TimeStamp(s) " + str(self.loopStart))
+
+        logger.debug("Gyro_raw(deg/s) " +
+            str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
+            str(time.monotonic()))
 
     def stackDisplacement(self):                                            # add the latest displacement to the global position
         theta = self.heading + ( self.angularDisplacement / 2 )             # use the "halfway" vector as the stackup heading
@@ -187,18 +191,18 @@ class SCUTTLE:
         localVector = np.array([self.forwardDisplacement, 0])               # x value is increment and y value is always 0
         globalVector = np.matmul(R, localVector)
         self.globalPosition = self.globalPosition + globalVector            # add the increment to the global position
-        # logger.debug("global_x(m) " +
-        #             str(round(self.globalPosition[0], 3)) + " global_y(m) " +
-        #             str(round(self.globalPosition[1], 3) ) )
+        logger.debug("global_x(m) " +
+                    str(round(self.globalPosition[0], 3)) + " global_y(m) " +
+                    str(round(self.globalPosition[1], 3) ) )
 
     def drawVector(self):                                                   # argument is an np array
         vector = self.point - self.globalPosition                           # the vector describing the next step
         self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)          # length in m
         self.vectorDirection = math.atan2(vector[1], vector[0])             # discover vector direction
-        # logger.debug("vectorLength(m) " +
-        #                  str(round(self.vectorLength, 3)) +
-        #                  " vectorDirection(deg) " +
-        #                  str(round(math.degrees(self.vectorDirection), 1)))
+        logger.debug("vectorLength(m) " +
+                         str(round(self.vectorLength, 3)) +
+                         " vectorDirection(deg) " +
+                         str(round(math.degrees(self.vectorDirection), 1)))
 
     def trajectory(self):
         span = math.radians(5)
@@ -211,7 +215,7 @@ class SCUTTLE:
             self.flip = -1                                                  # negative turn needed
         else:
             self.flip = 0                                                   # go straight
-        # logger.debug("CurveFlip " + str(self.flip) )
+        logger.debug("CurveFlip " + str(self.flip) )
         return self.flip
 
     def stackHeading(self):                                                 # increment heading & ensure heading doesn't exceed 180
@@ -220,12 +224,12 @@ class SCUTTLE:
             self.heading += (2 * math.pi)
         if self.heading < -math.pi:
             self.heading += (2 * math.pi)
-        # logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
-        
+        logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
+
     def checkLoop(self):
         self.loopFinish = time.monotonic()
         self.sleepTime = self.loopPeriod - (self.loopFinish - self.loopStart)
-        # logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)) )
+        logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)) )
         return(self.sleepTime)
 
     def move(self, point):
@@ -238,7 +242,7 @@ class SCUTTLE:
         self.drawVector()                                                   # draw vector to the destination
         self.trajectory()                                                   # recompute if turning is needed
 
-        # logger.debug("START_CURVING " + str(time.monotonic()))
+        logger.debug("START_CURVING " + str(time.monotonic()))
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
             self.setMotion([self.cruiseRate, self.curveRate * self.flip])   # closed loop command for turning
@@ -248,10 +252,10 @@ class SCUTTLE:
             self.drawVector()                                               # draw vector to the destination
             self.trajectory()                                               # recompute if turning is needed
             self.checkLoop()                                                # calculate how much to sleep
-            if self.sleepTime > 0.001: 
+            if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        # logger.debug("START_DRIVING " + str(time.monotonic()))
+        logger.debug("START_DRIVING " + str(time.monotonic()))
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
@@ -261,15 +265,15 @@ class SCUTTLE:
             self.drawVector()
             self.trajectory()
             self.checkLoop()                                                # calculate how much to sleep
-            if self.sleepTime > 0.001: 
+            if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        # logger.debug("SETTLE " + str(time.monotonic()))
+        logger.debug("SETTLE " + str(time.monotonic()))
 
         while self.speed != 0 and self.angularVelocity != 0:
             self.setMotion([0, 0])
             print( self.speed,  self.angularVelocity)
             time.sleep(0.035)
 
-        # logger.debug("Log_completed " + str(time.monotonic()))
+        logger.debug("Log_completed " + str(time.monotonic()))
         print("Movements finished. Log file: robotTest.log")

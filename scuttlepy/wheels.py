@@ -8,7 +8,7 @@
 import time
 import math
 import numpy as np                                                          # for handling arrays
-import logging
+from fastlogging import LogInit
 
 # Import local files
 

@@ -39,11 +39,11 @@ class SCUTTLE:
         self.l_motorChannel = 1
         self.r_motorChannel = 2
 
-        # self.l_encoderAddress = 0x40
-        # self.r_encoderAddress = 0x41
+        self.l_encoderAddress = 0x40
+        self.r_encoderAddress = 0x41
 
-        self.l_encoderAddress = 0x43
-        self.r_encoderAddress = 0x40
+        # self.l_encoderAddress = 0x43
+        # self.r_encoderAddress = 0x40
 
         # self.wheelBase = 0.201                                              # L - meters
         self.wheelBase = 0.180                                              # L - meters

@@ -26,7 +26,7 @@ from scuttlepy import encoder                                               # fo
 
 class Wheel:
 
-    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.04, KI=0.015, KD=0):
+    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.025, KI=0.015, KD=0):
 
         self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                          # mm

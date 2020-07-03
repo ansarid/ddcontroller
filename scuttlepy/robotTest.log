@@ -1,678 +1,678 @@
-20.07.03 05:16:36: root: DEBUG  : ColumnA ColumnB ColumnC ColumnD
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 411.88
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 1.25 0.907
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 0.003 0.0022
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 0.003 0.0022
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.004
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.0008 0.0
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 0.2138 0.0
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 0.2138 0.0
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.0 -0.0 411.886135838
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 411.886380779
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) -0.671 411.946278332
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.0 global_y(m) 0.0
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 0.0
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.707 vectorDirection(deg) 45.0
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : START_CURVING 411.949626046
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.07
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) -0.0008 -0.0025
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) -0.011 -0.0357
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) -0.011 -0.0357
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) -0.0 -0.0 411.956997384
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 411.957289779
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) -0.977 411.96623142
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.0 global_y(m) 0.0
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 0.0
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.707 vectorDirection(deg) 45.0
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : sleepTime(s) 0.049
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.0006 0.0918
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 0.0084 1.3482
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 0.0084 1.3482
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.002 0.01 412.023701649
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 412.023924758
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) 16.357 412.026206967
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.002 global_y(m) 0.0
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 0.573
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.706 vectorDirection(deg) 45.1
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : sleepTime(s) 0.056
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.0244 0.2968
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 0.3604 4.3926
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 0.3604 4.3926
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.007 0.031 412.091323973
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 412.091554081
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) 26.611 412.096632378
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.009 global_y(m) 0.0
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 2.349
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.701 vectorDirection(deg) 45.5
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : sleepTime(s) 0.053
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.1438 0.4437
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 2.1407 6.6049
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 2.1407 6.6049
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.012 0.034 412.158842012
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 412.159073245
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) 30.334 412.166207642
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.021 global_y(m) 0.001
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 4.297
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.692 vectorDirection(deg) 46.2
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.2454 0.4955
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 3.6569 7.3824
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 3.6569 7.3824
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.028 412.227016712
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 412.227272027
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) 22.095 412.236334075
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.036 global_y(m) 0.002
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 5.901
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.681 vectorDirection(deg) 47.0
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : sleepTime(s) 0.049
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.2443 0.489
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 3.5886 7.1827
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 3.5886 7.1827
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.028 412.294043412
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 412.294280937
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) 23.499 412.296644139
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.051 global_y(m) 0.004
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 7.506
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.669 vectorDirection(deg) 47.8
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : sleepTime(s) 0.055
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.1384 0.456
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 2.0248 6.6689
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 2.0248 6.6689
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.012 0.036 412.362263942
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 412.362501091
-20.07.03 05:16:37: root: DEBUG  : Gyro_raw(deg/s) 34.119 412.366283024
-20.07.03 05:16:37: root: DEBUG  : global_x(m) 0.063 global_y(m) 0.006
-20.07.03 05:16:37: root: DEBUG  : heading(deg) 9.568
-20.07.03 05:16:37: root: DEBUG  : vectorLength(m) 0.66 vectorDirection(deg) 48.5
-20.07.03 05:16:37: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:37: root: DEBUG  : sleepTime(s) 0.054
-20.07.03 05:16:37: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:37: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:37: root: DEBUG  : Wheel_Increments(rad) 0.0236 0.4521
-20.07.03 05:16:37: root: DEBUG  : Wheel_Speeds(rad/s) 0.3474 6.6606
-20.07.03 05:16:37: root: DEBUG  : PID_Speeds(rad/s) 0.3474 6.6606
-20.07.03 05:16:37: root: DEBUG  : Chassis_Increment(m,rad) 0.01 0.049 412.430137872
-20.07.03 05:16:37: root: DEBUG  : TimeStamp(s) 412.430371105
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 45.471 412.436338546
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.072 global_y(m) 0.008
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 12.376
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.652 vectorDirection(deg) 49.0
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) -0.0008 0.487
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) -0.0114 7.2656
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) -0.0114 7.2656
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.01 0.056 412.498578622
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.498825271
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 50.659 412.506195404
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.082 global_y(m) 0.01
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 15.584
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.644 vectorDirection(deg) 49.5
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.05
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.1317 0.5637
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 1.9148 8.1944
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 1.9148 8.1944
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.049 412.567406763
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.567643329
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 33.142 412.576474314
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.096 global_y(m) 0.014
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 18.392
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.632 vectorDirection(deg) 50.2
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.049
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.2203 0.5952
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 3.2312 8.729
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 3.2312 8.729
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.043 412.634105391
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.634336999
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 41.199 412.646118604
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.112 global_y(m) 0.02
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 20.856
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.618 vectorDirection(deg) 51.0
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.046
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.2048 0.6092
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 3.0015 8.9286
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 3.0015 8.9286
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.046 412.70229762
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.702527436
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 37.109 412.706249292
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.127 global_y(m) 0.026
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 23.491
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.603 vectorDirection(deg) 51.8
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.054
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.1753 0.5958
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 2.5825 8.7789
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 2.5825 8.7789
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.048 412.770191453
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.77041952
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 39.246 412.776782059
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.142 global_y(m) 0.033
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 26.241
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.589 vectorDirection(deg) 52.5
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.1239 0.5526
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 1.8427 8.221
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 1.8427 8.221
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.049 412.838069496
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.838298354
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 44.556 412.84637377
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.154 global_y(m) 0.04
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 29.049
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.576 vectorDirection(deg) 53.1
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.05
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.1026 0.557
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 1.5102 8.2001
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 1.5102 8.2001
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.052 412.906553703
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.906830642
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 46.326 412.916218879
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.166 global_y(m) 0.047
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 32.028
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.563 vectorDirection(deg) 53.6
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.049
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.1329 0.5806
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 1.9517 8.5278
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 1.9517 8.5278
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.051 412.974224595
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 412.974999747
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 42.419 412.986044905
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.179 global_y(m) 0.055
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 34.95
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.549 vectorDirection(deg) 54.2
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.047
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.2121 0.6076
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 3.0891 8.8512
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 3.0891 8.8512
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.045 413.042122553
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 413.042358411
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 33.142 413.046231755
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.193 global_y(m) 0.065
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 37.529
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.533 vectorDirection(deg) 54.8
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.053
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.2456 0.6161
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 3.6172 9.0727
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 3.6172 9.0727
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.018 0.042 413.110047801
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 413.110269993
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 35.156 413.116241019
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.207 global_y(m) 0.076
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 39.935
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.515 vectorDirection(deg) 55.3
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.052
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.2117 0.594
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 3.1297 8.7824
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 3.1297 8.7824
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.044 413.179261205
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 413.179503146
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 40.833 413.186147707
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.219 global_y(m) 0.087
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 42.456
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.499 vectorDirection(deg) 55.8
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.1388 0.6029
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 2.028 8.8065
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 2.028 8.8065
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.053 413.247322777
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 413.247565259
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 49.072 413.25648153
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.23 global_y(m) 0.098
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 45.493
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.484 vectorDirection(deg) 56.1
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.049
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.0453 0.6278
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 0.6576 9.1229
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 0.6576 9.1229
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.066 413.315649454
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 413.316311489
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 61.646 413.32599733
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.24 global_y(m) 0.108
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 49.274
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.47 vectorDirection(deg) 56.4
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 1
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.048
-20.07.03 05:16:38: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
-20.07.03 05:16:38: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:38: root: DEBUG  : Wheel_Increments(rad) 0.0253 0.6366
-20.07.03 05:16:38: root: DEBUG  : Wheel_Speeds(rad/s) 0.3726 9.3708
-20.07.03 05:16:38: root: DEBUG  : PID_Speeds(rad/s) 0.3726 9.3708
-20.07.03 05:16:38: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.07 413.383630864
-20.07.03 05:16:38: root: DEBUG  : TimeStamp(s) 413.383865722
-20.07.03 05:16:38: root: DEBUG  : Gyro_raw(deg/s) 59.57 413.38601115
-20.07.03 05:16:38: root: DEBUG  : global_x(m) 0.248 global_y(m) 0.119
-20.07.03 05:16:38: root: DEBUG  : heading(deg) 53.285
-20.07.03 05:16:38: root: DEBUG  : vectorLength(m) 0.457 vectorDirection(deg) 56.6
-20.07.03 05:16:38: root: DEBUG  : CurveFlip 0
-20.07.03 05:16:38: root: DEBUG  : sleepTime(s) 0.056
-20.07.03 05:16:39: root: DEBUG  : START_DRIVING 413.446406986
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.071
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.0472 0.6696
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 0.6676 9.4769
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 0.6676 9.4769
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.071 413.453733459
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.453972817
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 54.688 413.456554839
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.257 global_y(m) 0.131
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 57.353
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.442 vectorDirection(deg) 56.6
-20.07.03 05:16:39: root: DEBUG  : CurveFlip 0
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.055
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.1319 0.5785
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 1.9406 8.51
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 1.9406 8.51
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.051 413.521546328
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.521773894
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 34.729 413.526187868
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.265 global_y(m) 0.144
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 60.275
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.427 vectorDirection(deg) 56.5
-20.07.03 05:16:39: root: DEBUG  : CurveFlip 0
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.053
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.2322 0.4853
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 3.4147 7.1368
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 3.4147 7.1368
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.029 413.589929114
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.59015768
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 17.395 413.59630378
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.272 global_y(m) 0.157
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 61.937
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.412 vectorDirection(deg) 56.4
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.052
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.2872 0.424
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 4.2687 6.3005
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 4.2687 6.3005
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.016 413.658275652
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.658522468
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 8.24 413.66601922
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.279 global_y(m) 0.171
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 62.853
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.397 vectorDirection(deg) 56.1
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.05
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3056 0.4008
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 4.4488 5.8331
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 4.4488 5.8331
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.011 413.726710768
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.726975249
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 8.057 413.736406612
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.285 global_y(m) 0.183
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 63.484
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.383 vectorDirection(deg) 55.9
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.048
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.2936 0.3915
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 4.3126 5.752
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 4.3126 5.752
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.011 413.79429382
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.795194713
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 8.85 413.805920816
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.291 global_y(m) 0.196
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 64.114
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.369 vectorDirection(deg) 55.6
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.047
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3049 0.4128
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 4.4282 5.9961
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 4.4282 5.9961
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.012 413.862367836
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.862598403
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 9.399 413.86610615
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.298 global_y(m) 0.209
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 64.802
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.354 vectorDirection(deg) 55.2
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.054
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.326 0.4207
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 4.7739 6.1611
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 4.7739 6.1611
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.011 413.930617257
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.930840907
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 6.592 413.936405549
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.304 global_y(m) 0.223
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 65.432
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.339 vectorDirection(deg) 54.8
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.052
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3484 0.4119
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 5.1889 6.1341
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 5.1889 6.1341
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.007 413.999195737
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 413.999441511
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 4.822 414.005935502
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.311 global_y(m) 0.237
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 65.833
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.324 vectorDirection(deg) 54.2
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3643 0.4006
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 5.3369 5.8678
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 5.3369 5.8678
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.004 414.067371996
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 414.067619978
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 3.479 414.07595517
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.317 global_y(m) 0.252
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 66.062
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.308 vectorDirection(deg) 53.6
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.05
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3636 0.4088
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 5.3148 5.9763
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 5.3148 5.9763
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.005 414.135141951
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 414.135524341
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 3.662 414.14588222
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.324 global_y(m) 0.267
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 66.349
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.292 vectorDirection(deg) 52.9
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.048
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3555 0.4146
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 5.2598 6.1336
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 5.2598 6.1336
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.007 414.202871576
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 414.203121183
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 4.944 414.205976811
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.33 global_y(m) 0.281
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 66.75
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.277 vectorDirection(deg) 52.2
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.055
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3676 0.4266
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 5.3442 6.2029
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 5.3442 6.2029
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.007 414.270649989
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 414.270875264
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 5.066 414.276125095
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.336 global_y(m) 0.296
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 67.151
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.261 vectorDirection(deg) 51.3
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.052
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.3731 0.4088
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 5.5475 6.0777
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 5.5475 6.0777
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.004 414.338894868
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 414.339127727
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) 0.854 414.346271462
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.343 global_y(m) 0.311
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 67.38
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.246 vectorDirection(deg) 50.2
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:39: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:39: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:39: root: DEBUG  : Wheel_Increments(rad) 0.4002 0.4029
-20.07.03 05:16:39: root: DEBUG  : Wheel_Speeds(rad/s) 5.8991 5.9386
-20.07.03 05:16:39: root: DEBUG  : PID_Speeds(rad/s) 5.8991 5.9386
-20.07.03 05:16:39: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.0 414.40777166
-20.07.03 05:16:39: root: DEBUG  : TimeStamp(s) 414.408154924
-20.07.03 05:16:39: root: DEBUG  : Gyro_raw(deg/s) -3.113 414.416349251
-20.07.03 05:16:39: root: DEBUG  : global_x(m) 0.349 global_y(m) 0.326
-20.07.03 05:16:39: root: DEBUG  : heading(deg) 67.38
-20.07.03 05:16:39: root: DEBUG  : vectorLength(m) 0.231 vectorDirection(deg) 49.1
-20.07.03 05:16:39: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:39: root: DEBUG  : sleepTime(s) 0.05
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.413 0.3891
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 6.0175 5.6683
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 6.0175 5.6683
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.016 -0.003 414.475221697
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.475595545
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) -4.639 414.485905182
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.355 global_y(m) 0.34
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 67.208
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.216 vectorDirection(deg) 47.7
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.048
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.4192 0.3662
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 6.1391 5.364
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 6.1391 5.364
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.016 -0.006 414.54270116
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.542922436
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) -5.432 414.545949511
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.361 global_y(m) 0.355
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 66.864
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.201 vectorDirection(deg) 46.2
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.055
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.4234 0.3643
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 6.2101 5.3438
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 6.2101 5.3438
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.016 -0.007 414.611703014
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.612256933
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) -4.517 414.616361889
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.367 global_y(m) 0.37
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 66.463
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.186 vectorDirection(deg) 44.5
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.053
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.07
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.4174 0.3983
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 5.9982 5.7227
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 5.9982 5.7227
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.017 -0.002 414.68152306
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.681764168
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) 1.221 414.685975866
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.374 global_y(m) 0.385
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 66.349
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.17 vectorDirection(deg) 42.4
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.053
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.4011 0.4234
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 5.7917 6.1128
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 5.7917 6.1128
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.003 414.749946164
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.750173648
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) 4.028 414.7559644
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.381 global_y(m) 0.401
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 66.52
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.155 vectorDirection(deg) 39.8
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.067
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.3741 0.4188
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 5.5924 6.2602
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 5.5924 6.2602
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.005 414.819013097
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.819260287
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) 4.333 414.826007929
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.387 global_y(m) 0.416
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 66.807
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.141 vectorDirection(deg) 36.9
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.051
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.3731 0.4316
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 5.3964 6.2422
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 5.3964 6.2422
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.007 414.887773218
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.888152274
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) 6.47 414.896435723
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.394 global_y(m) 0.43
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 67.208
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.127 vectorDirection(deg) 33.2
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.041
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.3758 0.4441
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 5.4691 6.4625
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 5.4691 6.4625
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.008 414.956311147
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 414.956650623
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) 2.502 414.965867588
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.4 global_y(m) 0.446
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 67.666
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.113 vectorDirection(deg) 28.4
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.049
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.069
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.3822 0.3906
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 5.5647 5.6875
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 5.5647 5.6875
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.001 415.023579792
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 415.024777498
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) -2.014 415.035807125
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.406 global_y(m) 0.461
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 67.724
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.102 vectorDirection(deg) 22.7
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.047
-20.07.03 05:16:40: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
-20.07.03 05:16:40: root: DEBUG  : Time_Increment(s) 0.068
-20.07.03 05:16:40: root: DEBUG  : Wheel_Increments(rad) 0.3781 0.349
-20.07.03 05:16:40: root: DEBUG  : Wheel_Speeds(rad/s) 5.5442 5.1169
-20.07.03 05:16:40: root: DEBUG  : PID_Speeds(rad/s) 5.5442 5.1169
-20.07.03 05:16:40: root: DEBUG  : Chassis_Increment(m,rad) 0.015 -0.003 415.091352234
-20.07.03 05:16:40: root: DEBUG  : TimeStamp(s) 415.091577926
-20.07.03 05:16:40: root: DEBUG  : Gyro_raw(deg/s) -4.944 415.096245342
-20.07.03 05:16:40: root: DEBUG  : global_x(m) 0.412 global_y(m) 0.475
-20.07.03 05:16:40: root: DEBUG  : heading(deg) 67.552
-20.07.03 05:16:40: root: DEBUG  : vectorLength(m) 0.092 vectorDirection(deg) 16.0
-20.07.03 05:16:40: root: DEBUG  : CurveFlip -1
-20.07.03 05:16:40: root: DEBUG  : sleepTime(s) 0.053
-20.07.03 05:16:40: root: DEBUG  : SETTLE 415.151944982
-20.07.03 05:16:40: root: DEBUG  : Log_completed 415.152387408
+20.07.03 05:39:11: root: DEBUG  : ColumnA ColumnB ColumnC ColumnD
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 1766.609
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.0821 -1.2949
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 0.0 -0.0007
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 0.0 -0.0007
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.004
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.0 -0.0002
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 0.0 -0.0535
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 0.0 -0.0535
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) -0.0 -0.0 1766.615664168
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1766.615904398
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) -0.366 1766.680474426
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.0 global_y(m) 0.0
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 0.0
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.707 vectorDirection(deg) 45.0
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : START_CURVING 1766.682851601
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.073
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) -0.0002 0.0008
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) -0.0026 0.0105
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) -0.0026 0.0105
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.0 0.0 1766.690576077
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1766.690917923
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) -0.549 1766.7005999
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.0 global_y(m) 0.0
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 0.0
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.707 vectorDirection(deg) 45.0
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.048
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.069
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.0 -0.0002
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 0.0 -0.0028
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 0.0 -0.0028
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) -0.0 -0.0 1766.757905039
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1766.758131729
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) -0.488 1766.760488156
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.0 global_y(m) 0.0
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 0.0
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.707 vectorDirection(deg) 45.0
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.056
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.0023 0.083
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 0.034 1.2254
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 0.034 1.2254
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.002 0.009 1766.825729002
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1766.825955067
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 15.076 1766.830934773
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.002 global_y(m) 0.0
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 0.516
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.706 vectorDirection(deg) 45.1
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.053
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.0443 0.2847
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 0.655 4.2108
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 0.655 4.2108
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.007 0.027 1766.893456265
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1766.893689995
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 26.978 1766.900508713
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.009 global_y(m) 0.0
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 2.063
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.701 vectorDirection(deg) 45.5
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.051
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.163 0.446
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 2.4293 6.6476
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 2.4293 6.6476
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.012 0.032 1766.961565745
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1766.961809558
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 27.649 1766.9705242
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.021 global_y(m) 0.001
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 3.896
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.692 vectorDirection(deg) 46.2
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.247 0.5329
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 3.6114 7.7919
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 3.6114 7.7919
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.033 1767.028772718
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1767.02968285
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 23.804 1767.040340579
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.037 global_y(m) 0.002
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 5.787
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.68 vectorDirection(deg) 47.1
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.047
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.2504 0.5206
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 3.7032 7.6985
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 3.7032 7.6985
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.031 1767.096391032
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1767.096643094
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 27.344 1767.100583054
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.053 global_y(m) 0.004
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 7.563
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.668 vectorDirection(deg) 48.0
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.054
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.1994 0.5196
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 2.9219 7.6139
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 2.9219 7.6139
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.036 1767.164610961
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1767.164860982
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 33.875 1767.170551962
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.068 global_y(m) 0.006
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 9.626
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.656 vectorDirection(deg) 48.8
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.051
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.1043 0.5348
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 1.5507 7.9502
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 1.5507 7.9502
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.013 0.049 1767.233222816
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1767.233493127
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 47.485 1767.240508287
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.08 global_y(m) 0.009
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 12.433
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.646 vectorDirection(deg) 49.5
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.051
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.0228 0.572
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 0.3343 8.3803
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 0.3343 8.3803
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.012 0.063 1767.301400958
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1767.301647812
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 57.8 1767.310804709
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.092 global_y(m) 0.012
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 16.043
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.636 vectorDirection(deg) 50.1
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.048
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:12: root: DEBUG  : Wheel_Increments(rad) 0.0084 0.59
+20.07.03 05:39:12: root: DEBUG  : Wheel_Speeds(rad/s) 0.1239 8.6632
+20.07.03 05:39:12: root: DEBUG  : PID_Speeds(rad/s) 0.1239 8.6632
+20.07.03 05:39:12: root: DEBUG  : Chassis_Increment(m,rad) 0.012 0.066 1767.368261918
+20.07.03 05:39:12: root: DEBUG  : TimeStamp(s) 1767.368518438
+20.07.03 05:39:12: root: DEBUG  : Gyro_raw(deg/s) 54.932 1767.370519395
+20.07.03 05:39:12: root: DEBUG  : global_x(m) 0.103 global_y(m) 0.015
+20.07.03 05:39:12: root: DEBUG  : heading(deg) 19.824
+20.07.03 05:39:12: root: DEBUG  : vectorLength(m) 0.626 vectorDirection(deg) 50.7
+20.07.03 05:39:12: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:12: root: DEBUG  : sleepTime(s) 0.056
+20.07.03 05:39:12: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:12: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1622 0.6015
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.391 8.8657
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.391 8.8657
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.05 1767.435936394
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.436331277
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 33.569 1767.44047622
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.118 global_y(m) 0.021
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 22.689
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.612 vectorDirection(deg) 51.4
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.054
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1933 0.5915
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.8558 8.7403
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.8558 8.7403
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.045 1767.50365545
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.503873599
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 42.603 1767.510621531
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.133 global_y(m) 0.028
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 25.267
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.598 vectorDirection(deg) 52.2
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.051
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1776 0.6006
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.6657 9.016
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.6657 9.016
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.048 1767.571609362
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.571840968
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 42.847 1767.580432121
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.147 global_y(m) 0.035
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 28.018
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.584 vectorDirection(deg) 52.8
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1791 0.6324
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.6412 9.3261
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.6412 9.3261
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.052 1767.638166517
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.638392456
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 44.678 1767.640410786
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.162 global_y(m) 0.043
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 30.997
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.568 vectorDirection(deg) 53.5
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.056
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1664 0.6393
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.4692 9.4843
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.4692 9.4843
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.054 1767.705657343
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.70588524
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 44.25 1767.710673671
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.176 global_y(m) 0.052
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 34.091
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.552 vectorDirection(deg) 54.1
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.053
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1655 0.6308
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.444 9.3172
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.444 9.3172
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.053 1767.773462559
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.773686832
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 41.931 1767.780437597
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.189 global_y(m) 0.062
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 37.128
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.537 vectorDirection(deg) 54.7
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.051
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1659 0.5906
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.4745 8.8109
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.4745 8.8109
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.048 1767.841635327
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.841868266
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 40.833 1767.850897799
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.202 global_y(m) 0.072
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 39.878
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.522 vectorDirection(deg) 55.2
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.07
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1756 0.6167
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.5045 8.7931
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.5045 8.7931
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.05 1767.914189019
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.914770679
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 43.213 1767.92063731
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.214 global_y(m) 0.082
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 42.743
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.506 vectorDirection(deg) 55.6
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.051
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.072
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.177 0.6631
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.4598 9.2157
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.4598 9.2157
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.055 1767.982648055
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1767.982878869
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 44.983 1767.990536101
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.226 global_y(m) 0.094
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 45.894
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.49 vectorDirection(deg) 56.0
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.05
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1638 0.6257
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.4428 9.3336
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.4428 9.3336
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.053 1768.05076537
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1768.051044847
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 44.312 1768.060293278
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.237 global_y(m) 0.106
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 48.931
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.474 vectorDirection(deg) 56.3
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 2.341 9.366
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.162 0.6424
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.3756 9.4181
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.3756 9.4181
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.055 1768.117712284
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1768.11793164
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 44.861 1768.12032748
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.247 global_y(m) 0.118
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 52.082
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.458 vectorDirection(deg) 56.5
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 0
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.056
+20.07.03 05:39:13: root: DEBUG  : START_DRIVING 1768.178309231
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1607 0.6157
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.3641 9.0586
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.3641 9.0586
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.052 1768.186410966
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1768.186640822
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 44.312 1768.190655193
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.257 global_y(m) 0.131
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 55.061
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.442 vectorDirection(deg) 56.6
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 0
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.054
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.069
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1515 0.6059
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.2066 8.8263
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.2066 8.8263
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.052 1768.254264262
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1768.254491368
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 41.931 1768.260388788
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.265 global_y(m) 0.144
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 58.041
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.426 vectorDirection(deg) 56.6
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 0
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.052
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1407 0.5482
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.1079 8.2105
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.1079 8.2105
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.046 1768.322141055
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1768.322376035
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 37.598 1768.330205502
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.273 global_y(m) 0.156
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 60.676
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.412 vectorDirection(deg) 56.5
+20.07.03 05:39:13: root: DEBUG  : CurveFlip 0
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.05
+20.07.03 05:39:13: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:13: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:13: root: DEBUG  : Wheel_Increments(rad) 0.1503 0.501
+20.07.03 05:39:13: root: DEBUG  : Wheel_Speeds(rad/s) 2.2138 7.3783
+20.07.03 05:39:13: root: DEBUG  : PID_Speeds(rad/s) 2.2138 7.3783
+20.07.03 05:39:13: root: DEBUG  : Chassis_Increment(m,rad) 0.013 0.04 1768.389739414
+20.07.03 05:39:13: root: DEBUG  : TimeStamp(s) 1768.390541138
+20.07.03 05:39:13: root: DEBUG  : Gyro_raw(deg/s) 29.236 1768.40022749
+20.07.03 05:39:13: root: DEBUG  : global_x(m) 0.279 global_y(m) 0.168
+20.07.03 05:39:13: root: DEBUG  : heading(deg) 62.968
+20.07.03 05:39:13: root: DEBUG  : vectorLength(m) 0.399 vectorDirection(deg) 56.3
+20.07.03 05:39:13: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:13: root: DEBUG  : sleepTime(s) 0.048
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.1927 0.4498
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 2.8169 6.5756
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 2.8169 6.5756
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.013 0.029 1768.457614958
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.457842647
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 19.104 1768.460353478
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.284 global_y(m) 0.18
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 64.63
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.386 vectorDirection(deg) 56.1
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.056
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.251 0.3912
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 3.673 5.7242
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 3.673 5.7242
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.013 0.016 1768.525778979
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.526006585
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 7.629 1768.530216689
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.29 global_y(m) 0.191
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 65.546
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.373 vectorDirection(deg) 55.8
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.053
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.298 0.3446
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 4.3589 5.0405
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 4.3589 5.0405
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.013 0.005 1768.59412086
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.594342925
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 1.038 1768.600323255
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.295 global_y(m) 0.203
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 65.833
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.361 vectorDirection(deg) 55.4
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.052
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3308 0.3323
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 4.8868 4.9095
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 4.8868 4.9095
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.014 0.0 1768.662143601
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.662372624
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 0.305 1768.670472651
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.301 global_y(m) 0.216
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 65.833
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.347 vectorDirection(deg) 55.0
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3655 0.3728
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.4382 5.5466
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.4382 5.5466
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.015 0.001 1768.729762876
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.730276375
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 1.099 1768.740521639
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.307 global_y(m) 0.23
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 65.89
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.332 vectorDirection(deg) 54.5
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.047
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3846 0.4416
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.6703 6.5098
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.6703 6.5098
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.006 1768.796764495
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.79702189
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 6.714 1768.800263368
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.314 global_y(m) 0.245
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.234
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.315 vectorDirection(deg) 53.9
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.055
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3963 0.4596
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.8235 6.7533
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.8235 6.7533
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.018 0.007 1768.86491785
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.865150539
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 5.371 1768.870480549
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.321 global_y(m) 0.262
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.635
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.298 vectorDirection(deg) 53.1
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.052
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3981 0.4284
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.9071 6.3567
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.9071 6.3567
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.003 1768.93255779
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1768.932813269
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 2.38 1768.940356802
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.328 global_y(m) 0.277
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.807
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.281 vectorDirection(deg) 52.3
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.05
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3975 0.4048
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.9231 6.0316
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.9231 6.0316
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.001 1769.000461583
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1769.002214644
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) -0.488 1769.010279966
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.334 global_y(m) 0.292
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.864
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.266 vectorDirection(deg) 51.4
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.07
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3998 0.3935
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.7356 5.6448
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.7356 5.6448
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.016 -0.001 1769.070723428
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1769.07103786
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) -1.526 1769.08010264
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.341 global_y(m) 0.307
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.807
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.251 vectorDirection(deg) 50.5
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.069
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3862 0.3735
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.5834 5.4004
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.5834 5.4004
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.016 -0.001 1769.138182592
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1769.138842703
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) -0.854 1769.15025441
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.347 global_y(m) 0.321
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.75
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.235 vectorDirection(deg) 49.4
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.046
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3687 0.3653
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.4502 5.3992
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.4502 5.3992
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.015 -0.0 1769.205894234
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1769.206121673
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 1.099 1769.210066383
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.353 global_y(m) 0.335
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.75
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.221 vectorDirection(deg) 48.2
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.054
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3754 0.3906
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.4893 5.7108
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.4893 5.7108
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.002 1769.274290735
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1769.274515508
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 0.977 1769.280285523
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.359 global_y(m) 0.35
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.864
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.206 vectorDirection(deg) 46.8
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.052
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.3781 0.3988
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.6059 5.9129
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.6059 5.9129
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.002 1769.342155323
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1769.342386887
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 0.244 1769.350346927
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.365 global_y(m) 0.365
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 66.979
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.191 vectorDirection(deg) 45.1
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.05
+20.07.03 05:39:14: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:14: root: DEBUG  : Time_Increment(s) 0.067
+20.07.03 05:39:14: root: DEBUG  : Wheel_Increments(rad) 0.4008 0.4092
+20.07.03 05:39:14: root: DEBUG  : Wheel_Speeds(rad/s) 5.9427 6.0678
+20.07.03 05:39:14: root: DEBUG  : PID_Speeds(rad/s) 5.9427 6.0678
+20.07.03 05:39:14: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.001 1769.410435293
+20.07.03 05:39:14: root: DEBUG  : TimeStamp(s) 1769.41071127
+20.07.03 05:39:14: root: DEBUG  : Gyro_raw(deg/s) 0.671 1769.420161601
+20.07.03 05:39:14: root: DEBUG  : global_x(m) 0.372 global_y(m) 0.38
+20.07.03 05:39:14: root: DEBUG  : heading(deg) 67.036
+20.07.03 05:39:14: root: DEBUG  : vectorLength(m) 0.175 vectorDirection(deg) 43.1
+20.07.03 05:39:14: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:14: root: DEBUG  : sleepTime(s) 0.049
+20.07.03 05:39:15: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:15: root: DEBUG  : Wheel_Increments(rad) 0.408 0.413
+20.07.03 05:39:15: root: DEBUG  : Wheel_Speeds(rad/s) 5.9834 6.0565
+20.07.03 05:39:15: root: DEBUG  : PID_Speeds(rad/s) 5.9834 6.0565
+20.07.03 05:39:15: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.001 1769.477381292
+20.07.03 05:39:15: root: DEBUG  : TimeStamp(s) 1769.47760694
+20.07.03 05:39:15: root: DEBUG  : Gyro_raw(deg/s) -0.488 1769.480157184
+20.07.03 05:39:15: root: DEBUG  : global_x(m) 0.379 global_y(m) 0.396
+20.07.03 05:39:15: root: DEBUG  : heading(deg) 67.093
+20.07.03 05:39:15: root: DEBUG  : vectorLength(m) 0.16 vectorDirection(deg) 40.6
+20.07.03 05:39:15: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:15: root: DEBUG  : sleepTime(s) 0.056
+20.07.03 05:39:15: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:15: root: DEBUG  : Wheel_Increments(rad) 0.4046 0.4032
+20.07.03 05:39:15: root: DEBUG  : Wheel_Speeds(rad/s) 5.959 5.9392
+20.07.03 05:39:15: root: DEBUG  : PID_Speeds(rad/s) 5.959 5.9392
+20.07.03 05:39:15: root: DEBUG  : Chassis_Increment(m,rad) 0.017 -0.0 1769.545335124
+20.07.03 05:39:15: root: DEBUG  : TimeStamp(s) 1769.54556948
+20.07.03 05:39:15: root: DEBUG  : Gyro_raw(deg/s) -2.197 1769.550307123
+20.07.03 05:39:15: root: DEBUG  : global_x(m) 0.385 global_y(m) 0.412
+20.07.03 05:39:15: root: DEBUG  : heading(deg) 67.093
+20.07.03 05:39:15: root: DEBUG  : vectorLength(m) 0.145 vectorDirection(deg) 37.6
+20.07.03 05:39:15: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:15: root: DEBUG  : sleepTime(s) 0.053
+20.07.03 05:39:15: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:15: root: DEBUG  : Wheel_Increments(rad) 0.3885 0.3883
+20.07.03 05:39:15: root: DEBUG  : Wheel_Speeds(rad/s) 5.6835 5.6807
+20.07.03 05:39:15: root: DEBUG  : PID_Speeds(rad/s) 5.6835 5.6807
+20.07.03 05:39:15: root: DEBUG  : Chassis_Increment(m,rad) 0.016 -0.0 1769.613669383
+20.07.03 05:39:15: root: DEBUG  : TimeStamp(s) 1769.613900239
+20.07.03 05:39:15: root: DEBUG  : Gyro_raw(deg/s) -1.709 1769.620142964
+20.07.03 05:39:15: root: DEBUG  : global_x(m) 0.391 global_y(m) 0.426
+20.07.03 05:39:15: root: DEBUG  : heading(deg) 67.093
+20.07.03 05:39:15: root: DEBUG  : vectorLength(m) 0.131 vectorDirection(deg) 34.1
+20.07.03 05:39:15: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:15: root: DEBUG  : sleepTime(s) 0.051
+20.07.03 05:39:15: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:15: root: DEBUG  : Wheel_Increments(rad) 0.3697 0.3647
+20.07.03 05:39:15: root: DEBUG  : Wheel_Speeds(rad/s) 5.4299 5.3567
+20.07.03 05:39:15: root: DEBUG  : PID_Speeds(rad/s) 5.4299 5.3567
+20.07.03 05:39:15: root: DEBUG  : Chassis_Increment(m,rad) 0.015 -0.001 1769.682214457
+20.07.03 05:39:15: root: DEBUG  : TimeStamp(s) 1769.682443729
+20.07.03 05:39:15: root: DEBUG  : Gyro_raw(deg/s) 0.061 1769.690055632
+20.07.03 05:39:15: root: DEBUG  : global_x(m) 0.397 global_y(m) 0.44
+20.07.03 05:39:15: root: DEBUG  : heading(deg) 67.036
+20.07.03 05:39:15: root: DEBUG  : vectorLength(m) 0.119 vectorDirection(deg) 30.2
+20.07.03 05:39:15: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:15: root: DEBUG  : sleepTime(s) 0.05
+20.07.03 05:39:15: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : Time_Increment(s) 0.068
+20.07.03 05:39:15: root: DEBUG  : Wheel_Increments(rad) 0.377 0.3833
+20.07.03 05:39:15: root: DEBUG  : Wheel_Speeds(rad/s) 5.5272 5.62
+20.07.03 05:39:15: root: DEBUG  : PID_Speeds(rad/s) 5.5272 5.62
+20.07.03 05:39:15: root: DEBUG  : Chassis_Increment(m,rad) 0.016 0.001 1769.751738407
+20.07.03 05:39:15: root: DEBUG  : TimeStamp(s) 1769.751982387
+20.07.03 05:39:15: root: DEBUG  : Gyro_raw(deg/s) 2.808 1769.759962841
+20.07.03 05:39:15: root: DEBUG  : global_x(m) 0.404 global_y(m) 0.455
+20.07.03 05:39:15: root: DEBUG  : heading(deg) 67.093
+20.07.03 05:39:15: root: DEBUG  : vectorLength(m) 0.106 vectorDirection(deg) 25.0
+20.07.03 05:39:15: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:15: root: DEBUG  : sleepTime(s) 0.05
+20.07.03 05:39:15: root: DEBUG  : PhiTargets(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : PhiSetPoints(rad/s) 5.854 5.854
+20.07.03 05:39:15: root: DEBUG  : Time_Increment(s) 0.069
+20.07.03 05:39:15: root: DEBUG  : Wheel_Increments(rad) 0.4077 0.4274
+20.07.03 05:39:15: root: DEBUG  : Wheel_Speeds(rad/s) 5.9507 6.239
+20.07.03 05:39:15: root: DEBUG  : PID_Speeds(rad/s) 5.9507 6.239
+20.07.03 05:39:15: root: DEBUG  : Chassis_Increment(m,rad) 0.017 0.002 1769.819196448
+20.07.03 05:39:15: root: DEBUG  : TimeStamp(s) 1769.819867975
+20.07.03 05:39:15: root: DEBUG  : Gyro_raw(deg/s) 0.0 1769.830191232
+20.07.03 05:39:15: root: DEBUG  : global_x(m) 0.41 global_y(m) 0.471
+20.07.03 05:39:15: root: DEBUG  : heading(deg) 67.208
+20.07.03 05:39:15: root: DEBUG  : vectorLength(m) 0.095 vectorDirection(deg) 18.1
+20.07.03 05:39:15: root: DEBUG  : CurveFlip -1
+20.07.03 05:39:15: root: DEBUG  : sleepTime(s) 0.047
+20.07.03 05:39:15: root: DEBUG  : SETTLE 1769.880243443
+20.07.03 05:39:15: root: DEBUG  : Log_completed 1769.880640702

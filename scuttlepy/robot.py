@@ -7,6 +7,10 @@ from scuttlepy import wheels
 from scuttlepy import mpu
 from fastlogging import LogInit
 
+import os
+if os.path.exists("robotTest.log"):
+    os.remove("robotTest.log")
+
 logger = LogInit(pathName="./robotTest.log")
 
 # logger.debug("This is a debug message.")

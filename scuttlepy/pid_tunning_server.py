@@ -7,8 +7,8 @@ port = 9999
 socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 socket.bind(("", port))
 
-l_wheel = wheels.Wheel(1, 0x40, KP=0, KI=0, KD=0, invert_encoder=True) 	                # Right Motor (ch2)
-r_wheel = wheels.Wheel(2, 0x41, KP=0, KI=0, KD=0) 	                                    # Left Motor (ch1)
+l_wheel = wheels.Wheel(1, 0x43, KP=0, KI=0, KD=0, invert_encoder=True) 	                # Right Motor (ch2)
+r_wheel = wheels.Wheel(2, 0x40, KP=0, KI=0, KD=0) 	                                    # Left Motor (ch1)
 # r_wheel.pid.setWindup(1)
 start_time = time.time()
 
@@ -64,6 +64,8 @@ while 1:
     print(timestamp, ",", r_wheel.pid.SetPoint)
 
     socket.sendto(packet.encode(), ip)
+
+    # print(packet)
 
     if (time.time() - start_time) >= 6:
         break

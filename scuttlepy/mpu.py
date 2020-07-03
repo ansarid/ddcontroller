@@ -47,7 +47,7 @@ class MPU:
 
 
 # if __name__ == "__main__":
-    
+
 #     mpu = MPU()
 #     while True:
 #         if rcpy.get_state() == rcpy.RUNNING:    # verify the rcpy package is running

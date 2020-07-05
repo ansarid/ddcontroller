@@ -1,6 +1,5 @@
 import time
 import math
-# import logging
 import numpy as np
 from scuttlepy import gpio
 from scuttlepy import wheels
@@ -11,17 +10,8 @@ import os
 if os.path.exists("robotTest.log"):
     os.remove("robotTest.log")
 
-logger = LogInit(pathName="./robotTest.log")
-
-# logger.debug("This is a debug message.")
-# Create and configure logger
-# logging.basicConfig(filename="robotTest.log", format='%(asctime)s %(message)s', filemode='w')
-# logger = logging.getLogger()                                                # create an object
-# logger.setLevel(logging.DEBUG)                                              # set threshold of logger to DEBUG
-logger.debug("ColumnA ColumnB ColumnC ColumnD")
-
-gpio.write(1, 3, 0) # port 1 pin 3 deactivate
-
+logger = LogInit(pathName="./robotTest.log")        # set up logger
+logger.debug("ColumnA ColumnB ColumnC ColumnD")     # make columns
 
 class SCUTTLE:
 
@@ -29,26 +19,12 @@ class SCUTTLE:
 
         self.speed = 0
         self.heading = 0
-        self.compass = 0
         self.angularVelocity = 0
-        self.turnRate = 0
         self.globalPosition = np.array([0, 0])
         self.angularDisplacement = 0                                        # for tracking displacement between waypoints
         self.forwardDisplacement = 0                                        # for tracking displacement between waypoints
-
-        self.l_motorChannel = 1
-        self.r_motorChannel = 2
-
-        self.l_encoderAddress = 0x40
-        self.r_encoderAddress = 0x41
-
-        # self.l_encoderAddress = 0x43
-        # self.r_encoderAddress = 0x40
-
-        # self.wheelBase = 0.201                                              # L - meters
-        self.wheelBase = 0.180                                              # L - meters
-        # self.wheelBase = 0.170                                              # L - meters
-
+        
+        self.wheelBase = 0.180  #(201mm default)                            # L - meters
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
         self.wheelSpeeds = 0
@@ -56,25 +32,21 @@ class SCUTTLE:
         self.timeFinal = 0
         self.loopPeriod = 0.060                                             # how fast to make the loop (s)
         self.loopStart = time.monotonic()                                   # updates when we grab chassis displacements
-        self.sleeptime = 0                                                  # time to sleep updated per loop
+        self.sleepTime = 0                                                  # time to sleep updated per loop
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
-
-        self.rampDown = 0.020                                               # m
-        self.overSteer = math.radians(10)                                   # deg
-
         self.cruiseRate = 0.240                                             # fwd driving speed, m/s
         self.curveRadius = 0.300                                            # curve radius (m)
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
-        self.L2 = 0                                                         # amount to cut from straight path
-        self.arcLen = 0
         self.tolerance = 0.100                                              # 25mm for first test
         self.flip = 0                                                       # go straight
         self.vectorLength = 0
 
-        self.batteryVoltage = 0
-
+        self.l_motorChannel = 1
+        self.r_motorChannel = 2
+        self.l_encoderAddress = 0x40
+        self.r_encoderAddress = 0x41
         self.r_wheel = wheels.Wheel(self.r_motorChannel,
                                     self.r_encoderAddress)
 
@@ -118,8 +90,6 @@ class SCUTTLE:
                      + " " + str(round(wheelIncrements[1], 4)))
         logger.debug("Wheel_Speeds(rad/s) " + str(round(self.wheelSpeeds[0], 4))
                      + " " + str(round(self.wheelSpeeds[1], 4)))
-        logger.debug("PID_Speeds(rad/s) " + str(round(self.l_wheel.speed, 4))
-                     + " " + str(round(self.r_wheel.speed, 4)))
 
         return wheelIncrements
 
@@ -163,7 +133,7 @@ class SCUTTLE:
                                                                             # argument: [x_dot, theta_dot]
         C = self.getWheels(targetMotion)                                    # Perform matrix multiplication
 
-        logger.debug("PhiTargets(rad/s) " + str(round(C[0],3))  +          # indicate wheelspeed targets in log
+        logger.debug("PhiTargets(rad/s) " + str(round(C[0],3))  +           # indicate wheelspeed targets in log
             " " + str(round(C[1],3)))
 
         self.l_wheel.setAngularVelocity(C[0])                               # Set angularVelocity = [rad/s]
@@ -172,6 +142,12 @@ class SCUTTLE:
         logger.debug("PhiSetPoints(rad/s) " +                               # PID controller target (should match PhiTarget)
             str(round(self.l_wheel.pid.SetPoint,3) ) + " " +
             str(round(self.r_wheel.pid.SetPoint,3))  )
+        logger.debug("EffortLeft(duty) " +
+            str(round(self.l_wheel.pid.PTerm,3)) + " " +
+            str(round(self.l_wheel.pid.ITerm,3))
+        logger.debug("EffortRight(duty) " +
+            str(round(self.r_wheel.pid.PTerm,3)) + " " +
+            str(round(self.r_wheel.pid.ITerm,3))
 
     def displacement(self):
 
@@ -180,9 +156,9 @@ class SCUTTLE:
         self.angularDisplacement = chassisIncrement[1]                      # add the latest advancement(rad) to the total
 
         logger.debug("Chassis_Increment(m,rad) " +
-                    str(round(chassisIncrement[0], 4)) + " " +
-                    str(round(chassisIncrement[1], 4)) + " " +
-                    str(time.monotonic()))
+            str(round(chassisIncrement[0], 4)) + " " +
+            str(round(chassisIncrement[1], 4)) + " " +
+            str(time.monotonic()))
 
         self.loopStart = time.monotonic()                                   # use for measuring loop timehttps://prod.liveshare.vsengsaas.visualstudio.com/join?60A021E3072343B1F9E3A422F65353A190FD
         logger.debug("TimeStamp(s) " + str(self.loopStart))
@@ -199,17 +175,17 @@ class SCUTTLE:
         globalVector = np.matmul(R, localVector)
         self.globalPosition = self.globalPosition + globalVector            # add the increment to the global position
         logger.debug("global_x(m) " +
-                    str(round(self.globalPosition[0], 3)) + " global_y(m) " +
-                    str(round(self.globalPosition[1], 3) ) )
+            str(round(self.globalPosition[0], 3)) + " global_y(m) " +
+            str(round(self.globalPosition[1], 3) ) )
 
     def drawVector(self):                                                   # argument is an np array
         vector = self.point - self.globalPosition                           # the vector describing the next step
         self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)          # length in m
         self.vectorDirection = math.atan2(vector[1], vector[0])             # discover vector direction
         logger.debug("vectorLength(m) " +
-                         str(round(self.vectorLength, 3)) +
-                         " vectorDirection(deg) " +
-                         str(round(math.degrees(self.vectorDirection), 1)))
+            str(round(self.vectorLength, 3)) +
+            " vectorDirection(deg) " +
+            str(round(math.degrees(self.vectorDirection), 1)))
 
     def trajectory(self):
         span = math.radians(5)

@@ -144,10 +144,10 @@ class SCUTTLE:
             str(round(self.r_wheel.pid.SetPoint,3))  )
         logger.debug("EffortLeft(duty) " +
             str(round(self.l_wheel.pid.PTerm,3)) + " " +
-            str(round(self.l_wheel.pid.ITerm,3))
+            str(round(self.l_wheel.pid.ITerm,3))     )
         logger.debug("EffortRight(duty) " +
             str(round(self.r_wheel.pid.PTerm,3)) + " " +
-            str(round(self.r_wheel.pid.ITerm,3))
+            str(round(self.r_wheel.pid.ITerm,3))     )
 
     def displacement(self):
 

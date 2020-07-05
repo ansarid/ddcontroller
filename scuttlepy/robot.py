@@ -133,9 +133,6 @@ class SCUTTLE:
                                                                             # argument: [x_dot, theta_dot]
         C = self.getWheels(targetMotion)                                    # Perform matrix multiplication
 
-        logger.debug("PhiTargets(rad/s) " + str(round(C[0],3))  +           # indicate wheelspeed targets in log
-            " " + str(round(C[1],3)))
-
         self.l_wheel.setAngularVelocity(C[0])                               # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])                               # Set angularVelocity = [rad/s]
 

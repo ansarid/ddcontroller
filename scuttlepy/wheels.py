@@ -132,13 +132,13 @@ if __name__ == "__main__":
 
         while (myDuty < 1.01):      # test duty cycles from 0 to 1.00 in 0.05 increments
             myOutput = rescale(myDuty)
-            l_wheel.motor.setDuty(round(myOutput, 2))     # must round to ensure driver handling!
+            r_wheel.motor.setDuty(round(myOutput, 2))     # must round to ensure driver handling!
             myDuty += 0.05
             time.sleep(1.0)                             # wait 1 second for speed to settle.
-            mySpeed = l_wheel.getAngularVelocity()
+            mySpeed = r_wheel.getAngularVelocity()
             print("Duty, Speed(rad/s): ", round(myDuty, 2), ", ", round(mySpeed,2))
 
-        l_wheel.motor.setDuty(0)       
+        r_wheel.motor.setDuty(0)       
         print("duty/speed test finished.")
 
 

@@ -23,6 +23,7 @@ scuttle = SCUTTLE()
 # scuttle.move([0.5, 0.5])
 
 for waypoint in waypoints:
+    print(waypoint)
     scuttle.move(waypoint)
 
 # for waypoint in waypoints:

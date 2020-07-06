@@ -116,24 +116,21 @@ if __name__ == "__main__":
     print("Left Wheel, Right Wheel")
 
     startTime = time.time()
-
+    myDuty = 0
+    
     try:
 
-        while (time.time() - startTime) < 4:
+        while (myDuty > 1.01 - startTime) < 4:      # test duty cycles from 0 to 1.00 in 0.05 increments
+            
+            l_wheel.motor.setDuty(round(myDuty, 2))     # must round to ensure driver handling!
+            myDuty += 0.05
+            time.sleep(1.0)                             # wait 1 second for speed to settle.
+            mySpeed = l_wheel.getAngularVelocity()
+            print("Duty: ", myDuty, " Speed: ", round(mySpeed,3))
 
-            print(l_wheel.speed, ",", r_wheel.speed)
-            l_wheel.setAngularVelocity(4.68)
-            r_wheel.setAngularVelocity(4.68)
+        l_wheel.motor.setDuty(0)       
+        print("duty/speed test finished.")
 
-            time.sleep(0.060)
-
-        while (time.time() - startTime) > 4:
-
-            print(l_wheel.speed, ",", r_wheel.speed)
-            l_wheel.setAngularVelocity(2.92)
-            r_wheel.setAngularVelocity(2.92)
-
-            time.sleep(0.060)
 
     except KeyboardInterrupt:
         exit()

@@ -126,7 +126,7 @@ if __name__ == "__main__":
             myDuty += 0.05
             time.sleep(1.0)                             # wait 1 second for speed to settle.
             mySpeed = l_wheel.getAngularVelocity()
-            print("Duty: ", myDuty, " Speed: ", round(mySpeed,3))
+            print("Duty: ", round(myDuty, 2), " Speed: ", round(mySpeed,3))
 
         l_wheel.motor.setDuty(0)       
         print("duty/speed test finished.")

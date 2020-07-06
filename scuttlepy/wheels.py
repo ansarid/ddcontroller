@@ -108,12 +108,13 @@ class Wheel:
         self.motor.setDuty(round(duty, 2))                                  # must round to ensure driver handling!
 
 def rescale(duty):  # a temporary function to perform modified sweep test
-    if -0.222 < duty and duty < 0.222:
+    p1 = 0.16
+    if -p1 < duty and duty < p1:
         duty = (duty * 3)
-    elif duty >= 0.222:
-        duty = 0.666 + (0.429*(duty-0.222))
+    elif duty >= p1:
+        duty = 0.48 + (0.619*(duty-0.16))
     else:
-        duty = -0.666 + (-0.429*(duty+0.222))
+        duty = -0.48 + (-0.619*(duty+0.16))
     duty = sorted([-1, duty, 1])[1]      # place bounds on the motor commands
     return duty
 

@@ -96,12 +96,12 @@ class Wheel:
         duty = self.pid.output
 
         ### THIS NEEDS TO BE REFACTORED ###
-    if -0.222 < duty and duty < 0.222:
-        duty = (duty * 3)
-    elif duty >= 0.222:
-        duty = 0.666 + (0.429*(duty-0.222))
-    else:
-        duty = -0.666 + (-0.429*(duty+0.222))
+        if -0.222 < duty and duty < 0.222:
+            duty = (duty * 3)
+        elif duty >= 0.222:
+            duty = 0.666 + (0.429*(duty-0.222))
+        else:
+            duty = -0.666 + (-0.429*(duty+0.222))
         ### THIS NEEDS TO BE REFACTORED ###
 
         duty = sorted([-1, duty, 1])[1]                                     # place bounds on the motor commands

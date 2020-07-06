@@ -110,8 +110,8 @@ class Wheel:
 
 if __name__ == "__main__":
 
-    r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
-    l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
+    r_wheel = Wheel(2, 0x40) 	                                            # Right Motor (ch2)
+    l_wheel = Wheel(1, 0x43, invert_encoder=True)                           # Left Motor  (ch1)
 
     print("Left Wheel, Right Wheel")
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     
     try:
 
-        while (myDuty > 1.01 - startTime) < 4:      # test duty cycles from 0 to 1.00 in 0.05 increments
+        while (myDuty < 1.01):      # test duty cycles from 0 to 1.00 in 0.05 increments
             
             l_wheel.motor.setDuty(round(myDuty, 2))     # must round to ensure driver handling!
             myDuty += 0.05

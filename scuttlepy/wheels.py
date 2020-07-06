@@ -107,6 +107,15 @@ class Wheel:
         duty = sorted([-1, duty, 1])[1]                                     # place bounds on the motor commands
         self.motor.setDuty(round(duty, 2))                                  # must round to ensure driver handling!
 
+def rescale(duty)  # a temporary function to perform modified sweep test
+    if -0.222 < duty and duty < 0.222:
+        duty = (duty * 3)
+    elif duty > 0.222:
+        duty = ((duty * 0.778) + 0.222)
+    else:
+        duty = ((duty * 0.778) - 0.222)
+    duty = sorted([-1, duty, 1])[1]      # place bounds on the motor commands
+    return duty
 
 if __name__ == "__main__":
 
@@ -121,12 +130,12 @@ if __name__ == "__main__":
     try:
 
         while (myDuty < 1.01):      # test duty cycles from 0 to 1.00 in 0.05 increments
-            
-            l_wheel.motor.setDuty(round(myDuty, 2))     # must round to ensure driver handling!
+            myOutput = rescale(myDuty)
+            l_wheel.motor.setDuty(round(myOutput, 2))     # must round to ensure driver handling!
             myDuty += 0.05
             time.sleep(1.0)                             # wait 1 second for speed to settle.
             mySpeed = l_wheel.getAngularVelocity()
-            print("Duty: ", round(myDuty, 2), " Speed: ", round(mySpeed,2))
+            print("Duty, Speed(rad/s): ", round(myDuty, 2), ", ", round(mySpeed,2))
 
         l_wheel.motor.setDuty(0)       
         print("duty/speed test finished.")

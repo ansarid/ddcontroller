@@ -20,8 +20,10 @@ scuttle = SCUTTLE()
 
 # print(dir(scuttle))
 
-scuttle.move([0.5, 0.5])
+# scuttle.move([0.5, 0.5])
 
+for waypoint in waypoints:
+    scuttle.move(waypoint)
 
 # for waypoint in waypoints:
 #     print("DRIVING TO POINT", waypoint)

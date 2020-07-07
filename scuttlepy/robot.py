@@ -37,7 +37,7 @@ class SCUTTLE:
         self.L = self.wheelBase
         self.R = self.wheelRadius
         self.cruiseRate = 0.200                                             # fwd driving speed, m/s
-        self.curveRadius = 0.100                                            # curve radius (m)
+        self.curveRadius = 0.15                                         # curve radius (m)
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
         self.tolerance = 0.100                                              # 25mm for first test
         self.flip = 0                                                       # go straight

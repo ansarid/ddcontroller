@@ -189,8 +189,10 @@ class SCUTTLE:
     def trajectory(self):
         span = math.radians(5)
         gap = self.vectorDirection - self.heading
-        if gap > math.radians(180):                                         # large turns should be reversed
-                gap = gap - math.radians(360)
+        if gap > math.pi:                                                   # large turns should be reversed
+            gap += (2 * math.pi)
+        if gap < -math.pi:
+            gap -= (2 * math.pi)
         if gap > span:
             self.flip = 1                                                   # positive turn needed
         elif gap < -span:

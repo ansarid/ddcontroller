@@ -36,8 +36,8 @@ class SCUTTLE:
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
-        self.cruiseRate = 0.240                                             # fwd driving speed, m/s
-        self.curveRadius = 0.300                                            # curve radius (m)
+        self.cruiseRate = 0.200                                             # fwd driving speed, m/s
+        self.curveRadius = 0.100                                            # curve radius (m)
         self.curveRate = self.cruiseRate / self.curveRadius                 # curve rotational speed (rad/s)
         self.tolerance = 0.100                                              # 25mm for first test
         self.flip = 0                                                       # go straight
@@ -45,10 +45,10 @@ class SCUTTLE:
 
         self.l_motorChannel = 1
         self.r_motorChannel = 2
-        # self.l_encoderAddress = 0x40
-        self.l_encoderAddress = 0x43
-        # self.r_encoderAddress = 0x41
-        self.r_encoderAddress = 0x40
+        self.l_encoderAddress = 0x40
+        # self.l_encoderAddress = 0x43
+        self.r_encoderAddress = 0x41
+        # self.r_encoderAddress = 0x40
         self.r_wheel = wheels.Wheel(self.r_motorChannel,
                                     self.r_encoderAddress)
 
@@ -187,7 +187,7 @@ class SCUTTLE:
             str(round(math.degrees(self.vectorDirection), 1)))
 
     def trajectory(self):
-        span = math.radians(5)
+        span = math.radians(5)                                              # span is the turning tolerance
         gap = self.vectorDirection - self.heading
         if gap > math.pi:                                                   # large turns should be reversed
             gap += (2 * math.pi)

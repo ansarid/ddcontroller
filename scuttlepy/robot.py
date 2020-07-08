@@ -90,8 +90,6 @@ class SCUTTLE:
         logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
         logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
                      + " " + str(round(wheelIncrements[1], 4)))
-        logger.debug("Wheel_Speeds(rad/s) " + str(round(self.wheelSpeeds[0], 4))
-                     + " " + str(round(self.wheelSpeeds[1], 4)))
 
         return wheelIncrements
 
@@ -138,6 +136,9 @@ class SCUTTLE:
         self.l_wheel.setAngularVelocity(C[0])                               # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])                               # Set angularVelocity = [rad/s]
 
+        logger.debug("Wheel_Speeds(rad/s) " +                               # report wheel speeds
+             str(round(self.wheelSpeeds[0], 4)) + " " + 
+             str(round(self.wheelSpeeds[1], 4)))
         logger.debug("PhiSetPoints(rad/s) " +                               # PID controller target (should match PhiTarget)
             str(round(self.l_wheel.pid.SetPoint,3) ) + " " +
             str(round(self.r_wheel.pid.SetPoint,3))  )
@@ -215,18 +216,22 @@ class SCUTTLE:
         self.sleepTime = self.loopPeriod - (self.loopFinish - self.loopStart)
         logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)) )
         return(self.sleepTime)
-
-    def move(self, point):
-
+    
+    def setup(self): # call this before moving to points
+        
         self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
-        self.point = np.array(point)
+        self.setMotion([0,0])                                               # set speed zero
         self.displacement()                                                 # increment the displacements (update robot attributes)
         self.stackDisplacement()                                            # add the new displacement to global position
         self.stackHeading()                                                 # add up the new heading
+        
+    def move(self, point):
+        self.point = np.array(point)                                        # set the destination point
         self.drawVector()                                                   # draw vector to the destination
-        self.trajectory()                                                   # recompute if turning is needed
-
-        logger.debug("START_CURVING " + str(time.monotonic()))
+        self.trajectory()                                                   # compute if turning is needed, populate "flip"
+        
+        if self.flip != 0:
+            logger.debug("START_CURVING " + str(time.monotonic()))          # log beginning of curve
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
             self.setMotion([self.cruiseRate, self.curveRate * self.flip])   # closed loop command for turning
@@ -239,7 +244,8 @@ class SCUTTLE:
             if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        logger.debug("START_DRIVING " + str(time.monotonic()))
+        if self.flip = 0:
+            logger.debug("START_DRIVING " + str(time.monotonic()))          # log beginning of straightaway
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward

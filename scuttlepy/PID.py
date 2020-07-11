@@ -60,7 +60,7 @@ class PID:
 
         # Windup Guard
         self.int_error = 0.0
-        self.windup_guard = 20.0
+        self.windup_guard = 1.01
 
         self.output = 0.0
 

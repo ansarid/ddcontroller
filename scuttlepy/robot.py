@@ -24,7 +24,8 @@ class SCUTTLE:
         self.angularDisplacement = 0                                        # for tracking displacement between waypoints
         self.forwardDisplacement = 0                                        # for tracking displacement between waypoints
 
-        self.wheelBase = 0.180  #(201mm default)                            # L - meters
+        # self.wheelBase = 0.180  #(201mm default)                            # L - meters
+        self.wheelBase = 0.200  #(201mm default)                            # L - meters
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # latest increments of wheels
         self.wheelSpeeds = 0

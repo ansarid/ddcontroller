@@ -123,24 +123,21 @@ if __name__ == "__main__":
     r_wheel = Wheel(2, 0x40) 	                                            # Right Motor (ch2)
     l_wheel = Wheel(1, 0x43, invert_encoder=True)                           # Left Motor  (ch1)
 
-    print("Left Wheel, Right Wheel")
+    d = -1
 
-    startTime = time.time()
-    myDuty = 0
-    
-    try:
+    l_wheel.motor.setDuty(d)
+    r_wheel.motor.setDuty(d)
 
-        while (myDuty < 1.01):      # test duty cycles from 0 to 1.00 in 0.05 increments
-            myOutput = rescale(myDuty)
-            r_wheel.motor.setDuty(round(myOutput, 2))     # must round to ensure driver handling!
-            myDuty += 0.05
-            time.sleep(1.0)                             # wait 1 second for speed to settle.
-            mySpeed = r_wheel.getAngularVelocity()
-            print("Duty, Speed(rad/s): ", round(myDuty, 2), ", ", round(mySpeed,2))
+    l_speeds = []
+    r_speeds = []
 
-        r_wheel.motor.setDuty(0)       
-        print("duty/speed test finished.")
+    time.sleep(5)
 
+    while len(l_speeds) < 10:
 
-    except KeyboardInterrupt:
-        exit()
+        l_speeds.append(l_wheel.getAngularVelocity())
+        r_speeds.append(r_wheel.getAngularVelocity())
+
+        time.sleep(0.1)
+
+    print("\nDuty:",d,"\nLeft Max:", min(l_speeds), "\nRight Max:", min(r_speeds))

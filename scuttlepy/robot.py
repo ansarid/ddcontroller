@@ -37,9 +37,10 @@ class SCUTTLE:
 
         self.L = self.wheelBase
         self.R = self.wheelRadius
-        self.cruiseRate = 0.2                                             # fwd driving speed, m/s
-        self.curveRadius = 0.15                                         # curve radius (m)
-        self.curveRate = 0.6*(self.cruiseRate / self.curveRadius)                # curve rotational speed (rad/s)
+        self.cruiseRate = 0.2                                               # fwd driving speed, m/s
+        self.cruiseRateTurning = 0.02                                       # reduced fwd speed during turning
+        self.curveRadius = 0.020                                            # curve radius (m)
+        self.curveRate = (self.cruiseRateTurning / self.curveRadius)        # curve rotational speed, thetadot (rad/s)
         self.tolerance = 0.100                                              # 25mm for first test
         self.flip = 0                                                       # go straight
         self.vectorLength = 0
@@ -235,7 +236,7 @@ class SCUTTLE:
             logger.debug("START_CURVING " + str(time.monotonic()))          # log beginning of curve
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
-            self.setMotion([self.cruiseRate, self.curveRate * self.flip])   # closed loop command for turning
+            self.setMotion([self.cruiseRateTurning, self.curveRate * self.flip])   # closed loop command for turning
             self.displacement()                                             # increment the displacements (update robot attributes)
             self.stackDisplacement()                                        # add the new displacement to global position
             self.stackHeading()                                             # add up the new heading

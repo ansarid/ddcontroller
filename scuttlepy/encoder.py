@@ -21,8 +21,8 @@ class Encoder:
         self.bus = SMBus(bus)
         self.address = address
         self.invert = invert
-        self.resolution = ((math.pi*2)/2**14)
-        self.position = self.readPos()
+        self.resolution = ((math.pi*2)/2**14)                               # Define encoder angular resolution.
+        self.position = self.readPos()                                      # Read position of encoder
         self.angle = self.readAngle()
         self.magnitude = self.readMagnitude()
 
@@ -39,14 +39,9 @@ class Encoder:
 
     def readAngle(self):
 
-        angle = self.bus.read_i2c_block_data(self.address, 0xFE, 2)         # Request data from registers 0xFE & 0xFF of the encoder
-                                                                            # Takes ~700 microseconds.
-        angle = (angle[0] << 6) | angle[1]                                  # Remove unused bits 6 & 7 from byte 0xFF creating 14 bit value
+        self.readPos()                                                      # Read encoder position
 
-        if not self.invert:
-            self.angle = angle * (360 / 2**14)                              # scale values to get degrees
-        else:
-            self.angle = 360 - (angle * (360 / 2**14))                      # scale values to get degrees
+        self.angle = self.position * (360 / 2**14)                          # Scale values to get degrees
 
         return self.angle                                                   # Return encoder angle (0 to 359.97802734375)
 
@@ -62,17 +57,21 @@ class Encoder:
 
 if __name__ == "__main__":
 
-    rightEncoder = Encoder(0x40)
-    leftEncoder = Encoder(0x43, invert=True)
+    rightEncoder = Encoder(0x40)                                            # Create encoder object for right encoder on address 0x40
+    leftEncoder = Encoder(0x43, invert=True)                                # Create encoder object for left encoder on address 0x43
 
     while True:
+
+        rightPos = round(rightEncoder.readPos(), 2)
+        leftPos = round(leftEncoder.readPos(), 2)
 
         rightAngle = round(rightEncoder.readAngle(), 2)
         leftAngle = round(leftEncoder.readAngle(), 2)
 
-        # rightMag = round(rightEncoder.readMagnitude(), 2)
-        # leftMag = round(leftEncoder.readMagnitude(), 2)
+        rightMag = round(rightEncoder.readMagnitude(), 2)
+        leftMag = round(leftEncoder.readMagnitude(), 2)
 
+        # print(leftPos, "\t", rightPos)
         print(leftAngle, "\t", rightAngle)
         # print(leftMag, "\t", rightMag)
 

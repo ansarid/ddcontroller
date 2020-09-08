@@ -91,7 +91,7 @@ class Wheel:
 
     def setAngularVelocity(self, phiDotTarget):
         self.pid.SetPoint = phiDotTarget
-        # self.speed = self.getAngularVelocity()  # no update required - speed updated in navigation program
+        self.speed = self.getAngularVelocity()
         self.pid.update(self.speed)
         duty = self.pid.output
 
@@ -121,23 +121,4 @@ def rescale(duty):  # a temporary function to perform modified sweep test
 if __name__ == "__main__":
 
     r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
-    l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
-
-    d = -1
-
-    l_wheel.motor.setDuty(d)
-    r_wheel.motor.setDuty(d)
-
-    l_speeds = []
-    r_speeds = []
-
-    time.sleep(5)
-
-    while len(l_speeds) < 10:
-
-        l_speeds.append(l_wheel.getAngularVelocity())
-        r_speeds.append(r_wheel.getAngularVelocity())
-
-        time.sleep(0.1)
-
-    print("\nDuty:",d,"\nLeft Max:", min(l_speeds), "\nRight Max:", min(r_speeds))
+    l_wheel = Wheel(1, 0x43, invert_encoder=True)                           # Left Motor  (ch1)

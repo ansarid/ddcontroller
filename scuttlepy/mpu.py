@@ -1,59 +1,74 @@
-#!/usr/bin/python3
+import math
+import time
+import RTIMU
 
-# This program accesses info from the Blue's onboard sensor, MPU9250
-# It reads temp, accelerometer, gyro, and magnetometer data from the sensor.
-# Uses RCPY library.  See guitar.ucsd.edu/rcpy/rcpy.pdf for documentation
+class IMU:
 
-# Import external librarires
-import time                                     # for time.sleep function
-import numpy as np                              # for working with matrices
-import rcpy                                     # import rcpy library (this automatically initializes robotics cape)
-import rcpy.mpu9250 as mpu9250                  # for mpu sensor functions
+    def __init__(self, settingsFile='RTIMULib', offset=0):
+
+        self.heading = 0
+        self.pose = [0,0,0]
+        self.headingOffset = offset
+
+        self.settings = RTIMU.Settings(settingsFile)
+        self.imu = RTIMU.RTIMU(self.settings)
+
+        if (not self.imu.IMUInit()):
+            # print("IMU Init Failed")
+            return 1
+
+        else:
+            # print("IMU Init Succeeded")
+            pass
+
+        self.imu.setSlerpPower(0.02)
+        self.imu.setGyroEnable(True)
+        self.imu.setAccelEnable(True)
+        self.imu.setCompassEnable(True)
+        self.poll_interval = self.imu.IMUGetPollInterval()
+
+        self.data = None
+
+        while self.data is None:
+            self.readIMU()
+
+    def readIMU(self):
+        if self.imu.IMURead():
+            self.data = self.imu.getIMUData()
+        return self.data
+
+    def getPose(self):
+
+        self.readIMU()
+
+        pose = self.imu.getFusionData()
+
+        self.pose = (math.degrees(pose[0]),
+                     math.degrees(pose[1]),
+                     math.degrees(pose[2])
+                    )
+
+        return self.pose
+
+    def getHeading(self):
+
+        heading = self.getPose()[2]
+
+        if -180 < heading < 90:
+            heading += self.headingOffset
+        elif 90 <= heading < 180:
+            heading = heading - (360 - self.headingOffset)
+
+        self.heading = heading
+
+        return self.heading
 
 
-class MPU:
+if __name__ == "__main__":
 
-    def __init__(self):
+    imu = IMU()
 
-        rcpy.set_state(rcpy.RUNNING)                    # set state to rcpy.RUNNING
+    while True:
 
-        mpu9250.initialize(enable_dmp=True,
-                           dmp_sample_rate=100,
-                           enable_fusion=True,
-                           enable_magnetometer=True)
-
-    def readAccel(self):
-        axes = mpu9250.read_accel_data()            # returns x, y, z acceleration (m/s^2)
-        # axes = np.round(axes, 3)                  # round values to 3 decimals
-        return(axes)
-
-    def readAll(self):
-        data = mpu9250.read()                       # this command returns a string with many parameters.
-        return(data)
-
-    def readTemp(self):
-        temp = mpu9250.read_imu_temp()              # returns just temperature (deg C)
-        return(temp)
-
-    def readMag(self):
-        mag = mpu9250.read_mag_data()               # gets x,y,z mag values (microtesla)
-        # mag = np.round(mag, 1)                    # round values to 1 decimal
-        return(mag)
-
-    def readGyro(self):
-        gyro = mpu9250.read_gyro_data()             # returns 3 axes gyro data (deg/s)
-        # gyro = np.round(gyro, 2)
-        return(gyro)
-
-
-# if __name__ == "__main__":
-
-#     mpu = MPU()
-#     while True:
-#         if rcpy.get_state() == rcpy.RUNNING:    # verify the rcpy package is running
-#             myTemp = mpu.readTemp()
-#             myMag = mpu.readMag()
-#             myGyro = mpu.readGyro()
-#             myAccel = mpu.readAccel()
-#             print("temperature (C):", myTemp,"\t mag (μT):", myMag,"\t gyro(deg/s)",myGyro, "\t accel(m/s^2):", myAccel)
-#         time.sleep(0.5)
+        print(imu.getHeading())
+        time.sleep(0.01)

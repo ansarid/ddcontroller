@@ -51,35 +51,3 @@ if __name__ == "__main__":
             l_motor.setDuty(1)                       # Set left motor duty cycle to -0.7
             r_motor.setDuty(-1)                       # Set right motor duty cycle to -0.7
             time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving fwd")
-            l_motor.setDuty(-1)                        # Set left motor duty cycle to 0.7
-            r_motor.setDuty(1)                        # Set right motor duty cycle to 0.7
-            time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving reverse")
-            l_motor.setDuty(1)                       # Set left motor duty cycle to -0.7
-            r_motor.setDuty(-1)                       # Set right motor duty cycle to -0.7
-            time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving fwd")
-            l_motor.setDuty(-1)                        # Set left motor duty cycle to 0.7
-            r_motor.setDuty(1)                        # Set right motor duty cycle to 0.7
-            time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving reverse")
-            l_motor.setDuty(1)                       # Set left motor duty cycle to -0.7
-            r_motor.setDuty(-1)                       # Set right motor duty cycle to -0.7
-            time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving fwd")
-            l_motor.setDuty(-1)                        # Set left motor duty cycle to 0.7
-            r_motor.setDuty(1)                        # Set right motor duty cycle to 0.7
-            time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving reverse")
-            l_motor.setDuty(1)                       # Set left motor duty cycle to -0.7
-            r_motor.setDuty(-1)                       # Set right motor duty cycle to -0.7
-            time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving fwd")
-            l_motor.setDuty(-1)                        # Set left motor duty cycle to 0.7
-            r_motor.setDuty(1)                        # Set right motor duty cycle to 0.7
-            time.sleep(15)                              # Wait 15 seconds
-            print("motors.py: driving reverse")
-            l_motor.setDuty(1)                       # Set left motor duty cycle to -0.7
-            r_motor.setDuty(-1)                       # Set right motor duty cycle to -0.7
-            time.sleep(15)                              # Wait 15 seconds

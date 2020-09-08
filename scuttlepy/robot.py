@@ -57,7 +57,7 @@ class SCUTTLE:
                                     invert_encoder=True
                                     )
 
-        self.imu = mpu.MPU()
+        self.imu = mpu.IMU()
 
     def setGlobal(self, pos):
 
@@ -165,7 +165,7 @@ class SCUTTLE:
         logger.debug("TimeStamp(s) " + str(self.loopStart))
 
         logger.debug("Gyro_raw(deg/s) " +
-            str(round(self.imu.readAll()['gyro'][2], 3)) + " " +
+            str(round(self.imu.getHeading(), 3)) + " " +
             str(time.monotonic()))
 
     def stackDisplacement(self):                                            # add the latest displacement to the global position

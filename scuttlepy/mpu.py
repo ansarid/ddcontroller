@@ -4,21 +4,18 @@ import RTIMU
 
 class IMU:
 
-    def __init__(self, settingsFile='RTIMULib', offset=0):
+    def __init__(self, settingsFile='RTIMULib'):
 
         self.heading = 0
         self.pose = [0,0,0]
-        self.headingOffset = offset
 
         self.settings = RTIMU.Settings(settingsFile)
         self.imu = RTIMU.RTIMU(self.settings)
 
         if (not self.imu.IMUInit()):
-            # print("IMU Init Failed")
             return 1
 
         else:
-            # print("IMU Init Succeeded")
             pass
 
         self.imu.setSlerpPower(0.02)
@@ -35,6 +32,8 @@ class IMU:
     def readIMU(self):
         if self.imu.IMURead():
             self.data = self.imu.getIMUData()
+        else:
+            pass
         return self.data
 
     def getPose(self):
@@ -54,11 +53,6 @@ class IMU:
 
         heading = self.getPose()[2]
 
-        if -180 < heading < 90:
-            heading += self.headingOffset
-        elif 90 <= heading < 180:
-            heading = heading - (360 - self.headingOffset)
-
         self.heading = heading
 
         return self.heading
@@ -71,4 +65,5 @@ if __name__ == "__main__":
     while True:
 
         print(imu.getHeading())
-        time.sleep(0.01)
+        print(imu.data)
+        time.sleep(0.1)

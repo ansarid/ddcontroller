@@ -47,10 +47,10 @@ class Encoder:
 
     def readMagnitude(self):
 
-        magnitude = self.bus.read_i2c_block_data(self.address, 0xFC, 2)     # Request data from registers 0xFE & 0xFF of the encoder
+        magnitude = self.bus.read_i2c_block_data(self.address, 0xFC, 2)     # Request data from registers 0xFC & 0xFD of the encoder
                                                                             # Takes ~700 microseconds.
 
-        self.magnitude = (magnitude[0] << 6) | magnitude[1]                 # Remove unused bits 6 & 7 from byte 0xFF creating 14 bit value
+        self.magnitude = (magnitude[0] << 6) | magnitude[1]                 # Remove unused bits 6 & 7 from byte 0xFD creating 14 bit value
 
         return self.magnitude                                               # Return encoder magnitude
 

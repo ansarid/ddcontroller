@@ -14,7 +14,6 @@ class IMU:
 
         if (not self.imu.IMUInit()):
             return 1
-
         else:
             pass
 
@@ -51,9 +50,7 @@ class IMU:
 
     def getHeading(self):
 
-        heading = self.getPose()[2]
-
-        self.heading = heading
+        self.heading = self.getPose()[2]
 
         return self.heading
 
@@ -65,5 +62,4 @@ if __name__ == "__main__":
     while True:
 
         print(imu.getHeading())
-        print(imu.data)
         time.sleep(0.1)

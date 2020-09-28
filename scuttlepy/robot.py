@@ -96,8 +96,12 @@ class SCUTTLE:
 
     def getChassis(self, displacement):                                     # this function returns the chassis displacement
 
-        A = np.array([[          self.R/2,         self.R/2],
-                      [-self.R/(2*self.L), self.R/(2*self.L)]])             # This matrix relates [PDL, PDR] to [XD,TD]
+        L = self.wheelBase
+        R = self.wheelRadius
+
+        A = np.array([[     R/2,     R/2],
+                      [-R/(2*L), R/(2*L)]])                                 # This matrix relates [PDL, PDR] to [XD,TD]
+
         B = displacement                                                    # this array should store phi displacements (in radians)
         C = np.matmul(A, B)                                                 # perform matrix multiplication
         C = np.round(C, decimals=3)                                         # round the matrix

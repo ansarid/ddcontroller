@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib.widgets import Slider, Button, RadioButtons
 
 plt.style.use('dark_background')
 class network:
@@ -42,7 +43,7 @@ r_error = [0]
 
 timestamps = [0]
 
-speedTarget = round(4.0, 2) #6.28 rad/sec
+speedTarget = round(10, 2)
 
 startTime = time.time()
 
@@ -52,8 +53,8 @@ def animate(i):
 
     try:
 
-        p = 0.07
-        i = 1.15
+        p = 0.001
+        i = 0.02
         d = 0
 
         message = (str(speedTarget)+","+str(p)+","+str(i)+","+str(d)).encode()
@@ -95,15 +96,29 @@ def animate(i):
             l_speed_av.append(np.average(l_speeds))
             r_speed_av.append(np.average(r_speeds))
 
-        if timestamps[-1] >= 4:
+        # print(timestamps[-1])
+
+        if timestamps[-1] < 5:
+            speedTarget = speedTarget
+
+        elif round(timestamps[-1]) == 5:
+            speedTarget = 4
+
+        elif round(timestamps[-1]) == 10:
+            speedTarget = 7
+
+        elif round(timestamps[-1]) == 15:
+            speedTarget = 2
+
+        elif round(timestamps[-1]) > 20:
             speedTarget = 0
 
         pid_plot.clear()
 
         textstr = '\n'.join((
-            r'P = %.2f' % (p, ),
-            r'I = %.2f' % (i, ),
-            r'D = %.2f' % (d, )))
+            r'P = %.4f' % (p, ),
+            r'I = %.4f' % (i, ),
+            r'D = %.4f' % (d, )))
 
         plt.grid(color="dimgrey")
 
@@ -121,20 +136,20 @@ def animate(i):
 
 
         # pid_plot.plot(timestamps, l_speeds, color='red')   # Colored Points
-        pid_plot.scatter(timestamps, r_speeds, color='red')   # Colored Points
-        pid_plot.plot(   timestamps, r_speeds, color='red')   # Colored Points
+        # pid_plot.scatter(timestamps, r_speeds, color='red')   # Colored Points
+        pid_plot.plot(timestamps, r_speeds, color='red')   # Colored Points
 
         pid_plot.plot(timestamps, r_targets, color='blue')   # Colored Points
         # pid_plot.plot(timestamps, l_targets, color='blue')   # Colored Points
 
-        pid_plot.plot(timestamps, r_dutys, color='green')   # Colored Points
+        # pid_plot.plot(timestamps, r_dutys, color='green')   # Colored Points
         # pid_plot.plot(timestamps, l_dutys, color='green')   # Colored Points
 
         # pid_plot.plot(timestamps, l_speed_av, color='yellow')   # Colored Points
         # pid_plot.plot(timestamps, r_speed_av)   # Colored Points
 
-        pid_plot.plot(timestamps, r_error, color='yellow')   # Colored Points
-        pid_plot.scatter(timestamps, r_error, color='yellow')   # Colored Points
+        # pid_plot.plot(timestamps, r_error, color='yellow')   # Colored Points
+        # pid_plot.scatter(timestamps, r_error, color='yellow')   # Colored Points
 
         print(timestamps[-1], ",", speedTarget)
 
@@ -142,7 +157,7 @@ def animate(i):
         # print(e)
         pass
 
-ani = animation.FuncAnimation(fig, animate, interval=50)
+ani = animation.FuncAnimation(fig, animate, interval=1)
 
 plt.show()
 # plt.savefig(str("P")+str(p)+str("_I")+str(i)+str("_D")+str(d)+'.png')

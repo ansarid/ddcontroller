@@ -120,5 +120,15 @@ def rescale(duty):  # a temporary function to perform modified sweep test
 
 if __name__ == "__main__":
 
-    r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
+    r_wheel = Wheel(2, 0x40) 	                                            # Right Motor (ch2)
     l_wheel = Wheel(1, 0x43, invert_encoder=True)                           # Left Motor  (ch1)
+
+    r_wheel.setAngularVelocity(math.pi)
+    l_wheel.setAngularVelocity(math.pi)
+
+    while 1:
+
+        r_wheel.getAngularVelocity()
+        l_wheel.getAngularVelocity()
+
+

@@ -1,7 +1,6 @@
 import time
 import math
 import numpy as np
-from scuttlepy import gpio
 from scuttlepy import wheels
 from scuttlepy import mpu
 from fastlogging import LogInit
@@ -12,6 +11,7 @@ if os.path.exists("robotTest.log"):
 
 logger = LogInit(pathName="./robotTest.log")                                # Set up logger
 logger.debug("ColumnA ColumnB ColumnC ColumnD")                             # Make columns
+
 
 class SCUTTLE:
 
@@ -27,7 +27,7 @@ class SCUTTLE:
         self.wheelBase = 0.180                                              # L - meters    Measured from center of wheel base to inside edge of wheel.
         self.wheelRadius = 0.041                                            # R - meters
         self.wheelIncrements = np.array([0, 0])                             # Latest increments of wheels
-        self.wheelSpeeds = [0 ,0]                                           # [Left wheel speed, Right wheel speed.]
+        self.wheelSpeeds = [0, 0]                                           # [Left wheel speed, Right wheel speed.]
         self.timeInitial = time.monotonic()
         self.timeFinal = 0
         self.loopPeriod = 0.060                                             # How fast to make the loop (s)
@@ -84,9 +84,6 @@ class SCUTTLE:
         timeIncrement = self.timeFinal - self.timeInitial
 
         self.wheelSpeeds = wheelIncrements / timeIncrement                  # speed = distance/time
-        # self.l_wheel.speed = self.wheelSpeeds[0]                            # overwrite attribute of the actual wheel object
-        # self.r_wheel.speed = self.wheelSpeeds[1]
-
 
         logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
         logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
@@ -154,9 +151,9 @@ class SCUTTLE:
             str(round(self.r_wheel.pid.PTerm,3)) + " " +
             str(round(self.r_wheel.pid.ITerm,3))     )
 
-    def displacement(self):
+    def displacement(self, chassisIncrement):
 
-        chassisIncrement = self.getChassis(self.getWheelIncrements())       # get latest chassis travel (m, rad)
+        # chassisIncrement = self.getChassis(self.getWheelIncrements())       # get latest chassis travel (m, rad)
         self.forwardDisplacement = chassisIncrement[0]                      # add the latest advancement(m) to the total
         self.angularDisplacement = chassisIncrement[1]                      # add the latest advancement(rad) to the total
 
@@ -182,17 +179,20 @@ class SCUTTLE:
         logger.debug("global_x(m) " +
             str(round(self.globalPosition[0], 3)) + " global_y(m) " +
             str(round(self.globalPosition[1], 3) ) )
+        return self.globalPosition
 
-    def drawVector(self):                                                   # argument is an np array
-        vector = self.point - self.globalPosition                           # the vector describing the next step
+    def drawVector(self, point, globalPosition):                                                   # argument is an np array
+        vector = point - globalPosition                           # the vector describing the next step
         self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)          # length in m
         self.vectorDirection = math.atan2(vector[1], vector[0])             # discover vector direction
         logger.debug("vectorLength(m) " +
             str(round(self.vectorLength, 3)) +
             " vectorDirection(deg) " +
             str(round(math.degrees(self.vectorDirection), 1)))
+        vector = np.array([self.vectorLength, self.vectorDirection])
+        return vector
 
-    def trajectory(self):
+    def trajectory(self, vector):
         span = math.radians(5)                                              # span is the turning tolerance
         gap = self.vectorDirection - self.heading
         if gap > math.pi:                                                   # large turns should be reversed
@@ -215,6 +215,7 @@ class SCUTTLE:
         if self.heading < -math.pi:
             self.heading += (2 * math.pi)
         logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
+        return self.heading
 
     def checkLoop(self):
         self.loopFinish = time.monotonic()
@@ -222,17 +223,17 @@ class SCUTTLE:
         logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)) )
         return(self.sleepTime)
 
-    def setup(self): # call this before moving to points
+    def setup(self):                                                        # call this before moving to points
 
         self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
         self.setMotion([0,0])                                               # set speed zero
-        self.displacement()                                                 # increment the displacements (update robot attributes)
+        self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes)
         self.stackDisplacement()                                            # add the new displacement to global position
         self.stackHeading()                                                 # add up the new heading
 
     def move(self, point):
         self.point = np.array(point)                                        # set the destination point
-        self.drawVector()                                                   # draw vector to the destination
+        self.drawVector(self.point, self.globalPosition)                    # draw vector to the destination
         self.trajectory()                                                   # compute if turning is needed, populate "flip"
 
         if self.flip != 0:

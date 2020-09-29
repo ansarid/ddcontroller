@@ -53,8 +53,8 @@ def animate(i):
 
     try:
 
-        p = 0.001
-        i = 0.02
+        p = 0.0035
+        i = 0.025
         d = 0
 
         message = (str(speedTarget)+","+str(p)+","+str(i)+","+str(d)).encode()
@@ -71,8 +71,8 @@ def animate(i):
         timestamps.append(float(data[0]))
         l_speeds.append(float(data[1]))
         r_speeds.append(float(data[2]))
-        l_dutys.append(float(data[3])*4)
-        r_dutys.append(float(data[4])*4)
+        l_dutys.append(float(data[3])*10)
+        r_dutys.append(float(data[4])*10)
 
         l_error.append(float(data[5]))
         r_error.append(float(data[6]))
@@ -117,7 +117,7 @@ def animate(i):
 
         textstr = '\n'.join((
             r'P = %.4f' % (p, ),
-            r'I = %.4f' % (i, ),
+            r'I  = %.4f' % (i, ),
             r'D = %.4f' % (d, )))
 
         plt.grid(color="dimgrey")
@@ -142,7 +142,7 @@ def animate(i):
         pid_plot.plot(timestamps, r_targets, color='blue')   # Colored Points
         # pid_plot.plot(timestamps, l_targets, color='blue')   # Colored Points
 
-        # pid_plot.plot(timestamps, r_dutys, color='green')   # Colored Points
+        pid_plot.plot(timestamps, r_dutys, color='green')   # Colored Points
         # pid_plot.plot(timestamps, l_dutys, color='green')   # Colored Points
 
         # pid_plot.plot(timestamps, l_speed_av, color='yellow')   # Colored Points

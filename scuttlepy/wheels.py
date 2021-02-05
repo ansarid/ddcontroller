@@ -76,10 +76,10 @@ class Wheel:
     def getAngularVelocity(self):                                           # Use self.speed instead when possible!
 
         initialPosition = self.encoder.readPos()
-        initialTime = time.time()                                           # time.time() reports in seconds
+        initialTime = time.monotonic()                                           # time.monotonic() reports in seconds
         time.sleep(self.wait)                                               # delay specified amount
         finalPosition = self.encoder.readPos()
-        finalTime = time.time()
+        finalTime = time.monotonic()
         deltaTime = round((finalTime - initialTime), 3)                     # new scalar delta time value
 
         travel = self.getTravel(initialPosition, finalPosition)             # movement calculations

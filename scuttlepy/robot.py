@@ -44,10 +44,9 @@ class SCUTTLE:
 
         self.l_motorChannel = 1
         self.r_motorChannel = 2
-        # self.l_encoderAddress = 0x40                                      # Left wheel encoder address
-        # self.r_encoderAddress = 0x41                                      # Right wheel encoder address
-        self.l_encoderAddress = 0x43
-        self.r_encoderAddress = 0x40
+        self.l_encoderAddress = 0x40                                        # Left wheel encoder address
+        self.r_encoderAddress = 0x41                                        # Right wheel encoder address
+
         self.r_wheel = wheels.Wheel(self.r_motorChannel,                    # Create right wheel object
                                     self.r_encoderAddress
                                     )
@@ -67,7 +66,7 @@ class SCUTTLE:
 
         self.heading = heading
 
-    def getWheelIncrements(self):                                           # get the wheel increment in radians
+    def getWheelIncrements(self):                                           # get the wheel increment in radians var_bothWheelEncoderPositions
 
         self.l_wheel.positionInitial = self.l_wheel.positionFinal           # transfer previous reading.
         self.r_wheel.positionInitial = self.r_wheel.positionFinal           # transfer previous reading.
@@ -91,7 +90,7 @@ class SCUTTLE:
 
         return wheelIncrements
 
-    def getChassis(self, displacement):                                     # this function returns the chassis displacement
+    def getChassis(self, displacement):                                     # this function returns the chassis displacement var_ImmediateWheelsDisplacementOrPhis
 
         L = self.wheelBase
         R = self.wheelRadius
@@ -151,7 +150,7 @@ class SCUTTLE:
             str(round(self.r_wheel.pid.PTerm,3)) + " " +
             str(round(self.r_wheel.pid.ITerm,3))     )
 
-    def displacement(self, chassisIncrement):
+    def displacement(self, chassisIncrement):                               # store dispalcement info to the log var_AngularAndForwardDisplacements
 
         # chassisIncrement = self.getChassis(self.getWheelIncrements())       # get latest chassis travel (m, rad)
         self.forwardDisplacement = chassisIncrement[0]                      # add the latest advancement(m) to the total
@@ -169,11 +168,17 @@ class SCUTTLE:
             str(round(self.imu.getHeading(), 3)) + " " +
             str(time.monotonic()))
 
-    def stackDisplacement(self):                                            # add the latest displacement to the global position
-        theta = self.heading + ( self.angularDisplacement / 2 )             # use the "halfway" vector as the stackup heading
+        return np.array([self.forwardDisplacement, self.angularDisplacement])
+
+                                                                            # THIS MAY BE THE TRICKIEST FUNCTION OF THE WHOLE PROGRAM.  IT IS SPECIAL BECAUSE IT USES THE
+                                                                            # INFORMATION ABOUT THE LATEST ANGULAR DISPLACEMENT TO CALCULATE A FORWARD DISPLACEMENT
+                                                                            # IN CARTESIAN SYSTEM.
+
+    def stackDisplacement(self, forwardDisplacement, angularDisplacement):                                            # add the latest displacement to the global position var_AngularAndForwardDisplacements
+        theta = self.heading + ( angularDisplacement / 2 )             # use the "halfway" vector as the stackup heading
         c, s = np.cos(theta), np.sin(theta)
         R = np.array(((c, -s), (s, c)))                                     # create the rotation matrix
-        localVector = np.array([self.forwardDisplacement, 0])               # x value is increment and y value is always 0
+        localVector = np.array([forwardDisplacement, 0])               # x value is increment and y value is always 0
         globalVector = np.matmul(R, localVector)
         self.globalPosition = self.globalPosition + globalVector            # add the increment to the global position
         logger.debug("global_x(m) " +
@@ -181,8 +186,8 @@ class SCUTTLE:
             str(round(self.globalPosition[1], 3) ) )
         return self.globalPosition
 
-    def drawVector(self, point, globalPosition):                                                   # argument is an np array
-        vector = point - globalPosition                           # the vector describing the next step
+    def drawVector(self, point, globalPosition):                            # argument is an np array
+        vector = point - globalPosition                                     # the vector describing the next step
         self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)          # length in m
         self.vectorDirection = math.atan2(vector[1], vector[0])             # discover vector direction
         logger.debug("vectorLength(m) " +
@@ -208,8 +213,8 @@ class SCUTTLE:
         logger.debug("CurveFlip " + str(self.flip) )
         return self.flip
 
-    def stackHeading(self):                                                 # increment heading & ensure heading doesn't exceed 180
-        self.heading = self.heading + self.angularDisplacement              # update heading by the turn amount executed
+    def stackHeading(self, angularDisplacement):                                                 # increment heading & ensure heading doesn't exceed 180 var_chassisImmediateAngularDisplacement
+        self.heading = self.heading + angularDisplacement              # update heading by the turn amount executed
         if self.heading > math.pi:
             self.heading += (2 * math.pi)
         if self.heading < -math.pi:
@@ -220,21 +225,22 @@ class SCUTTLE:
     def checkLoop(self):
         self.loopFinish = time.monotonic()
         self.sleepTime = self.loopPeriod - (self.loopFinish - self.loopStart)
-        logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)) )
+        logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)))
         return(self.sleepTime)
 
     def setup(self):                                                        # call this before moving to points
 
-        self.getWheelIncrements()                                           # get the very first nonzero readings fron enconders
-        self.setMotion([0,0])                                               # set speed zero
-        self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes)
-        self.stackDisplacement()                                            # add the new displacement to global position
-        self.stackHeading()                                                 # add up the new heading
+        self.getWheelIncrements()                                           # get the very first nonzero readings fron encoders var_bothWheelEncoderPositions
+        self.setMotion([0,0])                                               # set speed zero [no inputs needed]
+        self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes) var_AngularAndForwardDisplacements
+                                                                                # for getChassis: var_ImmediateWheelsDisplacementOrPhis
+        self.stackDisplacement()                                            # add the new displacement to global position var_AngularAndForwardDisplacements
+        self.stackHeading()                                                 # add up the new heading  var_chassisImmediateAngularDisplacement
 
     def move(self, point):
-        self.point = np.array(point)                                        # set the destination point
-        self.drawVector(self.point, self.globalPosition)                    # draw vector to the destination
-        self.trajectory()                                                   # compute if turning is needed, populate "flip"
+        self.point = np.array(point)                                        # set the destination point  var_destinationPoint
+        self.drawVector(self.point, self.globalPosition)                    # draw vector to the destination var_currentLocationAndDestinationPoints
+        self.trajectory()                                                   # compute if turning is needed, populate "flip" 
 
         if self.flip != 0:
             logger.debug("START_CURVING " + str(time.monotonic()))          # log beginning of curve
@@ -250,7 +256,7 @@ class SCUTTLE:
             if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        if self.flip == 0:
+        if self.flip == 0:self.angularDisplacement
             logger.debug("START_DRIVING " + str(time.monotonic()))          # log beginning of straightaway
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving

@@ -62,7 +62,7 @@ class Wheel:
             if(travel >= self.gap):
                 travel = (diff - self.roll)                                 # handle reverse rollover
         else:
-            diff = position0 - position1
+            diff = position0 - position1                                    # DUPLICATE CODE
             travel = diff
             if((-travel) >= self.gap):
                 travel = (diff + self.roll)
@@ -76,7 +76,7 @@ class Wheel:
     def getAngularVelocity(self):                                           # Use self.speed instead when possible!
 
         initialPosition = self.encoder.readPos()
-        initialTime = time.monotonic()                                           # time.monotonic() reports in seconds
+        initialTime = time.monotonic()                                      # time.monotonic() reports in seconds
         time.sleep(self.wait)                                               # delay specified amount
         finalPosition = self.encoder.readPos()
         finalTime = time.monotonic()
@@ -128,7 +128,7 @@ if __name__ == "__main__":
 
     while 1:
 
-        r_wheel.getAngularVelocity()
-        l_wheel.getAngularVelocity()
+        print(r_wheel.getAngularVelocity())
+        print(l_wheel.getAngularVelocity())
 
 

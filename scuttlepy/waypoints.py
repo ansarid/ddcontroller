@@ -8,9 +8,6 @@ waypoints = [
             [ 0.9, 0]
             ]
 
-
-waypoints = [[2,0]]
-
 scuttle = SCUTTLE()
 
 scuttle.setup() # take the first encoder readings, establish start

@@ -10,7 +10,7 @@ from matplotlib.widgets import Slider, Button, RadioButtons
 plt.style.use('dark_background')
 class network:
 
-    ip = "scuttle"
+    ip = "192.168.1.16"
     port = 9999
 
 try:
@@ -53,9 +53,13 @@ def animate(i):
 
     try:
 
-        p = 0.0035
+        p = 0.004
         i = 0.025
         d = 0
+
+        # p = 0.002
+        # i = 0.035
+        # d = 0
 
         message = (str(speedTarget)+","+str(p)+","+str(i)+","+str(d)).encode()
         socket.sendto(message, (network.ip, network.port))
@@ -135,15 +139,15 @@ def animate(i):
         # pid_plot.axhline(speed, color='blue', lw=2)
 
 
-        # pid_plot.plot(timestamps, l_speeds, color='red')   # Colored Points
+        pid_plot.plot(timestamps, l_speeds, color='red')   # Colored Points
         # pid_plot.scatter(timestamps, r_speeds, color='red')   # Colored Points
-        pid_plot.plot(timestamps, r_speeds, color='red')   # Colored Points
+        # pid_plot.plot(timestamps, r_speeds, color='red')   # Colored Points
 
-        pid_plot.plot(timestamps, r_targets, color='blue')   # Colored Points
-        # pid_plot.plot(timestamps, l_targets, color='blue')   # Colored Points
+        pid_plot.plot(timestamps, l_targets, color='blue')   # Colored Points
+        # pid_plot.plot(timestamps, r_targets, color='blue')   # Colored Points
 
-        pid_plot.plot(timestamps, r_dutys, color='green')   # Colored Points
-        # pid_plot.plot(timestamps, l_dutys, color='green')   # Colored Points
+        pid_plot.plot(timestamps, l_dutys, color='yellow')   # Colored Points
+        # pid_plot.plot(timestamps, r_dutys, color='yellow')   # Colored Points
 
         # pid_plot.plot(timestamps, l_speed_av, color='yellow')   # Colored Points
         # pid_plot.plot(timestamps, r_speed_av)   # Colored Points

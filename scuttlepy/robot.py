@@ -56,7 +56,8 @@ class SCUTTLE:
                                     invert_encoder=True
                                     )
 
-        self.imu = mpu.IMU()
+        self.setup() # take the first encoder readings, establish start
+        # self.imu = mpu.IMU()
 
     def setGlobal(self, pos):
 
@@ -137,18 +138,18 @@ class SCUTTLE:
         self.l_wheel.setAngularVelocity(C[0])                               # Set angularVelocity = [rad/s]
         self.r_wheel.setAngularVelocity(C[1])                               # Set angularVelocity = [rad/s]
 
-        logger.debug("Wheel_Speeds(rad/s) " +                               # report wheel speeds
-             str(round(self.wheelSpeeds[0], 4)) + " " +
-             str(round(self.wheelSpeeds[1], 4)))
-        logger.debug("PhiSetPoints(rad/s) " +                               # PID controller target (should match PhiTarget)
-            str(round(self.l_wheel.pid.SetPoint,3) ) + " " +
-            str(round(self.r_wheel.pid.SetPoint,3))  )
-        logger.debug("EffortLeft(duty) " +
-            str(round(self.l_wheel.pid.PTerm,3)) + " " +
-            str(round(self.l_wheel.pid.ITerm,3))     )
-        logger.debug("EffortRight(duty) " +
-            str(round(self.r_wheel.pid.PTerm,3)) + " " +
-            str(round(self.r_wheel.pid.ITerm,3))     )
+        # logger.debug("Wheel_Speeds(rad/s) " +                               # report wheel speeds
+        #      str(round(self.wheelSpeeds[0], 4)) + " " +
+        #      str(round(self.wheelSpeeds[1], 4)))
+        # logger.debug("PhiSetPoints(rad/s) " +                               # PID controller target (should match PhiTarget)
+        #     str(round(self.l_wheel.pid.SetPoint,3) ) + " " +
+        #     str(round(self.r_wheel.pid.SetPoint,3))  )
+        # logger.debug("EffortLeft(duty) " +
+        #     str(round(self.l_wheel.pid.PTerm,3)) + " " +
+        #     str(round(self.l_wheel.pid.ITerm,3))     )
+        # logger.debug("EffortRight(duty) " +
+        #     str(round(self.r_wheel.pid.PTerm,3)) + " " +
+        #     str(round(self.r_wheel.pid.ITerm,3))     )
 
     def displacement(self, chassisIncrement):                               # store dispalcement info to the log var_AngularAndForwardDisplacements
 
@@ -164,9 +165,9 @@ class SCUTTLE:
         self.loopStart = time.monotonic()                                   # use for measuring loop time
         logger.debug("TimeStamp(s) " + str(self.loopStart))
 
-        logger.debug("Gyro_raw(deg/s) " +
-            str(round(self.imu.getHeading(), 3)) + " " +
-            str(time.monotonic()))
+        # logger.debug("Gyro_raw(deg/s) " +
+        #     str(round(self.imu.getHeading(), 3)) + " " +
+        #     str(time.monotonic()))
 
         return np.array([self.forwardDisplacement, self.angularDisplacement])
 
@@ -186,7 +187,7 @@ class SCUTTLE:
             str(round(self.globalPosition[1], 3) ) )
         return self.globalPosition
 
-    def drawVector(self, point, globalPosition):                            # argument is an np array
+    def drawVector(self, globalPosition, point):                            # argument is an np array
         vector = point - globalPosition                                     # the vector describing the next step
         self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)          # length in m
         self.vectorDirection = math.atan2(vector[1], vector[0])             # discover vector direction
@@ -214,7 +215,7 @@ class SCUTTLE:
         return self.flip
 
     def stackHeading(self, angularDisplacement):                                                 # increment heading & ensure heading doesn't exceed 180 var_chassisImmediateAngularDisplacement
-        self.heading = self.heading + angularDisplacement              # update heading by the turn amount executed
+        self.heading += angularDisplacement              # update heading by the turn amount executed
         if self.heading > math.pi:
             self.heading += (2 * math.pi)
         if self.heading < -math.pi:
@@ -232,40 +233,42 @@ class SCUTTLE:
 
         self.getWheelIncrements()                                           # get the very first nonzero readings fron encoders var_bothWheelEncoderPositions
         self.setMotion([0,0])                                               # set speed zero [no inputs needed]
-        self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes) var_AngularAndForwardDisplacements
-                                                                                # for getChassis: var_ImmediateWheelsDisplacementOrPhis
-        self.stackDisplacement()                                            # add the new displacement to global position var_AngularAndForwardDisplacements
-        self.stackHeading()                                                 # add up the new heading  var_chassisImmediateAngularDisplacement
+        forwardDisplacement, angularDisplacement = self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes) var_AngularAndForwardDisplacements
+                                                                            # for getChassis: var_ImmediateWheelsDisplacementOrPhis
+        self.stackDisplacement(forwardDisplacement, angularDisplacement)    # add the new displacement to global position var_AngularAndForwardDisplacements
+        self.stackHeading(angularDisplacement)                                                 # add up the new heading  var_chassisImmediateAngularDisplacement
 
     def move(self, point):
         self.point = np.array(point)                                        # set the destination point  var_destinationPoint
-        self.drawVector(self.point, self.globalPosition)                    # draw vector to the destination var_currentLocationAndDestinationPoints
-        self.trajectory()                                                   # compute if turning is needed, populate "flip" 
+        vector = self.drawVector(self.point, self.globalPosition)                    # draw vector to the destination var_currentLocationAndDestinationPoints
+        self.trajectory(vector)                                                   # compute if turning is needed, populate "flip" 
 
         if self.flip != 0:
             logger.debug("START_CURVING " + str(time.monotonic()))          # log beginning of curve
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
             self.setMotion([self.cruiseRateTurning, self.curveRate * self.flip])   # closed loop command for turning
-            self.displacement()                                             # increment the displacements (update robot attributes)
-            self.stackDisplacement()                                        # add the new displacement to global position
-            self.stackHeading()                                             # add up the new heading
-            self.drawVector()                                               # draw vector to the destination
-            self.trajectory()                                               # recompute if turning is needed
+            forwardDisplacement, angularDisplacement = self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes) var_AngularAndForwardDisplacements
+            self.globalPosition = self.stackDisplacement(forwardDisplacement, angularDisplacement)
+            self.heading = self.stackHeading(angularDisplacement)
+            vector = self.drawVector(self.globalPosition, point)                                           # draw vector to the destination
+            self.trajectory(vector)                                               # recompute if turning is needed
             self.checkLoop()                                                # calculate how much to sleep
             if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        if self.flip == 0:self.angularDisplacement
+        if self.flip == 0:
             logger.debug("START_DRIVING " + str(time.monotonic()))          # log beginning of straightaway
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
-            self.displacement()                                             # update the displacements
-            self.stackDisplacement()
-            self.stackHeading()
-            self.drawVector()
-            self.trajectory()
+            # self.displacement(self.getChassis(self.getWheelIncrements()))                                             # update the displacements
+            forwardDisplacement, angularDisplacement = self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes) var_AngularAndForwardDisplacements
+
+            self.globalPosition = self.stackDisplacement(forwardDisplacement, angularDisplacement)
+            self.heading = self.stackHeading(angularDisplacement)
+            vector = self.drawVector(self.globalPosition, point)
+            self.trajectory(vector)
             self.checkLoop()                                                # calculate how much to sleep
             if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
@@ -277,5 +280,4 @@ class SCUTTLE:
             print( self.speed,  self.angularVelocity)
             time.sleep(0.035)
 
-        logger.debug("Log_completed " + str(time.monotonic()))
-        print("Movements finished. Log file: robotTest.log")
+        # logger.debug("Log_completed " + str(time.monotonic()))

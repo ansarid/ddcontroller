@@ -4,93 +4,41 @@
 # Intended for Beaglebone Blue hardware.
 # This example uses rcpy library. Documentation: guitar.ucsd.edu/rcpy/rcpy.pdf
 
-from adafruit_platformdetect import Detector
-detector = Detector()
+# from adafruit_platformdetect import Detector
+# detector = Detector()
+# if detector.board.BEAGLEBONE_BLUE:
 
 # Import external libraries
+import rcpy
+import rcpy.motor as motor
 
 class Motor:
 
-    def __init__(self, channel=None, pins=None, invert=False):
+    def __init__(self, channel, invert=False):
 
+        self.channel = channel
         self.duty = 0                                   # Initial Duty
         self.invert = invert                            # Reverse motor direction? Duty of 1 becomes -1 and duty of -1 becomes 1
 
-        if detector.board.BEAGLEBONE_BLUE:
-            import rcpy
-            import rcpy.motor as motor
-
-            if isinstance(channel, int):
-                if 1 >= channel <= 4:
-                    self.channel = channel
-                    rcpy.set_state(rcpy.RUNNING)
-                    motor.set(self.channel, self.duty)
-                else:
-                    raise ValueError('Invalid Channel. Please use a channel from 1-4.')
-            else:
-                raise TypeError('channel must be an int.')
-
-        if detector.board.any_raspberry_pi_40_pin:
-            import RPi.GPIO as GPIO
-            GPIO.setwarnings(False)
-            GPIO.setmode(GPIO.BOARD)
-
-            if isinstance(pins, tuple):
-                self.pins = pins
-
-                for pin in self.pins:
-                    GPIO.setup(pin, GPIO.OUT)
-                    GPIO.output(pin, GPIO.LOW)
-
-                self.pins = (GPIO.PWM(self.pins[0], 25000),
-                             GPIO.PWM(self.pins[1], 25000)
-                            )
-
-                for pin in self.pins:
-                    pin.start(0)
-                    pin.ChangeDutyCycle(100)     # Change duty cycle
-
-
-            else:
-                raise TypeError('pins must be a tuple.')
+        rcpy.set_state(rcpy.RUNNING)
+        motor.set(self.channel, self.duty)
 
     def setDuty(self, duty):
-        if detector.board.BEAGLEBONE_BLUE:
-            if rcpy.get_state() == rcpy.RUNNING:            # Execute loop if rcpy is running
-                if not self.invert:
-                    self.duty = duty
-                else:
-                    self.duty = -1 * duty                   # Invert duty cycle
-
-                motor.set(self.channel, self.duty)
-
-        if detector.board.any_raspberry_pi_40_pin:
+        if rcpy.get_state() == rcpy.RUNNING:            # Execute loop if rcpy is running
             if not self.invert:
-                if duty > 0:
-                    self.pins[0].ChangeDutyCycle(0)     # Change duty cycle
-                    self.pins[1].ChangeDutyCycle(abs(duty)*100)     # Change duty cycle
-                if duty < 0:
-                    self.pins[0].ChangeDutyCycle(abs(duty)*100)     # Change duty cycle
-                    self.pins[1].ChangeDutyCycle(0)     # Change duty cycle
+                self.duty = duty
             else:
-                if duty > 0:
-                    self.pins[0].ChangeDutyCycle(0)     # Change duty cycle
-                    self.pins[1].ChangeDutyCycle(abs(duty)*100)     # Change duty cycle
-                if duty < 0:
-                    self.pins[0].ChangeDutyCycle(abs(duty)*100)     # Change duty cycle
-                    self.pins[1].ChangeDutyCycle(0)     # Change duty cycle
+                self.duty = -1 * duty                   # Invert duty cycle
+
+            motor.set(self.channel, self.duty)
+
 
 if __name__ == "__main__":
 
     import time
 
-    if detector.board.BEAGLEBONE_BLUE:
-        l_motor = Motor(channel=1) 	                                # Create Left Motor Object (ch1)
-        r_motor = Motor(channel=2) 	                                # Create Right Motor Object (ch2)
-
-    if detector.board.any_raspberry_pi_40_pin:
-        r_motor = Motor(pins=(11,12)) 	                                # Create Left Motor Object (ch1)
-        l_motor = Motor(pins=(15,16)) 	                                # Create Right Motor Object (ch2)
+    l_motor = Motor(1) 	                                # Create Left Motor Object (ch1)
+    r_motor = Motor(2) 	                                # Create Right Motor Object (ch2)
 
     while True:
         print("motors.py: driving fwd")

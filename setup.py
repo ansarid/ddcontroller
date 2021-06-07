@@ -13,10 +13,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=['spidev',
                       'smbus2',
-                      'bmp280',
-                      'Adafruit-PlatformDetect'
                       'RTIMULib',
                       'fastlogging',
+                      'Adafruit-PlatformDetect',
                      ],
     keywords=['scuttle','robot','python'],
     url='https://github.com/ansarid/scuttlepy',

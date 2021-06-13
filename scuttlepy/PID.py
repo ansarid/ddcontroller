@@ -30,7 +30,6 @@ More information about PID Controller: http://en.wikipedia.org/wiki/PID_controll
 """
 import time
 
-
 class PID:
     """PID Controller
     """
@@ -45,8 +44,6 @@ class PID:
         self.current_time = current_time if current_time is not None else time.time()
         self.last_time = self.current_time
 
-        self.error = 0
-
         self.clear()
 
     def clear(self):
@@ -60,7 +57,7 @@ class PID:
 
         # Windup Guard
         self.int_error = 0.0
-        self.windup_guard = 1.01
+        self.windup_guard = 20.0
 
         self.output = 0.0
 
@@ -76,15 +73,15 @@ class PID:
            Test PID with Kp=1.2, Ki=1, Kd=0.001 (test_pid.py)
 
         """
-        self.error = self.SetPoint - feedback_value
+        error = self.SetPoint - feedback_value
 
         self.current_time = current_time if current_time is not None else time.time()
         delta_time = self.current_time - self.last_time
-        delta_error = self.error - self.last_error
+        delta_error = error - self.last_error
 
         if (delta_time >= self.sample_time):
-            self.PTerm = self.Kp * self.error
-            self.ITerm += self.Ki * self.error
+            self.PTerm = self.Kp * error
+            self.ITerm += error * delta_time
 
             if (self.ITerm < -self.windup_guard):
                 self.ITerm = -self.windup_guard
@@ -97,9 +94,9 @@ class PID:
 
             # Remember last time and last error for next calculation
             self.last_time = self.current_time
-            self.last_error = self.error
+            self.last_error = error
 
-            self.output = self.PTerm + self.ITerm + (self.Kd * self.DTerm)
+            self.output = self.PTerm + (self.Ki * self.ITerm) + (self.Kd * self.DTerm)
 
     def setKp(self, proportional_gain):
         """Determines how aggressively the PID reacts to the current error with setting Proportional Gain"""

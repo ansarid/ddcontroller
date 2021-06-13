@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import time
 import math
 import numpy as np
@@ -9,8 +11,8 @@ import os
 if os.path.exists("robotTest.log"):
     os.remove("robotTest.log")
 
-logger = LogInit(pathName="./robotTest.log")                                # Set up logger
-logger.debug("ColumnA ColumnB ColumnC ColumnD")                             # Make columns
+# logger = LogInit(pathName="./robotTest.log")                                # Set up logger
+# logger.debug("ColumnA ColumnB ColumnC ColumnD")                             # Make columns
 
 
 class SCUTTLE:
@@ -85,9 +87,9 @@ class SCUTTLE:
 
         self.wheelSpeeds = wheelIncrements / timeIncrement                  # speed = distance/time
 
-        logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
-        logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
-                     + " " + str(round(wheelIncrements[1], 4)))
+        # logger.debug("Time_Increment(s) " + str(round(timeIncrement, 3)) )
+        # logger.debug("Wheel_Increments(rad) " + str(round(wheelIncrements[0], 4))
+        #              + " " + str(round(wheelIncrements[1], 4)))
 
         return wheelIncrements
 
@@ -157,13 +159,13 @@ class SCUTTLE:
         self.forwardDisplacement = chassisIncrement[0]                      # add the latest advancement(m) to the total
         self.angularDisplacement = chassisIncrement[1]                      # add the latest advancement(rad) to the total
 
-        logger.debug("Chassis_Increment(m,rad) " +
-            str(round(chassisIncrement[0], 4)) + " " +
-            str(round(chassisIncrement[1], 4)) + " " +
-            str(time.monotonic()))
+        # logger.debug("Chassis_Increment(m,rad) " +
+        #     str(round(chassisIncrement[0], 4)) + " " +
+        #     str(round(chassisIncrement[1], 4)) + " " +
+        #     str(time.monotonic()))
 
         self.loopStart = time.monotonic()                                   # use for measuring loop time
-        logger.debug("TimeStamp(s) " + str(self.loopStart))
+        # logger.debug("TimeStamp(s) " + str(self.loopStart))
 
         # logger.debug("Gyro_raw(deg/s) " +
         #     str(round(self.imu.getHeading(), 3)) + " " +
@@ -182,19 +184,19 @@ class SCUTTLE:
         localVector = np.array([forwardDisplacement, 0])               # x value is increment and y value is always 0
         globalVector = np.matmul(R, localVector)
         self.globalPosition = self.globalPosition + globalVector            # add the increment to the global position
-        logger.debug("global_x(m) " +
-            str(round(self.globalPosition[0], 3)) + " global_y(m) " +
-            str(round(self.globalPosition[1], 3) ) )
+        # logger.debug("global_x(m) " +
+        #     str(round(self.globalPosition[0], 3)) + " global_y(m) " +
+        #     str(round(self.globalPosition[1], 3) ) )
         return self.globalPosition
 
     def drawVector(self, globalPosition, point):                            # argument is an np array
         vector = point - globalPosition                                     # the vector describing the next step
         self.vectorLength = math.sqrt(vector[0]**2 + vector[1]**2)          # length in m
         self.vectorDirection = math.atan2(vector[1], vector[0])             # discover vector direction
-        logger.debug("vectorLength(m) " +
-            str(round(self.vectorLength, 3)) +
-            " vectorDirection(deg) " +
-            str(round(math.degrees(self.vectorDirection), 1)))
+        # logger.debug("vectorLength(m) " +
+        #     str(round(self.vectorLength, 3)) +
+        #     " vectorDirection(deg) " +
+        #     str(round(math.degrees(self.vectorDirection), 1)))
         vector = np.array([self.vectorLength, self.vectorDirection])
         return vector
 
@@ -211,7 +213,7 @@ class SCUTTLE:
             self.flip = -1                                                  # negative turn needed
         else:
             self.flip = 0                                                   # go straight
-        logger.debug("CurveFlip " + str(self.flip) )
+        # logger.debug("CurveFlip " + str(self.flip) )
         return self.flip
 
     def stackHeading(self, angularDisplacement):                                                 # increment heading & ensure heading doesn't exceed 180 var_chassisImmediateAngularDisplacement
@@ -220,14 +222,14 @@ class SCUTTLE:
             self.heading += (2 * math.pi)
         if self.heading < -math.pi:
             self.heading += (2 * math.pi)
-        logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
+        # logger.debug("heading(deg) " + str(round(math.degrees(self.heading), 3)))
         return self.heading
 
     def checkLoop(self):
         self.loopFinish = time.monotonic()
         self.sleepTime = self.loopPeriod - (self.loopFinish - self.loopStart)
-        logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)))
-        return(self.sleepTime)
+        # logger.debug("sleepTime(s) " + str(round(self.sleepTime, 3)))
+        return self.sleepTime
 
     def setup(self):                                                        # call this before moving to points
 
@@ -243,8 +245,8 @@ class SCUTTLE:
         vector = self.drawVector(self.point, self.globalPosition)                    # draw vector to the destination var_currentLocationAndDestinationPoints
         self.trajectory(vector)                                                   # compute if turning is needed, populate "flip" 
 
-        if self.flip != 0:
-            logger.debug("START_CURVING " + str(time.monotonic()))          # log beginning of curve
+        # if self.flip != 0:
+        #     logger.debug("START_CURVING " + str(time.monotonic()))          # log beginning of curve
 
         while abs(self.flip):                                               # flip is +/-1 for turning.  flip is zero when heading points to target
             self.setMotion([self.cruiseRateTurning, self.curveRate * self.flip])   # closed loop command for turning
@@ -257,8 +259,8 @@ class SCUTTLE:
             if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        if self.flip == 0:
-            logger.debug("START_DRIVING " + str(time.monotonic()))          # log beginning of straightaway
+        # if self.flip == 0:
+        #     logger.debug("START_DRIVING " + str(time.monotonic()))          # log beginning of straightaway
 
         while self.vectorLength > ( self.tolerance ):                       # criteria to stop driving
             self.setMotion([self.cruiseRate, 0])                            # closed loop driving forward
@@ -273,7 +275,7 @@ class SCUTTLE:
             if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        logger.debug("SETTLE " + str(time.monotonic()))
+        # logger.debug("SETTLE " + str(time.monotonic()))
 
         while self.speed != 0 and self.angularVelocity != 0:
             self.setMotion([0, 0])

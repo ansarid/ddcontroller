@@ -41,11 +41,13 @@ if __name__ == "__main__":
     r_motor = Motor(2) 	                                # Create Right Motor Object (ch2)
 
     while True:
+
         print("motors.py: driving fwd")
-        l_motor.setDuty(1)                         # Set left motor duty cycle to 0.7
-        r_motor.setDuty(1)                          # Set right motor duty cycle to 0.7
-        time.sleep(5)                              # Wait 5 seconds
+        l_motor.setDuty(1)                              # Set left motor duty cycle to 0.7
+        r_motor.setDuty(1)                              # Set right motor duty cycle to 0.7
+        time.sleep(5)                                   # Wait 5 seconds
+
         print("motors.py: driving reverse")
-        l_motor.setDuty(-1)                          # Set left motor duty cycle to -0.7
-        r_motor.setDuty(-1)                         # Set right motor duty cycle to -0.7
-        time.sleep(5)                              # Wait 5 seconds
+        l_motor.setDuty(-1)                             # Set left motor duty cycle to -0.7
+        r_motor.setDuty(-1)                             # Set right motor duty cycle to -0.7
+        time.sleep(5)                                   # Wait 5 seconds

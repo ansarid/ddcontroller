@@ -6,7 +6,7 @@
 # Import external libraries
 
 import time
-import math
+import threading
 import numpy as np                                                          # for handling arrays
 
 # Import local files
@@ -23,11 +23,11 @@ from scuttlepy import encoder                                               # fo
 
 # logger.debug("ColumnA ColumnB ColumnC ColumnD")
 
-
 class Wheel:
 
     def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.04, KI=0.025, KD=0):
 
+        self.targetSpeed = 0                                                      # (rad/s), use self.speed instead when possible!
         self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                          # mm
         self.motor = motor.Motor(motor_channel, invert=invert_motor)
@@ -47,21 +47,44 @@ class Wheel:
         self.pid = PID.PID(self.KP, self.KI, self.KD)
         # self.pid.setWindup(1)
 
-        self.roll = 2 * math.pi / self.encoder.resolution
+        self.roll = 2 * np.pi / self.encoder.resolution
         self.gap = 0.5 * self.roll                                          # degrees specified as limit for rollover
-        self.wait = 0.02                                                    # wait time between encoder measurements (s)
+        self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
+        self.wait = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
 
-        # self.pid.setSampleTime(self.wait)
+        self.loopTime = 0
+        self.startTime = time.monotonic()
+
+        self.pid.setSampleTime(1/self.loopFreq)
+
+        self.stopped = False
+
+        self.wheelThread = threading.Thread(target=self._wheelLoop)
+        self.wheelThread.start()
+
+    def _wheelLoop(self):
+        while not self.stopped:
+
+            self.setAngularVelocity(self.targetSpeed)                       # Set target velocity
+
+            self.loopTime = (time.monotonic()-self.startTime)               # Calculate loop time
+            loopTimeOffset = (1/self.loopFreq)-self.loopTime                # Calculate time difference between target and actaul loop time
+            self.wait += loopTimeOffset                                     # Adjust wait time to achieve target
+            self.startTime = time.monotonic()                               # reset startTime
+
+    def stop(self):
+        self.stopped = True
+        self.wheelThread.join()
 
     def getTravel(self, position0, position1):                              # calculate the increment of a wheel in radians
-        diff = position1 - position0                                        # take in the values in raw encoder position
         if not self.invert_encoder:
+            diff = position1 - position0                                    # take in the values in raw encoder position
             travel = diff                                                   # reset the travel reading
             if((-travel) >= self.gap):                                      # if movement is large (has rollover)
                 travel = (diff + self.roll)                                 # handle forward rollover
             if(travel >= self.gap):
                 travel = (diff - self.roll)                                 # handle reverse rollover
-        else:
+        elif self.invert_encoder:
             diff = position0 - position1                                    # DUPLICATE CODE
             travel = diff
             if((-travel) >= self.gap):
@@ -71,7 +94,7 @@ class Wheel:
 
         travel = travel * self.encoder.resolution                           # go from raw value to radians
         travel = travel * self.pulleyRatio                                  # go from motor pulley to wheel pulley
-        return(travel)                                                      # return in radians of wheel advancement
+        return travel                                                       # return in radians of wheel advancement
 
     def getAngularVelocity(self):                                           # Use self.speed instead when possible!
 
@@ -85,12 +108,13 @@ class Wheel:
         travel = self.getTravel(initialPosition, finalPosition)             # movement calculations
 
         self.speed = round(travel / deltaTime, 3)                           # speed produced from true wheel travel (rad)
-        # logger.debug("Wheel_speed(rad/s) " + str(round(self.speed, 3)) +
+        # logger.debug("Wheel_speed(rad/s) " + str(round(self.speed, 3))round +
         #     " timeStamp " + str(time.monotonic()) )
         return self.speed                                                   # returns pdc in radians/second
 
-    def setAngularVelocity(self, phiDotTarget):
-        self.pid.SetPoint = phiDotTarget
+    def setAngularVelocity(self, angularVelocity):
+        self.targetSpeed = angularVelocity
+        self.pid.SetPoint = self.targetSpeed
         self.speed = self.getAngularVelocity()
         self.pid.update(self.speed)
         duty = self.pid.output
@@ -107,28 +131,20 @@ class Wheel:
         duty = sorted([-1, duty, 1])[1]                                     # place bounds on the motor commands
         self.motor.setDuty(round(duty, 2))                                  # must round to ensure driver handling!
 
-def rescale(duty):  # a temporary function to perform modified sweep test
-    p1 = 0.16
-    if -p1 < duty and duty < p1:
-        duty = (duty * 3)
-    elif duty >= p1:
-        duty = 0.48 + (0.619*(duty-0.16))
-    else:
-        duty = -0.48 + (-0.619*(duty+0.16))
-    duty = sorted([-1, duty, 1])[1]      # place bounds on the motor commands
-    return duty
 
 if __name__ == "__main__":
 
-    r_wheel = Wheel(2, 0x40) 	                                            # Right Motor (ch2)
-    l_wheel = Wheel(1, 0x41, invert_encoder=True)                           # Left Motor  (ch1)
 
-    r_wheel.setAngularVelocity(math.pi)
-    l_wheel.setAngularVelocity(math.pi)
+    l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
+    r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
 
-    while 1:
+    r_wheel.setAngularVelocity(np.pi)
+    l_wheel.setAngularVelocity(np.pi)
 
-        print(r_wheel.getAngularVelocity())
-        print(l_wheel.getAngularVelocity())
-
-
+    try:
+        while True:
+            print(l_wheel.getAngularVelocity(), '\t', r_wheel.getAngularVelocity())
+            time.sleep(0.2)
+    except KeyboardInterrupt:
+        l_wheel.stop()
+        r_wheel.stop()

@@ -9,10 +9,8 @@
 # if detector.board.BEAGLEBONE_BLUE:
 
 # Import external libraries
-import time
 import math
 from smbus2 import SMBus
-
 
 class Encoder:
 
@@ -57,19 +55,21 @@ class Encoder:
 
 if __name__ == "__main__":
 
-    rightEncoder = Encoder(0x40)                                            # Create encoder object for right encoder on address 0x40
-    leftEncoder = Encoder(0x41, invert=True)                                # Create encoder object for left encoder on address 0x43
+    import time
+
+    l_encoder = Encoder(0x40, invert=True)                                  # Create encoder object for left encoder on address 0x40
+    r_encoder = Encoder(0x41)                                               # Create encoder object for right encoder on address 0x41
 
     while True:
 
-        rightPos = round(rightEncoder.readPos(), 2)
-        leftPos = round(leftEncoder.readPos(), 2)
+        # rightPos = round(rightEncoder.readPos(), 2)
+        # leftPos = round(leftEncoder.readPos(), 2)
 
-        rightAngle = round(rightEncoder.readAngle(), 2)
-        leftAngle = round(leftEncoder.readAngle(), 2)
+        rightAngle = round(r_encoder.readAngle(), 2)
+        leftAngle = round(l_encoder.readAngle(), 2)
 
-        rightMag = round(rightEncoder.readMagnitude(), 2)
-        leftMag = round(leftEncoder.readMagnitude(), 2)
+        # rightMag = round(rightEncoder.readMagnitude(), 2)
+        # leftMag = round(leftEncoder.readMagnitude(), 2)
 
         # print(leftPos, "\t", rightPos)
         print(leftAngle, "\t", rightAngle)

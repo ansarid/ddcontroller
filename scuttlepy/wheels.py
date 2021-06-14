@@ -52,7 +52,7 @@ class Wheel:
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
         self.wait = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
 
-        self.loopTime = 0
+        self.loopTime = self.wait
         self.startTime = time.monotonic()
 
         self.pid.setSampleTime(1/self.loopFreq)
@@ -100,7 +100,7 @@ class Wheel:
 
         initialPosition = self.encoder.readPos()
         initialTime = time.monotonic()                                      # time.monotonic() reports in seconds
-        time.sleep(self.wait)                                               # delay specified amount
+        time.sleep(abs(self.wait))                                               # delay specified amount   ABS is probably the wrong fix
         finalPosition = self.encoder.readPos()
         finalTime = time.monotonic()
         deltaTime = round((finalTime - initialTime), 3)                     # new scalar delta time value

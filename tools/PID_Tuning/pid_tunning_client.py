@@ -10,7 +10,7 @@ from matplotlib.widgets import Slider, Button, RadioButtons
 plt.style.use('dark_background')
 class network:
 
-    ip = "192.168.1.16"
+    ip = "192.168.1.14"
     port = 9999
 
 try:
@@ -53,8 +53,8 @@ def animate(i):
 
     try:
 
-        p = 0.004
-        i = 0.025
+        p = 0.02
+        i = 0
         d = 0
 
         # p = 0.002

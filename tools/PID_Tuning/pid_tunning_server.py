@@ -1,3 +1,4 @@
+import threading
 import time
 import socket
 from scuttlepy import wheels
@@ -15,11 +16,13 @@ packet = ''
 request = [0, 0, 0, 0]
 
 request, ip = socket.recvfrom(1024)
-start_time = time.time()
+start_time = time.monotonic()
+
 
 while 1:
+    otherTime = time.monotonic()
     request, ip = socket.recvfrom(1024)
-    print(request)
+    # print(request)
     if request.decode('utf-8') == 'q':
         exit()
 
@@ -30,16 +33,16 @@ while 1:
         request = request.decode('utf-8').split(',')
         # l_wheel.setAngularVelocity(-1*float(request[0]))
 
-        # if (time.time() - start_time) >= 40:
+        # if (time.monotonic() - start_time) >= 40:
         l_wheel.setAngularVelocity(float(request[0]))
-        r_wheel.setAngularVelocity(float(request[0]))
+        r_wheel.setAngularVelocity(-1*float(request[0]))
 
         # else:
         #     l_wheel.setAngularVelocity(float(request[0]))
         #     # l_wheel.setAngularVelocity(0)
         #     r_wheel.setAngularVelocity(float(request[0]))
         #     # l_wheel.motor.setDuty(0.6)
-        time.sleep(0.060)
+        # time.sleep(0.060)
 
         r_wheel.pid.setKp(float(request[1]))
         r_wheel.pid.setKi(float(request[2]))
@@ -49,7 +52,7 @@ while 1:
         l_wheel.pid.setKi(float(request[2]))
         l_wheel.pid.setKd(float(request[3]))
 
-        timestamp = round(time.time() - start_time, 3)
+        timestamp = round(time.monotonic() - start_time, 3)
 
     packet = str(timestamp)+\
         ","+str(l_wheel.speed)+\
@@ -67,6 +70,7 @@ while 1:
 
     # print(packet)
 
-    if (time.time() - start_time) >= 40:
+    if (time.monotonic() - start_time) >= 40:
         break
 
+    print(round(time.monotonic()-otherTime,3))

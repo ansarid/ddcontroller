@@ -6,7 +6,6 @@
 # Import external libraries
 
 import time
-import threading
 import numpy as np                                                          # for handling arrays
 
 # Import local files
@@ -27,7 +26,7 @@ class Wheel:
 
     def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.04, KI=0.025, KD=0):
 
-        self.targetSpeed = 0                                                      # (rad/s), use self.speed instead when possible!
+        self.targetSpeed = 0                                                # (rad/s), use self.speed instead when possible!
         self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                          # mm
         self.motor = motor.Motor(motor_channel, invert=invert_motor)
@@ -52,29 +51,24 @@ class Wheel:
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
         self.wait = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
 
-        self.loopTime = self.wait
-        self.startTime = time.monotonic()
+        # self.loopTime = self.wait
+        # self.startTime = time.monotonic()
 
         self.pid.setSampleTime(1/self.loopFreq)
 
-        self.stopped = False
+    # def _wheelLoop(self):
+    #     while not self.stopped:
 
-        self.wheelThread = threading.Thread(target=self._wheelLoop)
-        self.wheelThread.start()
+    #         self.setAngularVelocity(self.targetSpeed)                       # Set target velocity
 
-    def _wheelLoop(self):
-        while not self.stopped:
+    #         self.loopTime = (time.monotonic()-self.startTime)               # Calculate loop time
+    #         loopTimeOffset = (1/self.loopFreq)-self.loopTime                # Calculate time difference between target and actaul loop time
+    #         self.wait += loopTimeOffset                                     # Adjust wait time to achieve target
+    #         self.startTime = time.monotonic()                               # reset startTime
 
-            self.setAngularVelocity(self.targetSpeed)                       # Set target velocity
-
-            self.loopTime = (time.monotonic()-self.startTime)               # Calculate loop time
-            loopTimeOffset = (1/self.loopFreq)-self.loopTime                # Calculate time difference between target and actaul loop time
-            self.wait += loopTimeOffset                                     # Adjust wait time to achieve target
-            self.startTime = time.monotonic()                               # reset startTime
-
-    def stop(self):
-        self.stopped = True
-        self.wheelThread.join()
+    # def stop(self):
+    #     self.stopped = True
+    #     self.wheelThread.join()
 
     def getTravel(self, position0, position1):                              # calculate the increment of a wheel in radians
         if not self.invert_encoder:
@@ -134,17 +128,11 @@ class Wheel:
 
 if __name__ == "__main__":
 
-
     l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
     r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
 
     r_wheel.setAngularVelocity(np.pi)
     l_wheel.setAngularVelocity(np.pi)
 
-    try:
-        while True:
-            print(l_wheel.getAngularVelocity(), '\t', r_wheel.getAngularVelocity())
-            time.sleep(0.2)
-    except KeyboardInterrupt:
-        l_wheel.stop()
-        r_wheel.stop()
+    while True:
+        print(l_wheel.getAngularVelocity(), ' rad/s\t', r_wheel.getAngularVelocity(), ' rad/s')

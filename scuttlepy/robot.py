@@ -2,20 +2,29 @@
 
 import time
 import math
+import threading
 import numpy as np
 from scuttlepy import wheels
 from scuttlepy import mpu
 from fastlogging import LogInit
 
-import os
-if os.path.exists("robotTest.log"):
-    os.remove("robotTest.log")
+# import os
+# if os.path.exists("robotTest.log"):
+#     os.remove("robotTest.log")
 
 # logger = LogInit(pathName="./robotTest.log")                                # Set up logger
 # logger.debug("ColumnA ColumnB ColumnC ColumnD")                             # Make columns
 
 
 class SCUTTLE:
+
+    '''
+
+        SCUTTLE Specifications
+
+            - Max Wheel Velocity: 10 rad/s
+
+    '''
 
     def __init__(self):
 
@@ -49,6 +58,8 @@ class SCUTTLE:
         self.l_encoderAddress = 0x40                                        # Left wheel encoder address
         self.r_encoderAddress = 0x41                                        # Right wheel encoder address
 
+        self.targetMotion = [0,0]
+
         self.r_wheel = wheels.Wheel(self.r_motorChannel,                    # Create right wheel object
                                     self.r_encoderAddress
                                     )
@@ -58,8 +69,33 @@ class SCUTTLE:
                                     invert_encoder=True
                                     )
 
+        self.stopped = False
+
         self.setup() # take the first encoder readings, establish start
         # self.imu = mpu.IMU()
+        self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
+        self.wait = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
+
+        self.loopTime = self.wait
+        self.startTime = time.monotonic()
+
+        self.wheelsThread = threading.Thread(target=self._wheelsLoop)
+        self.wheelsThread.start()
+
+    def _wheelsLoop(self):
+        while not self.stopped:
+
+            self.setMotion(self.targetMotion)                       # Set target velocity
+
+            self.loopTime = (time.monotonic()-self.startTime)               # Calculate loop time
+            loopTimeOffset = (1/self.loopFreq)-self.loopTime                # Calculate time difference between target and actaul loop time
+            self.wait += loopTimeOffset                                     # Adjust wait time to achieve target
+            self.startTime = time.monotonic()                               # reset startTime
+
+    def stop(self):
+        self.setMotion([0, 0])
+        self.stopped = True
+        self.wheelsThread.join()
 
     def setGlobal(self, pos):
 
@@ -135,6 +171,7 @@ class SCUTTLE:
 
     def setMotion(self, targetMotion):                                      # Take chassis speed and command wheels
                                                                             # argument: [x_dot, theta_dot]
+        self.targetMotion = targetMotion
         C = self.getWheels(targetMotion)                                    # Perform matrix multiplication
 
         self.l_wheel.setAngularVelocity(C[0])                               # Set angularVelocity = [rad/s]
@@ -234,7 +271,7 @@ class SCUTTLE:
     def setup(self):                                                        # call this before moving to points
 
         self.getWheelIncrements()                                           # get the very first nonzero readings fron encoders var_bothWheelEncoderPositions
-        self.setMotion([0,0])                                               # set speed zero [no inputs needed]
+        self.setMotion(self.targetMotion)                                               # set speed zero [no inputs needed]
         forwardDisplacement, angularDisplacement = self.displacement(self.getChassis(self.getWheelIncrements()))       # increment the displacements (update robot attributes) var_AngularAndForwardDisplacements
                                                                             # for getChassis: var_ImmediateWheelsDisplacementOrPhis
         self.stackDisplacement(forwardDisplacement, angularDisplacement)    # add the new displacement to global position var_AngularAndForwardDisplacements
@@ -275,11 +312,27 @@ class SCUTTLE:
             if self.sleepTime > 0.001:
                 time.sleep(self.sleepTime)
 
-        # logger.debug("SETTLE " + str(time.monotonic()))
-
+        # logger.debug("SETTLE " + str(time.monotonic()))targetMotion
         while self.speed != 0 and self.angularVelocity != 0:
             self.setMotion([0, 0])
-            print( self.speed,  self.angularVelocity)
+            # print( self.speed,  self.angularVelocity)
             time.sleep(0.035)
 
         # logger.debug("Log_completed " + str(time.monotonic()))
+
+if __name__ == "__main__":
+
+    scuttle = SCUTTLE()
+
+    try:
+        while True:
+            scuttle.setMotion([0, 4])
+            time.sleep(5)
+            scuttle.setMotion([-2, 0])
+            time.sleep(5)
+            scuttle.setMotion([2, 0])
+            time.sleep(5)
+
+    except KeyboardInterrupt:
+        scuttle.stop()
+        pass

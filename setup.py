@@ -16,10 +16,12 @@ setuptools.setup(
                       'RTIMULib',
                       'fastlogging',
                       'Adafruit-PlatformDetect',
+                      'rcpy',                       # Need to make this install based on user platform
+                      'RPi.GPIO',                   # Need to make this install based on user platform
+                      'Jetson.GPIO',                # Need to make this install based on user platform
                      ],
     keywords=['scuttle','robot','python'],
     url='https://github.com/ansarid/scuttlepy',
     long_description=long_description,
     long_description_content_type='text/markdown'
 )
-

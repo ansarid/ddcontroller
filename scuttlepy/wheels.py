@@ -14,6 +14,9 @@ from scuttlepy import PID                                                   # fo
 from scuttlepy import motor                                                 # for controlling motors
 from scuttlepy import encoder                                               # for reading encoders
 
+from adafruit_platformdetect import Detector
+detector = Detector()
+
 # Create and configure logger
 # logging.basicConfig(filename="wheelsTest.log", format='%(asctime)s %(message)s', filemode='w')
 # logger = logging.getLogger()                                                # create an object
@@ -24,12 +27,12 @@ from scuttlepy import encoder                                               # fo
 
 class Wheel:
 
-    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0):
+    def __init__(self, motor_output, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0):
 
         self.targetSpeed = 0                                                # (rad/s), use self.speed instead when possible!
         self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                          # mm
-        self.motor = motor.Motor(motor_channel, invert=invert_motor)
+        self.motor = motor.Motor(motor_output, invert=invert_motor)
         self.encoder = encoder.Encoder(encoder_address)
         self.invert_motor = invert_motor
         self.invert_encoder = invert_encoder
@@ -128,8 +131,15 @@ class Wheel:
 
 if __name__ == "__main__":
 
-    l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
-    r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
+    if detector.board.BEAGLEBONE_BLUE:
+
+        l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
+        r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
+
+    elif detector.board.RASPBERRY_PI_40_PIN or detector.board.JETSON_NANO:
+
+        l_wheel = Wheel((15,16), 0x40, invert_encoder=True)                           # Left Motor  (ch1)
+        r_wheel = Wheel((11,12), 0x41) 	                                            # Right Motor (ch2)
 
     while True:
         r_wheel.setAngularVelocity(np.pi)

@@ -6,8 +6,8 @@
 # Import external libraries
 
 import time
+import threading
 import numpy as np                                                          # for handling arrays
-
 # Import local files
 
 from scuttlepy import PID                                                   # for PID controller
@@ -24,7 +24,7 @@ from scuttlepy import encoder                                               # fo
 
 class Wheel:
 
-    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.04, KI=0.025, KD=0):
+    def __init__(self, motor_channel, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0):
 
         self.targetSpeed = 0                                                # (rad/s), use self.speed instead when possible!
         self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
@@ -131,8 +131,8 @@ if __name__ == "__main__":
     l_wheel = Wheel(1, 0x40, invert_encoder=True)                           # Left Motor  (ch1)
     r_wheel = Wheel(2, 0x41) 	                                            # Right Motor (ch2)
 
-    r_wheel.setAngularVelocity(np.pi)
-    l_wheel.setAngularVelocity(np.pi)
-
     while True:
+        r_wheel.setAngularVelocity(np.pi)
+        l_wheel.setAngularVelocity(np.pi)
+
         print(l_wheel.getAngularVelocity(), ' rad/s\t', r_wheel.getAngularVelocity(), ' rad/s')

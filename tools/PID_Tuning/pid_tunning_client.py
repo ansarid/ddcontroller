@@ -43,7 +43,7 @@ r_error = [0]
 
 timestamps = [0]
 
-speedTarget = round(10, 2)
+speedTarget = round(9, 2)
 
 startTime = time.time()
 
@@ -53,12 +53,12 @@ def animate(i):
 
     try:
 
-        p = 0.02
-        i = 0
-        d = 0
+        p = 0.015
+        i = 0.025
+        d = 0.0
 
-        # p = 0.002
-        # i = 0.035
+        # p = 0.004
+        # i = 0.025
         # d = 0
 
         message = (str(speedTarget)+","+str(p)+","+str(i)+","+str(d)).encode()
@@ -115,7 +115,7 @@ def animate(i):
             speedTarget = 2
 
         elif round(timestamps[-1]) > 20:
-            speedTarget = 0
+            speedTarget = -5
 
         pid_plot.clear()
 

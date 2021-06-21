@@ -46,17 +46,19 @@ elif detector.board.any_raspberry_pi_40_pin:
                 GPIO.setup(pin, GPIO.OUT)
 
             self.motor = GPIO.PWM(pins[0], self.freqency)
+            self.motor.start(self.duty)
 
         def setDuty(self, duty):
 
             self.duty = duty
 
-            if not self.invert:
+            if self.duty > 0:
                 GPIO.output(self.pins[1], self.duty < 0)
-            else:
-                GPIO.output(self.pins[1], self.duty > 0)
+                self.motor.ChangeDutyCycle(abs(self.duty*100))
 
-            self.motor.ChangeDutyCycle(abs(self.duty*100))
+            elif self.duty < 0:
+                GPIO.output(self.pins[1], self.duty < 0)
+                self.motor.ChangeDutyCycle(100-abs(self.duty*100))
 
         def stop(self):
             self.motor.stop()
@@ -80,21 +82,24 @@ elif detector.board.JETSON_NANO:
                 GPIO.setup(pin, GPIO.OUT)
 
             self.motor = GPIO.PWM(pins[0], self.freqency)
+            self.motor.start(self.duty)
 
         def setDuty(self, duty):
 
             self.duty = duty
 
-            if not self.invert:
+            if self.duty > 0:
                 GPIO.output(self.pins[1], self.duty < 0)
-            else:
-                GPIO.output(self.pins[1], self.duty > 0)
+                self.motor.ChangeDutyCycle(abs(self.duty*100))
 
-            self.motor.ChangeDutyCycle(abs(self.duty*100))
+            elif self.duty < 0:
+                GPIO.output(self.pins[1], self.duty < 0)
+                self.motor.ChangeDutyCycle(100-abs(self.duty*100))
 
         def stop(self):
             self.motor.stop()
             GPIO.cleanup()
+
 
 if __name__ == "__main__":
 

@@ -28,7 +28,7 @@ if detector.board.BEAGLEBONE_BLUE:
 
                 motor.set(self.channel, self.duty)
 
-elif detector.board.RASPBERRY_PI_40_PIN:
+elif detector.board.any_raspberry_pi_40_pin:
 
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BOARD)
@@ -57,6 +57,10 @@ elif detector.board.RASPBERRY_PI_40_PIN:
                 GPIO.output(self.pins[1], self.duty > 0)
 
             self.motor.ChangeDutyCycle(abs(self.duty*100))
+
+        def stop(self):
+            self.motor.stop()
+            GPIO.cleanup()
 
 elif detector.board.JETSON_NANO:
 
@@ -88,6 +92,9 @@ elif detector.board.JETSON_NANO:
 
             self.motor.ChangeDutyCycle(abs(self.duty*100))
 
+        def stop(self):
+            self.motor.stop()
+            GPIO.cleanup()
 
 if __name__ == "__main__":
 
@@ -98,7 +105,7 @@ if __name__ == "__main__":
         l_motor = Motor(1) 	                                # Create Left Motor Object (ch1)
         r_motor = Motor(2) 	                                # Create Right Motor Object (ch2)
 
-    elif detector.board.RASPBERRY_PI_40_PIN or detector.board.JETSON_NANO:
+    elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
 
         l_motor = Motor((15,16)) 	                                # Create Left Motor Object (pwm, digital)
         r_motor = Motor((11,12)) 	                                # Create Right Motor Object (pwm, digital)

@@ -8,6 +8,9 @@ from scuttlepy import wheels
 from scuttlepy import mpu
 from fastlogging import LogInit
 
+from adafruit_platformdetect import Detector
+detector = Detector()
+
 # import os
 # if os.path.exists("robotTest.log"):
 #     os.remove("robotTest.log")
@@ -60,6 +63,16 @@ class SCUTTLE:
 
         self.targetMotion = [0,0]
 
+        if detector.board.BEAGLEBONE_BLUE:
+
+            self.l_motorChannel = 1
+            self.r_motorChannel = 2
+
+        elif detector.board.RASPBERRY_PI_40_PIN or detector.board.JETSON_NANO:
+
+            self.l_motorChannel = (32,29)
+            self.r_motorChannel = (33,31)
+
         self.r_wheel = wheels.Wheel(self.r_motorChannel,                    # Create right wheel object
                                     self.r_encoderAddress
                                     )
@@ -91,6 +104,15 @@ class SCUTTLE:
             loopTimeOffset = (1/self.loopFreq)-self.loopTime                # Calculate time difference between target and actaul loop time
             self.wait += loopTimeOffset                                     # Adjust wait time to achieve target
             self.startTime = time.monotonic()                               # reset startTime
+
+        self.r_wheel.setAngularVelocity(0)
+        self.l_wheel.setAngularVelocity(0)
+
+        self.r_wheel.motor.setDuty(0)
+        self.l_wheel.motor.setDuty(0)
+
+        self.r_wheel.stop()
+        self.l_wheel.stop()
 
     def stop(self):
         self.setMotion([0, 0])

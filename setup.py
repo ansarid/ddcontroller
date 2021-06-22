@@ -13,11 +13,11 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=['spidev',
                       'smbus2',
-                      'RTIMULib',
+#                      'RTIMULib',
                       'fastlogging',
                       'Adafruit-PlatformDetect',
-                      'rcpy',                       # Need to make this install based on user platform
-                      'RPi.GPIO',                   # Need to make this install based on user platform
+#                      'rcpy',                       # Need to make this install based on user platform
+#                      'RPi.GPIO',                   # Need to make this install based on user platform
                       'Jetson.GPIO',                # Need to make this install based on user platform
                      ],
     keywords=['scuttle','robot','python'],

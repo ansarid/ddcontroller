@@ -6,7 +6,6 @@
 # Import external libraries
 
 import time
-import threading
 import numpy as np                                                          # for handling arrays
 # Import local files
 
@@ -54,24 +53,7 @@ class Wheel:
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
         self.wait = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
 
-        # self.loopTime = self.wait
-        # self.startTime = time.monotonic()
-
         self.pid.setSampleTime(1/self.loopFreq)
-
-    # def _wheelLoop(self):
-    #     while not self.stopped:
-
-    #         self.setAngularVelocity(self.targetSpeed)                       # Set target velocity
-
-    #         self.loopTime = (time.monotonic()-self.startTime)               # Calculate loop time
-    #         loopTimeOffset = (1/self.loopFreq)-self.loopTime                # Calculate time difference between target and actaul loop time
-    #         self.wait += loopTimeOffset                                     # Adjust wait time to achieve target
-    #         self.startTime = time.monotonic()                               # reset startTime
-
-    # def stop(self):
-    #     self.stopped = True
-    #     self.wheelThread.join()
 
     def getTravel(self, position0, position1):                              # calculate the increment of a wheel in radians
         if not self.invert_encoder:
@@ -128,6 +110,10 @@ class Wheel:
         duty = sorted([-1, duty, 1])[1]                                     # place bounds on the motor commands
         self.motor.setDuty(round(duty, 2))                                  # must round to ensure driver handling!
 
+    def stop(self):
+        self.motor.setDuty(0)
+        self.motor.stop()
+
 
 if __name__ == "__main__":
 
@@ -138,11 +124,20 @@ if __name__ == "__main__":
 
     elif detector.board.RASPBERRY_PI_40_PIN or detector.board.JETSON_NANO:
 
-        l_wheel = Wheel((15,16), 0x40, invert_encoder=True)                           # Left Motor  (ch1)
-        r_wheel = Wheel((11,12), 0x41) 	                                            # Right Motor (ch2)
+        l_wheel = Wheel((32,29), 0x40, invert_encoder=True)                     # Left Motor  (ch1)
+        r_wheel = Wheel((33,31), 0x41) 	                                        # Right Motor (ch2)
 
-    while True:
-        r_wheel.setAngularVelocity(np.pi)
-        l_wheel.setAngularVelocity(np.pi)
+    try:
+        while True:
 
-        print(l_wheel.getAngularVelocity(), ' rad/s\t', r_wheel.getAngularVelocity(), ' rad/s')
+            r_wheel.setAngularVelocity(np.pi)
+            l_wheel.setAngularVelocity(np.pi)
+
+            print(l_wheel.getAngularVelocity(), ' rad/s\t', r_wheel.getAngularVelocity(), ' rad/s')
+
+    except KeyboardInterrupt:
+        r_wheel.setAngularVelocity(0)
+        l_wheel.setAngularVelocity(0)
+
+        r_wheel.stop()
+        l_wheel.stop()

@@ -1,14 +1,9 @@
 #!/usr/bin/python3
 
-# speed_control.py takes target speeds and generates duty cycles
-# to send to motors, and has a function to execute PID control.
-
-# Import external libraries
-
 import time
 import numpy as np                                                          # for handling arrays
-# Import local files
 
+import logging
 from scuttlepy import PID                                                   # for PID controller
 from scuttlepy import motor                                                 # for controlling motors
 from scuttlepy import encoder                                               # for reading encoders
@@ -16,17 +11,24 @@ from scuttlepy import encoder                                               # fo
 from adafruit_platformdetect import Detector
 detector = Detector()
 
-# Create and configure logger
-# logging.basicConfig(filename="wheelsTest.log", format='%(asctime)s %(message)s', filemode='w')
-# logger = logging.getLogger()                                                # create an object
-# logger.setLevel(logging.DEBUG)                                              # set threshold of logger to DEBUG
-# logger.disabled = True
-
-# logger.debug("ColumnA ColumnB ColumnC ColumnD")
-
 class Wheel:
 
-    def __init__(self, motor_output, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0):
+    def __init__(self, motor_output, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False, debugging=False, debugFile=None):
+
+        self.debugging = debugging
+        self.debugFile = debugFile
+        self.openLoop = openLoop
+
+        if self.debugging:
+            if self.debugFile:
+                logging.basicConfig(filename=self.debugFile, format='%(asctime)s %(message)s', filemode='w')
+                self.logger = logging.getself.logger()                                                # create an object
+                self.logger.setLevel(logging.DEBUG)                                              # set threshold of self.logger to DEBUG
+                self.logger.disabled = False
+                self.t0 = time.monotonic()
+            else:
+                print('Please specify a debug file name!')
+                self.debugging = False
 
         self.targetSpeed = 0                                                # (rad/s), use self.speed instead when possible!
         self.speed = 0                                                      # (rad/s), use self.speed instead when possible!
@@ -51,7 +53,7 @@ class Wheel:
         self.roll = 2 * np.pi / self.encoder.resolution
         self.gap = 0.5 * self.roll                                          # degrees specified as limit for rollover
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
-        self.wait = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
+        self.period = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
 
         self.pid.setSampleTime(1/self.loopFreq)
 
@@ -79,7 +81,7 @@ class Wheel:
 
         initialPosition = self.encoder.readPos()
         initialTime = time.monotonic()                                      # time.monotonic() reports in seconds
-        time.sleep(abs(self.wait))                                               # delay specified amount   ABS is probably the wrong fix
+        time.sleep(self.period)                                               # delay specified amount
         finalPosition = self.encoder.readPos()
         finalTime = time.monotonic()
         deltaTime = round((finalTime - initialTime), 3)                     # new scalar delta time value
@@ -87,16 +89,32 @@ class Wheel:
         travel = self.getTravel(initialPosition, finalPosition)             # movement calculations
 
         self.speed = round(travel / deltaTime, 3)                           # speed produced from true wheel travel (rad)
-        # logger.debug("Wheel_speed(rad/s) " + str(round(self.speed, 3))round +
-        #     " timeStamp " + str(time.monotonic()) )
+
+        if self.debugging:
+            myTime = round(time.monotonic() - self.t0,3)
+            self.logger.debug("Wheel_speed(rad/s) " + str(round(self.speed, 3)) +
+                " timeStamp " + str(myTime) )
+
         return self.speed                                                   # returns pdc in radians/second
 
     def setAngularVelocity(self, angularVelocity):
         self.targetSpeed = angularVelocity
-        self.pid.SetPoint = self.targetSpeed
-        self.speed = self.getAngularVelocity()
-        self.pid.update(self.speed)
-        duty = self.pid.output
+
+        if not self.openLoop:
+            self.pid.SetPoint = self.targetSpeed
+            self.speed = self.getAngularVelocity()
+            self.pid.update(self.speed)
+            duty = self.pid.output
+
+            if self.debugging:
+                myTime = round(time.monotonic() - self.t0,3)
+                self.logger.debug(" timeStamp " + str(myTime) +
+                    " u_p " + str(round(self.pid.PTerm, 3)) +
+                    " u_total " + str(round (self.pid.output,2) ) )
+
+        else:       # VERY TEMPORARY CODE
+            # duty = sorted([-1, self.targetSpeed * (1/9) * 0.8, 1])[1]
+            duty = self.targetSpeed/10
 
         ### THIS NEEDS TO BE REFACTORED ###
         if -0.222 < duty and duty < 0.222:
@@ -107,7 +125,7 @@ class Wheel:
             duty = -0.666 + (-0.429*(duty+0.222))
         ### THIS NEEDS TO BE REFACTORED ###
 
-        duty = sorted([-1, duty, 1])[1]                                     # place bounds on the motor commands
+        duty = sorted([-1, duty, 1])[1]                                     # place bounds on the motor commands    looks like a job for np.clip()
         self.motor.setDuty(round(duty, 2))                                  # must round to ensure driver handling!
 
     def stop(self):

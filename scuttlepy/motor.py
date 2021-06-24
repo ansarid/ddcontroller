@@ -73,6 +73,7 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
                 self.motor.ChangeDutyCycle(100-abs(self.duty*100))
 
         def stop(self):
+            GPIO.output(self.pins[1], False)
             self.motor.ChangeDutyCycle(0)
             GPIO.cleanup()
 
@@ -88,13 +89,13 @@ if __name__ == "__main__":
 
     elif detector.board.any_raspberry_pi_40_pin:
 
-        l_motor = Motor((15,16)) 	                                # Create Left Motor Object (pwm, digital)
-        r_motor = Motor((11,12)) 	                                # Create Right Motor Object (pwm, digital)
+        l_motor = Motor((15,16)) 	                        # Create Left Motor Object (pwm, digital)
+        r_motor = Motor((11,12)) 	                        # Create Right Motor Object (pwm, digital)
 
     elif detector.board.JETSON_NANO:
 
-        l_motor = Motor((32,29)) 	                                # Create Left Motor Object (pwm, digital)
-        r_motor = Motor((33,31)) 	                                # Create Right Motor Object (pwm, digital)
+        l_motor = Motor((32,29)) 	                        # Create Left Motor Object (pwm, digital)
+        r_motor = Motor((33,31)) 	                        # Create Right Motor Object (pwm, digital)
 
     else:
         print('Unsupported Platform "', detector.board.id, '"!')
@@ -105,15 +106,15 @@ if __name__ == "__main__":
 
             for duty in np.arange(-1,1, 0.01):
                 print(duty)
-                l_motor.setDuty(duty)                              # Set left motor duty cycle to 1
-                r_motor.setDuty(duty)                              # Set right motor duty cycle to 1
-                time.sleep(0.1)                                 # Wait 0.1 seconds
+                l_motor.setDuty(duty)           # Set left motor duty cycle to 1
+                r_motor.setDuty(duty)           # Set right motor duty cycle to 1
+                time.sleep(0.1)                 # Wait 0.1 seconds
 
             for duty in np.arange(1,-1, -0.01):
                 print(duty)
-                l_motor.setDuty(duty)                              # Set left motor duty cycle to 1
-                r_motor.setDuty(duty)                              # Set right motor duty cycle to 1
-                time.sleep(0.1)                                 # Wait 0.1 seconds
+                l_motor.setDuty(duty)           # Set left motor duty cycle to 1
+                r_motor.setDuty(duty)           # Set right motor duty cycle to 1
+                time.sleep(0.1)                 # Wait 0.1 seconds
 
     except KeyboardInterrupt:
 

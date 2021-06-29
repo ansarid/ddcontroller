@@ -95,7 +95,7 @@ class Wheel:
             self.logger.debug("Wheel_speed(rad/s) " + str(round(self.speed, 3)) +
                 " timeStamp " + str(myTime) )
 
-        return self.speed                                                   # returns pdc in radians/second
+        return self.speed                                                   # returns wheel velocity in radians/second
 
     def setAngularVelocity(self, angularVelocity):
         self.targetSpeed = angularVelocity
@@ -112,24 +112,26 @@ class Wheel:
                     " u_p " + str(round(self.pid.PTerm, 3)) +
                     " u_total " + str(round (self.pid.output,2) ) )
 
+            ### THIS NEEDS TO BE REFACTORED ###
+            if -0.222 < duty and duty < 0.222:
+                duty = (duty * 3)
+            elif duty >= 0.222:
+                duty = 0.666 + (0.429*(duty-0.222))
+            else:
+                duty = -0.666 + (-0.429*(duty+0.222))
+            ### THIS NEEDS TO BE REFACTORED ###
+
         else:       # VERY TEMPORARY CODE
-            # duty = sorted([-1, self.targetSpeed * (1/9) * 0.8, 1])[1]
-            duty = self.targetSpeed/10
+            if self.targetSpeed > 0.15:
+                duty = (0.098*self.targetSpeed)+0.148
+            elif self.targetSpeed < -0.15:
+                duty = (0.098*self.targetSpeed)-0.148
+            else:
+                duty = 0
 
-        ### THIS NEEDS TO BE REFACTORED ###
-        if -0.222 < duty and duty < 0.222:
-            duty = (duty * 3)
-        elif duty >= 0.222:
-            duty = 0.666 + (0.429*(duty-0.222))
-        else:
-            duty = -0.666 + (-0.429*(duty+0.222))
-        ### THIS NEEDS TO BE REFACTORED ###
-
-        duty = sorted([-1, duty, 1])[1]                                     # place bounds on the motor commands    looks like a job for np.clip()
-        self.motor.setDuty(round(duty, 2))                                  # must round to ensure driver handling!
+        self.motor.setDuty(duty)
 
     def stop(self):
-        self.motor.setDuty(0)
         self.motor.stop()
 
 
@@ -153,9 +155,6 @@ if __name__ == "__main__":
 
             print(l_wheel.getAngularVelocity(), ' rad/s\t', r_wheel.getAngularVelocity(), ' rad/s')
 
-    except KeyboardInterrupt:
-        r_wheel.setAngularVelocity(0)
-        l_wheel.setAngularVelocity(0)
-
+    finally:
         r_wheel.stop()
         l_wheel.stop()

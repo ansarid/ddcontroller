@@ -96,6 +96,7 @@ class SCUTTLE:
         self.wheelsThread.start()
 
     def _wheelsLoop(self):
+
         while not self.stopped:
 
             self.setMotion(self.targetMotion)                       # Set target velocity
@@ -104,12 +105,6 @@ class SCUTTLE:
             loopTimeOffset = (1/self.loopFreq)-self.loopTime                # Calculate time difference between target and actaul loop time
             self.wait += loopTimeOffset                                     # Adjust wait time to achieve target
             self.startTime = time.monotonic()                               # reset startTime
-
-        self.r_wheel.setAngularVelocity(0)
-        self.l_wheel.setAngularVelocity(0)
-
-        self.r_wheel.motor.setDuty(0)
-        self.l_wheel.motor.setDuty(0)
 
         self.r_wheel.stop()
         self.l_wheel.stop()

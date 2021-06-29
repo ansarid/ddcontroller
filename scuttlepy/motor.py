@@ -21,6 +21,7 @@ if detector.board.BEAGLEBONE_BLUE:
 
         def setDuty(self, duty):
             if rcpy.get_state() == rcpy.RUNNING:            # Execute loop if rcpy is running
+                self.duty = round(sorted((-1, duty, 1))[1], 2)
                 if not self.invert:
                     self.duty = duty
                 else:
@@ -35,19 +36,12 @@ if detector.board.BEAGLEBONE_BLUE:
 
 elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
 
-    if detector.board.any_raspberry_pi_40_pin:
-
-        import RPi.GPIO as GPIO
-        GPIO.setmode(GPIO.BOARD)
-
-    elif detector.board.JETSON_NANO:
-
-        import Jetson.GPIO as GPIO
-        GPIO.setmode(GPIO.BOARD)
+    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BOARD)
 
     class Motor:
 
-        def __init__(self, pins, invert=False, freqency=150):
+        def __init__(self, pins, freqency=150, invert=False):
 
             self.pins = pins                                # First pin will be PWM and second pin will be digital
             self.duty = 0                                   # Initial Duty
@@ -62,7 +56,7 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
 
         def setDuty(self, duty):
 
-            self.duty = duty
+            self.duty = round(sorted((-1, duty, 1))[1], 2)
 
             if self.duty > 0:
                 GPIO.output(self.pins[1], self.duty < 0)
@@ -72,10 +66,15 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
                 GPIO.output(self.pins[1], self.duty < 0)
                 self.motor.ChangeDutyCycle(100-abs(self.duty*100))
 
+            elif self.duty == 0:
+                GPIO.output(self.pins[1], False)
+                self.motor.ChangeDutyCycle(0)
+
         def stop(self):
             GPIO.output(self.pins[1], False)
-            self.motor.ChangeDutyCycle(0)
-            GPIO.cleanup()
+            self.motor.stop()
+            GPIO.cleanup(self.pins)
+
 
 if __name__ == "__main__":
 
@@ -84,18 +83,18 @@ if __name__ == "__main__":
 
     if detector.board.BEAGLEBONE_BLUE:
 
-        l_motor = Motor(1) 	                                # Create Left Motor Object (ch1)
-        r_motor = Motor(2) 	                                # Create Right Motor Object (ch2)
+        l_motor = Motor(1) 	                            # Create Left Motor Object (ch1)
+        r_motor = Motor(2) 	                            # Create Right Motor Object (ch2)
 
     elif detector.board.any_raspberry_pi_40_pin:
 
-        l_motor = Motor((15,16)) 	                        # Create Left Motor Object (pwm, digital)
-        r_motor = Motor((11,12)) 	                        # Create Right Motor Object (pwm, digital)
+        l_motor = Motor((15,16)) 	                    # Create Left Motor Object (pwm, digital)
+        r_motor = Motor((11,12)) 	                    # Create Right Motor Object (pwm, digital)
 
     elif detector.board.JETSON_NANO:
 
-        l_motor = Motor((32,29)) 	                        # Create Left Motor Object (pwm, digital)
-        r_motor = Motor((33,31)) 	                        # Create Right Motor Object (pwm, digital)
+        l_motor = Motor((32,29))                        # Create Left Motor Object (pwm, digital)
+        r_motor = Motor((33,31))                        # Create Right Motor Object (pwm, digital)
 
     else:
         print('Unsupported Platform "', detector.board.id, '"!')
@@ -106,20 +105,15 @@ if __name__ == "__main__":
 
             for duty in np.arange(-1,1, 0.01):
                 print(duty)
-                l_motor.setDuty(duty)           # Set left motor duty cycle to 1
-                r_motor.setDuty(duty)           # Set right motor duty cycle to 1
+                l_motor.setDuty(duty)           # Set left motor duty cycle
+                r_motor.setDuty(duty)           # Set right motor duty cycle
                 time.sleep(0.1)                 # Wait 0.1 seconds
 
             for duty in np.arange(1,-1, -0.01):
                 print(duty)
-                l_motor.setDuty(duty)           # Set left motor duty cycle to 1
-                r_motor.setDuty(duty)           # Set right motor duty cycle to 1
+                l_motor.setDuty(duty)           # Set left motor duty cycle
+                r_motor.setDuty(duty)           # Set right motor duty cycle
                 time.sleep(0.1)                 # Wait 0.1 seconds
-
-    except KeyboardInterrupt:
-
-        l_motor.setDuty(0)
-        r_motor.setDuty(0)
 
     finally:
 

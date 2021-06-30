@@ -84,10 +84,10 @@ class SCUTTLE:
 
         self.stopped = False
 
-        self.setup() # take the first encoder readings, establish start
+        self.setup()                                                        # Take the first encoder readings, establish start
         # self.imu = mpu.IMU()
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
-        self.wait = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
+        self.wait = 1/self.loopFreq                                         # Corrected wait time between encoder measurements (s)
 
         self.loopTime = self.wait
         self.startTime = time.monotonic()

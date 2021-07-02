@@ -83,13 +83,13 @@ if __name__ == "__main__":
 
     if detector.board.BEAGLEBONE_BLUE:
 
-        l_motor = Motor(1) 	                            # Create Left Motor Object (ch1)
-        r_motor = Motor(2) 	                            # Create Right Motor Object (ch2)
+        l_motor = Motor(1) 	                        # Create Left Motor Object (ch1)
+        r_motor = Motor(2) 	                        # Create Right Motor Object (ch2)
 
     elif detector.board.any_raspberry_pi_40_pin:
 
-        l_motor = Motor((15,16)) 	                    # Create Left Motor Object (pwm, digital)
-        r_motor = Motor((11,12)) 	                    # Create Right Motor Object (pwm, digital)
+        l_motor = Motor((15,16)) 	                # Create Left Motor Object (pwm, digital)
+        r_motor = Motor((11,12)) 	                # Create Right Motor Object (pwm, digital)
 
     elif detector.board.JETSON_NANO:
 
@@ -103,17 +103,15 @@ if __name__ == "__main__":
     try:
         while True:
 
-            for duty in np.arange(-1,1, 0.01):
-                print(duty)
-                l_motor.setDuty(duty)           # Set left motor duty cycle
-                r_motor.setDuty(duty)           # Set right motor duty cycle
-                time.sleep(0.1)                 # Wait 0.1 seconds
-
             for duty in np.arange(1,-1, -0.01):
-                print(duty)
                 l_motor.setDuty(duty)           # Set left motor duty cycle
                 r_motor.setDuty(duty)           # Set right motor duty cycle
-                time.sleep(0.1)                 # Wait 0.1 seconds
+                time.sleep(0.05)                # Wait 0.1 seconds
+
+            for duty in np.arange(-1,1, 0.01):
+                l_motor.setDuty(duty)           # Set left motor duty cycle
+                r_motor.setDuty(duty)           # Set right motor duty cycle
+                time.sleep(0.05)                # Wait 0.1 seconds
 
     finally:
 

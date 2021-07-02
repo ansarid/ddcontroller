@@ -104,11 +104,13 @@ if __name__ == "__main__":
         while True:
 
             for duty in np.arange(1,-1, -0.01):
+                print(duty)
                 l_motor.setDuty(duty)           # Set left motor duty cycle
                 r_motor.setDuty(duty)           # Set right motor duty cycle
                 time.sleep(0.05)                # Wait 0.1 seconds
 
             for duty in np.arange(-1,1, 0.01):
+                print(duty)
                 l_motor.setDuty(duty)           # Set left motor duty cycle
                 r_motor.setDuty(duty)           # Set right motor duty cycle
                 time.sleep(0.05)                # Wait 0.1 seconds

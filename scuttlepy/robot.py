@@ -14,7 +14,7 @@ detector = Detector()
 
 class SCUTTLE:
 
-    def __init__(self, debugging=False, debugFile=None, openLoop=False):
+    def __init__(self, configFile='~/.config/scuttle/config.yaml', debugging=False, debugFile=None, openLoop=False,):
 
         self.debugging = debugging
         self.debugFile = debugFile

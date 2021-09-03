@@ -55,7 +55,7 @@ class Wheel:
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
         self.period = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
 
-        self.pid.setSampleTime(1/self.loopFreq)
+#         self.pid.setSampleTime(1/self.loopFreq)
 
     def getTravel(self, position0, position1):                              # calculate the increment of a wheel in radians
         if not self.invert_encoder:

@@ -12,7 +12,7 @@ sudo pip3 install Adafruit-PlatformDetect
 Install RTIMULib:
 ```
 git clone https://github.com/RPi-Distro/RTIMULib
-cd RTIMULib/python
+cd RTIMULib/Linux/python
 sudo python3 setup.py install
 ```
 Install Library:

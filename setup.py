@@ -1,7 +1,21 @@
+import pip
+import importlib
 import setuptools
-
-# read the contents of your README file
 from os import path
+
+def install(package):
+    if hasattr(pip, 'main'):
+        pip.main(['install', package])
+    else:
+        pip._internal.main(['install', package])
+
+if importlib.find_loader('Adafruit-PlatformDetect') is not None:
+    install('Adafruit-PlatformDetect')
+
+from adafruit_platformdetect import Detector
+detector = Detector()
+    
+# read the contents of your README file
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md')) as f:
     long_description = f.read()

@@ -4,9 +4,9 @@ import time
 import numpy as np                                                          # for handling arrays
 
 import logging
-from scuttlepy import PID                                                   # for PID controller
-from scuttlepy import motor                                                 # for controlling motors
-from scuttlepy import encoder                                               # for reading encoders
+import scuttlepy.PID as PID                                                   # for PID controller
+import scuttlepy.motor as motor                                                 # for controlling motors
+import scuttlepy.encoder as encoder                                               # for reading encoders
 
 from adafruit_platformdetect import Detector
 detector = Detector()
@@ -144,14 +144,11 @@ if __name__ == "__main__":
 
     elif detector.board.any_raspberry_pi_40_pin:
 
-<<<<<<< HEAD:scuttlepy/wheels.py
         l_wheel = Wheel((15,16), 0x43, invert_encoder=True)                     # Left Motor  (ch1)
         r_wheel = Wheel((11,12), 0x41) 	                                        # Right Motor (ch2)
 
     elif detector.board.JETSON_NANO:
 
-=======
->>>>>>> b0697537b1ae2b177ca877246f08c90c955df59e:scuttlepy/scuttlepy/wheels.py
         l_wheel = Wheel((32,29), 0x43, invert_encoder=True)                     # Left Motor  (ch1)
         r_wheel = Wheel((33,31), 0x41) 	                                        # Right Motor (ch2)
 

@@ -48,7 +48,6 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
             self.freqency = freqency                        # PWM freqency (Hz)
             self.invert = invert                            # Reverse motor direction? Duty of 1 becomes -1 and duty of -1 becomes 1
 
-            print(pins)
             for pin in pins:
                 GPIO.setup(pin, GPIO.OUT)
 

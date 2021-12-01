@@ -5,7 +5,7 @@ import math
 import logging
 import threading
 import numpy as np
-from scuttlepy import wheels
+import scuttlepy.wheels as wheels
 # from fastlogging import LogInit
 
 from adafruit_platformdetect import Detector
@@ -65,10 +65,15 @@ class SCUTTLE:
             self.l_motorChannel = 1
             self.r_motorChannel = 2
 
-        elif detector.board.RASPBERRY_PI_40_PIN or detector.board.JETSON_NANO:
+        elif detector.board.any_raspberry_pi_40_pin:
 
-            self.l_motorChannel = (32,29)
-            self.r_motorChannel = (33,31)
+            self.l_motorChannel = (15,16) 	                # Create Left Motor Object (pwm, digital)
+            self.r_motorChannel = (11,12) 	                # Create Right Motor Object (pwm, digital)
+
+        elif detector.board.JETSON_NANO:
+
+            self.l_motorChannel = (32,29)                        # Create Left Motor Object (pwm, digital)
+            self.r_motorChannel = (33,31)                        # Create Right Motor Object (pwm, digital)
 
         self.r_wheel = wheels.Wheel(self.r_motorChannel,                    # Create right wheel object
                                     self.r_encoderAddress,
@@ -83,7 +88,6 @@ class SCUTTLE:
 
         self.stopped = False
 
-        self.setup()                                                        # Take the first encoder readings, establish start
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
         self.wait = 1/self.loopFreq                                         # Corrected wait time between encoder measurements (s)
 

@@ -14,7 +14,7 @@ if importlib.find_loader('Adafruit-PlatformDetect') is not None:
 
 from adafruit_platformdetect import Detector
 detector = Detector()
-
+    
 # read the contents of your README file
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md')) as f:
@@ -30,7 +30,7 @@ elif detector.board.any_raspberry_pi_40_pin:
     install_requires.append('RPi.GPIO')
 elif detector.board.JETSON_NANO:
     install_requires.append('Jetson.GPIO')
-
+    
 setuptools.setup(
     name='scuttlepy',
     version='0.0.1',
@@ -42,4 +42,3 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown'
 )
-

@@ -57,16 +57,16 @@ if __name__ == "__main__":
 
     import time
 
-    l_encoder = Encoder(0x40, invert=True)                                  # Create encoder object for left encoder on address 0x40
-    r_encoder = Encoder(0x41)                                               # Create encoder object for right encoder on address 0x41
+    rightEncoder = Encoder(0x40, invert=True)                                  # Create encoder object for left encoder on address 0x40
+    leftEncoder = Encoder(0x41)                                               # Create encoder object for right encoder on address 0x41
 
     while True:
 
         # rightPos = rightEncoder.readPos()
         # leftPos = leftEncoder.readPos()
 
-        rightAngle = round(r_encoder.readAngle(), 2)
-        leftAngle = round(l_encoder.readAngle(), 2)
+        rightAngle = round(rightEncoder.readAngle(), 2)
+        leftAngle = round(leftEncoder.readAngle(), 2)
 
         # rightMag = round(rightEncoder.readMagnitude(), 2)
         # leftMag = round(leftEncoder.readMagnitude(), 2)

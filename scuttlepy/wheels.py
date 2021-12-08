@@ -60,18 +60,13 @@ class Wheel:
     def getTravel(self, position0, position1):                              # calculate the increment of a wheel in radians
         if not self.invert_encoder:
             diff = position1 - position0                                    # take in the values in raw encoder position
-            travel = diff                                                   # reset the travel reading
-            if((-travel) >= self.gap):                                      # if movement is large (has rollover)
-                travel = (diff + self.roll)                                 # handle forward rollover
-            if(travel >= self.gap):
-                travel = (diff - self.roll)                                 # handle reverse rollover
         elif self.invert_encoder:
             diff = position0 - position1                                    # DUPLICATE CODE
-            travel = diff
-            if((-travel) >= self.gap):
-                travel = (diff + self.roll)
-            if(travel >= self.gap):
-                travel = (diff - self.roll)
+        travel = diff                                                   # reset the travel reading
+        if((-travel) >= self.gap):                                      # if movement is large (has rollover)
+            travel = (diff + self.roll)                                 # handle forward rollover
+        if(travel >= self.gap):
+            travel = (diff - self.roll)                                 # handle reverse rollover
 
         travel = travel * self.encoder.resolution                           # go from raw value to radians
         travel = travel * self.pulleyRatio                                  # go from motor pulley to wheel pulley

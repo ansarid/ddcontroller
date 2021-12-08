@@ -62,8 +62,8 @@ if __name__ == "__main__":
 
     while True:
 
-        # rightPos = round(rightEncoder.readPos(), 2)
-        # leftPos = round(leftEncoder.readPos(), 2)
+        # rightPos = rightEncoder.readPos()
+        # leftPos = leftEncoder.readPos()
 
         rightAngle = round(r_encoder.readAngle(), 2)
         leftAngle = round(l_encoder.readAngle(), 2)

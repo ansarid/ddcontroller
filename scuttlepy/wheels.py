@@ -8,9 +8,6 @@ import scuttlepy.PID as PID                                                   # 
 import scuttlepy.motor as motor                                                 # for controlling motors
 import scuttlepy.encoder as encoder                                               # for reading encoders
 
-from adafruit_platformdetect import Detector
-detector = Detector()
-
 class Wheel:
 
     def __init__(self, motor_output, encoder_address, wheel_radius=41, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False, debugging=False, debugFile=None):
@@ -53,7 +50,7 @@ class Wheel:
         self.roll = 2 * np.pi / self.encoder.resolution
         self.gap = 0.5 * self.roll                                          # degrees specified as limit for rollover
         self.loopFreq = 50                                                  # Target Wheel Loop frequency (Hz)
-        self.period = 1/self.loopFreq                                         # corrected wait time between encoder measurements (s)
+        self.period = 1/self.loopFreq                                       # corrected wait time between encoder measurements (s)
 
 #         self.pid.setSampleTime(1/self.loopFreq)
 
@@ -62,11 +59,11 @@ class Wheel:
             diff = position1 - position0                                    # take in the values in raw encoder position
         elif self.invert_encoder:
             diff = position0 - position1                                    # DUPLICATE CODE
-        travel = diff                                                   # reset the travel reading
-        if((-travel) >= self.gap):                                      # if movement is large (has rollover)
-            travel = (diff + self.roll)                                 # handle forward rollover
+        travel = diff                                                       # reset the travel reading
+        if((-travel) >= self.gap):                                          # if movement is large (has rollover)
+            travel = (diff + self.roll)                                     # handle forward rollover
         if(travel >= self.gap):
-            travel = (diff - self.roll)                                 # handle reverse rollover
+            travel = (diff - self.roll)                                     # handle reverse rollover
 
         travel = travel * self.encoder.resolution                           # go from raw value to radians
         travel = travel * self.pulleyRatio                                  # go from motor pulley to wheel pulley
@@ -76,7 +73,7 @@ class Wheel:
 
         initialPosition = self.encoder.readPos()
         initialTime = time.monotonic()                                      # time.monotonic() reports in seconds
-        time.sleep(self.period)                                               # delay specified amount
+        time.sleep(self.period)                                             # delay specified amount
         finalPosition = self.encoder.readPos()
         finalTime = time.monotonic()
         deltaTime = round((finalTime - initialTime), 3)                     # new scalar delta time value
@@ -131,6 +128,9 @@ class Wheel:
 
 
 if __name__ == "__main__":
+
+    from adafruit_platformdetect import Detector
+    detector = Detector()
 
     if detector.board.BEAGLEBONE_BLUE:
 

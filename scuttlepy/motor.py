@@ -44,78 +44,31 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
         def __init__(self, pins, freqency=150, invert=False):
 
             self.pins = pins                                # First pin will be PWM and second pin will be digital
-            self.duty = 0                                   # Initial Duty
+            self.duty = 0                                   # Initial Duty %
             self.freqency = freqency                        # PWM freqency (Hz)
             self.invert = invert                            # Reverse motor direction? Duty of 1 becomes -1 and duty of -1 becomes 1
 
-            for pin in pins:
+            for pin in pins:                                # Set motor pins as outputs
                 GPIO.setup(pin, GPIO.OUT)
 
-            self.motor = GPIO.PWM(pins[0], self.freqency)
+            self.motor = GPIO.PWM(pins[0], self.freqency)   # set first pin as PWM and set freq
             self.motor.start(self.duty)
 
         def setDuty(self, duty):
+            self.duty = round(sorted((-1, float(duty), 1))[1], 2)  # Make sure duty is between -1 and 1
 
-            self.duty = round(sorted((-1, duty, 1))[1], 2)
+            duty = self.duty*100
 
-            if self.duty > 0:
-                GPIO.output(int(self.pins[1]), bool(self.duty < 0))
-                self.motor.ChangeDutyCycle(abs(self.duty*100))
+            GPIO.output(self.pins[1], duty < 0)            # Set direction pin
 
-            elif self.duty < 0:
-                GPIO.output(int(self.pins[1]), bool(self.duty < 0))
-                self.motor.ChangeDutyCycle(100-abs(self.duty*100))
-
-            elif self.duty == 0:
-                GPIO.output(int(self.pins[1]), False)
+            if duty == 0:
+                GPIO.output(self.pins[1], False)
                 self.motor.ChangeDutyCycle(0)
+
+            else:
+                self.motor.ChangeDutyCycle(duty if (duty > 0) else abs(100+duty))
 
         def stop(self):
             GPIO.output(self.pins[1], False)
             self.motor.stop()
             GPIO.cleanup(self.pins)
-
-
-if __name__ == "__main__":
-
-    import time
-    import numpy as np
-
-    if detector.board.BEAGLEBONE_BLUE:
-
-        l_motor = Motor(1) 	                        # Create Left Motor Object (ch1)
-        r_motor = Motor(2) 	                        # Create Right Motor Object (ch2)
-
-    elif detector.board.any_raspberry_pi_40_pin:
-
-        l_motor = Motor((15,16)) 	                # Create Left Motor Object (pwm, digital)
-        r_motor = Motor((11,12)) 	                # Create Right Motor Object (pwm, digital)
-
-    elif detector.board.JETSON_NANO:
-
-        l_motor = Motor((32,29))                        # Create Left Motor Object (pwm, digital)
-        r_motor = Motor((33,31))                        # Create Right Motor Object (pwm, digital)
-
-    else:
-        print('Unsupported Platform "', detector.board.id, '"!')
-        exit()
-
-    try:
-        while True:
-
-            for duty in np.arange(1,-1, -0.01):
-                print(duty)
-                l_motor.setDuty(duty)           # Set left motor duty cycle
-                r_motor.setDuty(duty)           # Set right motor duty cycle
-                time.sleep(0.05)                # Wait 0.1 seconds
-
-            for duty in np.arange(-1,1, 0.01):
-                print(duty)
-                l_motor.setDuty(duty)           # Set left motor duty cycle
-                r_motor.setDuty(duty)           # Set right motor duty cycle
-                time.sleep(0.05)                # Wait 0.1 seconds
-
-    finally:
-
-        l_motor.stop()
-        r_motor.stop()

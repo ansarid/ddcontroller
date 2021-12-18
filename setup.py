@@ -9,7 +9,7 @@ def install(package):
     else:
         pip._internal.main(['install', package])
 
-if importlib.find_loader('Adafruit-PlatformDetect') is not None:
+if importlib.util.find_spec('Adafruit-PlatformDetect') is not None:
     install('Adafruit-PlatformDetect')
 
 from adafruit_platformdetect import Detector

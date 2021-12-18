@@ -1,13 +1,5 @@
 #!/usr/bin/python3
 
-# This example reads left & right encoders & outputs the position (deg) to the terminal
-# Left has address 40 & right has 41
-# Code for Beagle Hardware
-
-# from adafruit_platformdetect import Detector
-# detector = Detector()
-# if detector.board.BEAGLEBONE_BLUE:
-
 # Import external libraries
 import math
 from smbus2 import SMBus
@@ -51,28 +43,3 @@ class Encoder:
         self.magnitude = (magnitude[0] << 6) | magnitude[1]                 # Remove unused bits 6 & 7 from byte 0xFD creating 14 bit value
 
         return self.magnitude                                               # Return encoder magnitude
-
-
-if __name__ == "__main__":
-
-    import time
-
-    rightEncoder = Encoder(0x40, invert=True)                                  # Create encoder object for left encoder on address 0x40
-    leftEncoder = Encoder(0x41)                                               # Create encoder object for right encoder on address 0x41
-
-    while True:
-
-        # rightPos = rightEncoder.readPos()
-        # leftPos = leftEncoder.readPos()
-
-        rightAngle = round(rightEncoder.readAngle(), 2)
-        leftAngle = round(leftEncoder.readAngle(), 2)
-
-        # rightMag = round(rightEncoder.readMagnitude(), 2)
-        # leftMag = round(leftEncoder.readMagnitude(), 2)
-
-        # print(leftPos, "\t", rightPos)
-        print(leftAngle, "\t", rightAngle)
-        # print(leftMag, "\t", rightMag)
-
-        time.sleep(0.01)

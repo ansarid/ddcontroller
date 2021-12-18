@@ -59,7 +59,7 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
 
             duty = self.duty*100
 
-            GPIO.output(self.pins[1], duty < 0)            # Set direction pin
+            GPIO.output(self.pins[1], duty < 0)            # Set direction pin high if duty cycle is negative
 
             if duty == 0:
                 GPIO.output(self.pins[1], False)

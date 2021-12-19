@@ -35,6 +35,9 @@ class Wheel:
         self.loopFreq = 50                                              # Target Wheel Loop frequency (Hz)
         self.period = 1/self.loopFreq                                   # corrected wait time between encoder measurements (s)
 
+        self._positionFinal = 0
+        self._positionInitial = 0
+
         # self.pid.setSampleTime(1/self.loopFreq)
 
     def getRotation(self, position0, position1):                        # calculate the increment of a wheel in ticks

@@ -23,8 +23,8 @@ class SCUTTLE:
         self.wheelRadius = 0.04165                                  # R - meters
         self.wheelSpeeds = [0, 0]                                   # [Left wheel speed, Right wheel speed.]
 
-        self.l_encoderAddress = 0x43                                # Left wheel encoder address
-        self.r_encoderAddress = 0x41                                # Right wheel encoder address
+        self.leftEncoderAddress = 0x43                                # Left wheel encoder address
+        self.rightEncoderAddress = 0x41                                # Right wheel encoder address
 
         self.targetMotion = [0,0]
 
@@ -51,12 +51,12 @@ class SCUTTLE:
             self.rightMotorChannel = (33,31)                           # Create Right Motor Object (pwm, digital)
 
         self.rightWheel = wheels.Wheel(self.rightMotorChannel,            # Create right wheel object
-                                    self.r_encoderAddress,
+                                    self.rightEncoderAddress,
                                     openLoop=openLoop,
                                     )
 
         self.leftWheel = wheels.Wheel(self.leftMotorChannel,            # Create left wheel object
-                                    self.l_encoderAddress,
+                                    self.leftEncoderAddress,
                                     openLoop=openLoop,
                                     invert_encoder=True,
                                     )
@@ -111,18 +111,18 @@ class SCUTTLE:
 
     def _getWheelIncrements(self):                                           # get the wheel increment in radians
 
-        self.leftWheel.positionInitial = self.leftWheel.positionFinal       # transfer previous reading.
-        self.rightWheel.positionInitial = self.rightWheel.positionFinal     # transfer previous reading.
+        self.leftWheel.positionInitial = self.leftWheel._positionFinal       # transfer previous reading.
+        self.rightWheel.positionInitial = self.rightWheel._positionFinal     # transfer previous reading.
         self._timeInitial = self._timeFinal
 
-        self.leftWheel.positionFinal = self.leftWheel.encoder.readPos()     # reading, raw.
-        self.rightWheel.positionFinal = self.rightWheel.encoder.readPos()   # reading, raw.
+        self.leftWheel._positionFinal = self.leftWheel.encoder.readPos()     # reading, raw.
+        self.rightWheel._positionFinal = self.rightWheel.encoder.readPos()   # reading, raw.
         self._timeFinal = time.monotonic()
 
         wheelIncrements = np.array([self.leftWheel.getRotation(self.leftWheel.positionInitial,
-                                                           self.leftWheel.positionFinal),
+                                                           self.leftWheel._positionFinal),
                                     self.rightWheel.getRotation(self.rightWheel.positionInitial,
-                                                           self.rightWheel.positionFinal)])        # store wheels travel in radians
+                                                           self.rightWheel._positionFinal)])        # store wheels travel in radians
         timeIncrement = self._timeFinal - self._timeInitial
 
         self.wheelSpeeds = wheelIncrements / timeIncrement                  # speed = distance/time

@@ -42,8 +42,8 @@ class SCUTTLE:
 
         elif detector.board.any_raspberry_pi_40_pin:
 
-            self.leftMotorChannel = (15,16) 	                        # Create Left Motor Object (pwm, digital)
-            self.rightMotorChannel = (11,12) 	                        # Create Right Motor Object (pwm, digital)
+            self.leftMotorChannel = (11,12) 	                        # Create Left Motor Object (pwm, digital)
+            self.rightMotorChannel = (15,16) 	                        # Create Right Motor Object (pwm, digital)
 
         elif detector.board.JETSON_NANO:
 

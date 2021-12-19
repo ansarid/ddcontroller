@@ -43,7 +43,7 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
 
         def __init__(self, pins, freqency=150, invert=False):
 
-            self.pins = pins                                # First pin will be PWM and second pin will be digital
+            self.pins = pins                                # First pin will be digital and second pin will be PWM
             self.duty = 0                                   # Initial Duty %
             self.freqency = freqency                        # PWM freqency (Hz)
             self.invert = invert                            # Reverse motor direction? Duty of 1 becomes -1 and duty of -1 becomes 1
@@ -51,7 +51,7 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
             for pin in pins:                                # Set motor pins as outputs
                 GPIO.setup(pin, GPIO.OUT)
 
-            self.motor = GPIO.PWM(pins[0], self.freqency)   # set first pin as PWM and set freq
+            self.motor = GPIO.PWM(pins[1], self.freqency)   # set first pin as PWM and set freq
             self.motor.start(self.duty)
 
         def setDuty(self, duty):
@@ -59,16 +59,16 @@ elif detector.board.any_raspberry_pi_40_pin or detector.board.JETSON_NANO:
 
             duty = self.duty*100
 
-            GPIO.output(self.pins[1], duty < 0)            # Set direction pin high if duty cycle is negative
+            GPIO.output(self.pins[0], duty < 0)            # Set direction pin high if duty cycle is negative
 
             if duty == 0:
-                GPIO.output(self.pins[1], False)
+                GPIO.output(self.pins[0], False)
                 self.motor.ChangeDutyCycle(0)
 
             else:
                 self.motor.ChangeDutyCycle(duty if (duty > 0) else abs(100+duty))
 
         def stop(self):
-            GPIO.output(self.pins[1], False)
+            GPIO.output(self.pins[0], False)
             self.motor.stop()
             GPIO.cleanup(self.pins)

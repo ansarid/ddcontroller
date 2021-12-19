@@ -13,12 +13,12 @@ if __name__ == "__main__":
 
     elif detector.board.any_raspberry_pi_40_pin:
 
-        leftWheel = Wheel((11,12), 0x43, invert_encoder=True)     # Left Motor  (ch1)
+        leftWheel = Wheel((11,12), 0x40, invert_encoder=True)     # Left Motor  (ch1)
         rightWheel = Wheel((15,16), 0x41) 	                        # Right Motor (ch2)
 
     elif detector.board.JETSON_NANO:
 
-        leftWheel = Wheel((32,29), 0x43, invert_encoder=True)     # Left Motor  (ch1)
+        leftWheel = Wheel((32,29), 0x40, invert_encoder=True)     # Left Motor  (ch1)
         rightWheel = Wheel((33,31), 0x41) 	                        # Right Motor (ch2)
 
     else:

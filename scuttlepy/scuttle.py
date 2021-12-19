@@ -23,7 +23,7 @@ class SCUTTLE:
         self.wheelRadius = 0.04165                                  # R - meters
         self.wheelSpeeds = [0, 0]                                   # [Left wheel speed, Right wheel speed.]
 
-        self.leftEncoderAddress = 0x43                                # Left wheel encoder address
+        self.leftEncoderAddress = 0x40                                # Left wheel encoder address
         self.rightEncoderAddress = 0x41                                # Right wheel encoder address
 
         self.targetMotion = [0,0]

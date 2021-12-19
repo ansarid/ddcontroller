@@ -6,10 +6,11 @@ import numpy as np
 import scuttlepy.PID as PID
 import scuttlepy.motor as motor
 import scuttlepy.encoder as encoder
+from scuttlepy.constants import *
 
 class Wheel:
 
-    def __init__(self, motor_output, encoder_address, wheel_radius=0.04165, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False, debugging=False, debugFile=None):
+    def __init__(self, motor_output, encoder_address, wheel_radius=0.04165, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
 
         self.openLoop = openLoop
 
@@ -17,7 +18,7 @@ class Wheel:
         self.speed = 0                                                  # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                      # m
         self.motor = motor.Motor(motor_output, invert=invert_motor)     # Create motor object
-        self.encoder = encoder.Encoder(encoder_address)
+        self.encoder = encoder.Encoder(encoder_address, bus=I2C_BUS)
         self.invert_motor = invert_motor
         self.invert_encoder = invert_encoder
 

@@ -1,4 +1,3 @@
-import time
 from scuttlepy import SCUTTLE
 
 scuttle = SCUTTLE(openLoop=True)

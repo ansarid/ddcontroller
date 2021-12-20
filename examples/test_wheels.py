@@ -1,8 +1,8 @@
 import numpy as np
 from scuttlepy.wheels import Wheel
 
-leftWheel = Wheel((11,12), 0x40, invert_encoder=True)   # Left Motor  (ch1)
-rightWheel = Wheel((15,16), 0x41) 	                    # Right Motor (ch2)
+leftWheel = Wheel((11,12), 0x40, invert_encoder=True)	# Create Left Wheel Object
+rightWheel = Wheel((15,16), 0x41) 	               	# Create Right Wheel Object
 
 try:
     while True:
@@ -14,9 +14,10 @@ try:
 
 except KeyboardInterrupt:
 
-    print('Stopping')
+    print('Stopping...')
 
 finally:
 
     leftWheel.stop()
     rightWheel.stop()
+    print'Stopped.')

@@ -24,9 +24,10 @@ try:
 
 except KeyboardInterrupt:
 
-    print('Stopping')
+    print('Stopping...')
 
 finally:
 
     leftMotor.stop()
     rightMotor.stop()
+    print('Stopped.')

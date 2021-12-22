@@ -2,7 +2,7 @@ import numpy as np
 from scuttlepy.wheels import Wheel
 
 leftWheel = Wheel((11,12), 0x40, invert_encoder=True)	# Create Left Wheel Object
-rightWheel = Wheel((15,16), 0x41) 	               	# Create Right Wheel Object
+rightWheel = Wheel((15,16), 0x41) 	               	    # Create Right Wheel Object
 
 try:
     while True:
@@ -20,4 +20,4 @@ finally:
 
     leftWheel.stop()
     rightWheel.stop()
-    print'Stopped.')
+    print('Stopped.')

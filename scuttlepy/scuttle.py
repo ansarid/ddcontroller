@@ -194,6 +194,3 @@ class SCUTTLE:
             self.heading += (2 * math.pi)
 
         return self.heading
-                         # Update angularVelocity = [rad/s]
-
-        return [self.velocity, self.angularVelocity]                        # return [speed, angularVelocity]

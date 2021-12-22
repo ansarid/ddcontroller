@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 # Import external libraries
-import math
 from smbus2 import SMBus
 
 class Encoder:
@@ -11,7 +10,7 @@ class Encoder:
         self.bus = SMBus(bus)
         self.address = address
         self.invert = invert
-        self.resolution = ((math.pi*2)/2**14)                               # Define encoder angular resolution.
+        self.resolution = 2**14                                             # Define "ticks", 14 bit encoder
         self.position = self.readPos()                                      # Read position of encoder
         self.angle = self.readAngle()
         self.magnitude = self.readMagnitude()

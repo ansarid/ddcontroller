@@ -2,6 +2,7 @@
 
 import time
 import numpy as np
+from numpy.lib.ufunclike import _dispatcher
 
 import scuttlepy.PID as PID
 import scuttlepy.motor as motor
@@ -18,9 +19,9 @@ class Wheel:
         self.speed = 0                                                  # (rad/s), use self.speed instead when possible!
         self.radius = wheel_radius                                      # m
         self.motor = motor.Motor(motor_output, invert=invert_motor)     # Create motor object
-        self.encoder = encoder.Encoder(encoder_address, bus=I2C_BUS)
-        self.invert_motor = invert_motor
-        self.invert_encoder = invert_encoder
+        self.encoder = encoder.Encoder(encoder_address, bus=I2C_BUS)    # Create encoder object
+        self.invert_motor = invert_motor                                # Invert motor mode
+        self.invert_encoder = invert_encoder                            # Invert encoder mode
 
         self.pulleyRatio = 0.5                                          # pulley ratio = 0.5 wheel turns per pulley turn
 
@@ -28,16 +29,16 @@ class Wheel:
         self.KI = KI
         self.KD = KD
 
-        self.pid = PID.PID(self.KP, self.KI, self.KD)
+        self.pid = PID.PID(self.KP, self.KI, self.KD)                   # Create PID controller object
         # self.pid.setWindup(1)
 
-        self.roll = 2 * np.pi / self.encoder.resolution
-        self.gap = 0.5 * self.roll                                      # degrees specified as limit for rollover
+        self.gap = 0.5 * self.encoder.resolution                        # limit for rollover
         self.loopFreq = 50                                              # Target Wheel Loop frequency (Hz)
+        self.loopFrequencyAdjustment = 0                                # Adjusted Wheel Loop frequency (Hz)
         self.period = 1/self.loopFreq                                   # corrected wait time between encoder measurements (s)
 
-        self._positionFinal = 0
         self._positionInitial = 0
+        self._positionFinal = 0
 
         # self.pid.setSampleTime(1/self.loopFreq)
 
@@ -48,30 +49,33 @@ class Wheel:
             changeInRotation = position0 - position1
         rotation = changeInRotation                                     # reset the rotation reading
         if(-rotation >= self.gap):                                      # if movement is large (has rollover)
-            rotation = (changeInRotation + self.roll)                   # handle forward rollover
+            rotation = (changeInRotation + self.encoder.resolution)     # handle forward rollover
         if(rotation >= self.gap):
-            rotation = (changeInRotation - self.roll)                   # handle reverse rollover
+            rotation = (changeInRotation - self.encoder.resolution)     # handle reverse rollover
 
-        rotation = rotation * self.encoder.resolution                   # go from raw value to radians
-        rotation = rotation * self.pulleyRatio                          # go from motor pulley to wheel pulley
+        # rotation = rotation * self.pulleyRatio                          # go from motor pulley to wheel pulley
         return rotation                                                 # return wheel advancement in ticks
 
-    def getTravel(self):                                      # calculate travel of the wheel in meters
-        initialPosition = self.encoder.readPos()
-        initialTime = time.monotonic_ns()                               # time.monotonic_ns() reports in nanoseconds
-        time.sleep(self.period)                                         # delay specified amount
-        finalPosition = self.encoder.readPos()
-        finalTime = time.monotonic_ns()
-        deltaTime = (finalTime - initialTime)/1e9                       # new scalar delta time valuel, convert ns to s
+    def getTravel(self):                                                # calculate travel of the wheel in meters
+        initialPosition = self.encoder.readPos()                        # read encoder initial position
+        initialTime = time.monotonic_ns()                               # get time at initial position reading
+        time.sleep(self.period)                                         # delay specified amount of time (FIX THIS)
+        finalPosition = self.encoder.readPos()                          # read encoder final position
+
+        finalTime = time.monotonic_ns()                                 # get time at final position reading
+        deltaTime = (finalTime - initialTime)/1e9                       # new scalar delta time value, convert ns to s
+        self.loopFrequencyAdjustment = deltaTime - self.period
+
+        # print(self.period*1000, '\t', deltaTime*1000, '\t', self.loopFrequencyAdjustment*1000)
+
         rotation = self.getRotation(initialPosition, finalPosition)     # movement calculations
 
-        self.speed = (rotation / deltaTime)                             # speed produced from true wheel rotation (rad)
+        self.speed = ((rotation * (np.pi/(self.encoder.resolution/2))) / deltaTime)     # speed produced from true wheel rotation (rad)
+        distance = (2*np.pi*self.radius)*(rotation/self.encoder.resolution)             # calculate distance traveled in wheel rotation
 
-        D = (2 * np.pi * self.radius)*(rotation/self.encoder.resolution)
-        return D
+        return distance
 
     def getAngularVelocity(self):                                       # Use self.speed instead when possible!
-        self.getTravel()
         return self.speed                                               # returns wheel velocity in radians/second
 
     def setAngularVelocity(self, angularVelocity):

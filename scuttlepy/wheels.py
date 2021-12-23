@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-from os import getrandom
 import time
 import numpy as np
 from collections import deque
@@ -82,15 +81,14 @@ class Wheel:
         self.angularVelocity = ((rotation * (np.pi/(self.encoder.resolution/2))) / deltaTime)               # speed produced from true wheel rotation (rad)
         return self.angularVelocity                                                                         # returns wheel angular velocity in radians/second
 
-    def setAngularVelocity(self, angularVelocity):
-        self.targetAngularVelocity = angularVelocity
-        self.update()
+    def setAngularVelocity(self, angularVelocity):                                                          # set wheel angular velocity
+        self.targetAngularVelocity = angularVelocity                                                        # store target angular velocity
 
-        if not self.openLoop:
+        if not self.openLoop:                                           # If closed loop
             self.pid.SetPoint = self.targetAngularVelocity
-            self.speed = self.getAngularVelocity()
-            self.pid.update(self.speed)
-            duty = self.pid.output
+            self.angularVelocity = self.getAngularVelocity()            # Get latest angular velocity
+            self.pid.update(self.angularVelocity)                       # Give PID controller latest angular velocity
+            duty = self.pid.output                                      # Get duty cycle from PID controller
 
             ### THIS NEEDS TO BE REFACTORED ###
             if -0.222 < duty and duty < 0.222:
@@ -101,7 +99,7 @@ class Wheel:
                 duty = -0.666 + (-0.429*(duty+0.222))
             ### THIS NEEDS TO BE REFACTORED ###
 
-        else:       # VERY TEMPORARY CODE
+        else:       # VERY TEMPORARY CODE                               # If open loop
             if self.targetAngularVelocity > 0.15:
                 duty = (0.098*self.targetAngularVelocity)+0.148
             elif self.targetAngularVelocity < -0.15:
@@ -109,7 +107,7 @@ class Wheel:
             else:
                 duty = 0
 
-        self.motor.setDuty(duty)
+        self.motor.setDuty(duty)                                        # Set duty cycle to motor
 
     def stop(self):
         self.motor.stop()
@@ -118,23 +116,23 @@ class Wheel:
 
 if __name__ == "__main__":
 
-    leftWheel = Wheel((11,12), 0x43, invertEncoder=True, invertMotor=True, openLoop=True)	# Create Left Wheel Object
-    # rightWheel = Wheel((15,16), 0x41, openLoop=True) 	               	    # Create Right Wheel Object
+    # leftWheel = Wheel((11,12), 0x43, invertEncoder=True, invertMotor=True, openLoop=True)	# Create Left Wheel Object
+    rightWheel = Wheel((15,16), 0x41, openLoop=True) 	               	    # Create Right Wheel Object
 
     try:
 
-        leftWheel.motor.setDuty(1)
-        # rightWheel.motor.setDuty(1)
+        # leftWheel.motor.setDuty(1)
+        rightWheel.motor.setDuty(1)
 
-        leftWheel.setAngularVelocity(2*np.pi)
-        # rightWheel.setAngularVelocity(-2*np.pi)
+        # leftWheel.setAngularVelocity(2*np.pi)
+        rightWheel.setAngularVelocity(-2*np.pi)
 
         while True:
 
-            leftWheel.update()
-            # rightWheel.update()
-            print(leftWheel.getAngularVelocity())
-            # print(rightWheel.getAngularVelocity())
+            # leftWheel.update()
+            rightWheel.update()
+            # print(leftWheel.getAngularVelocity())
+            print(rightWheel.getAngularVelocity())
             # leftWheel.setAngularVelocity(2*np.pi)
             # print(round(leftWheel.getAngularVelocity(),3), ' rad/s\t', round(rightWheel.getAngularVelocity(), 3), ' rad/s')
             # print(rightWheel.getTravel())
@@ -150,6 +148,6 @@ if __name__ == "__main__":
 
     finally:
 
-        leftWheel.stop()
-        # rightWheel.stop()
+        # leftWheel.stop()
+        rightWheel.stop()
         print('Stopped.')

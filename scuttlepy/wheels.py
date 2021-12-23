@@ -40,33 +40,27 @@ class Wheel:
         self.rolloverLimit = self.pulleyRatio * self.encoder.resolution                     # limit for rollover
         self._positions = deque([self.position, self.encoder.readPosition()], maxlen=2)     # Create FIFO queue for wheel positions
         self._timestamps = deque([time.monotonic_ns()]*2, maxlen=2)                         # Create FIFO queue for wheel positions timestamps
-
-        self.update()
+        self.update()                                                                       # Update values in object
 
     def update(self):
         self._positions.append(self.encoder.readPosition())             # append new position to _positions queue. This will push out the oldest item in the queue
         self._timestamps.append(time.monotonic_ns())                    # append new timestamp to _timestamps queue. This will push out the oldest item in the queue
-
         self.position = self._positions[1]                              # Set latest position
         self.timestamp = self._timestamps[1]                            # set timestamp of latest data
 
     def getRotation(self):                                              # calculate the increment of a wheel in ticks
         rotation = self._positions[1] - self._positions[0]              # calculate how much wheel has rotated
-
         if(-rotation >= self.rolloverLimit):                            # if movement is large (has rollover)
             rotation = (rotation + self.encoder.resolution)             # handle forward rollover
-        if(rotation >= self.rolloverLimit):
+        if(rotation >= self.rolloverLimit):                             # if movement is large (has rollover) in the negative direction
             rotation = (rotation - self.encoder.resolution)             # handle reverse rollover
-
         rotation *= self.pulleyRatio                                    # go from motor pulley to wheel pulley
-
         return rotation                                                 # return wheel advancement in ticks
 
-    def getTravel(self):                                                # calculate travel of the wheel in meters
+    def getTravel(self):                                                                # calculate travel of the wheel in meters
         rotation = self.getRotation()                                                   # get wheel rotation between measurements
         distance = (2*np.pi*self.radius)*(rotation/self.encoder.resolution)             # calculate distance traveled in wheel rotation
-
-        return distance
+        return distance                                                                 # return distance traveled
 
     def getLinearVelocity(self):                                                        # get wheel linear velocity
         distance = self.getTravel()                                                     # get wheel travel
@@ -74,8 +68,7 @@ class Wheel:
         self.linearVelocity = distance/deltaTime                                        # calculate wheel linear velocity
         return self.linearVelocity                                                      # return wheel linear velocity in meters/second
 
-
-    def getAngularVelocity(self):                                                       # get wheel angular velocity
+    def getAngularVelocity(self):                                                                           # get wheel angular velocity
         rotation = self.getRotation()                                                                       # get wheel rotation between measurements
         deltaTime = (self._timestamps[1] - self._timestamps[0])/1e9                                         # calculate deltaTime, convert from ns to s
         self.angularVelocity = ((rotation * (np.pi/(self.encoder.resolution/2))) / deltaTime)               # speed produced from true wheel rotation (rad)

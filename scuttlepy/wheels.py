@@ -30,6 +30,8 @@ class Wheel:
         self.radius = wheelRadius                                       # meters
         self.pulleyRatio = 15/30                                        # number of teeth on motor pulley / number of teeth on wheel pulley
 
+        self.targetAngularVelocity = 0                                  # Create target angular velocity
+
         self.position = self.encoder.readPosition()                     # Raw encoder 'ticks'
         self.timestamp = time.monotonic_ns()                            # Stores age of data
         self.targetVelocity = 0                                         # (radians/second)

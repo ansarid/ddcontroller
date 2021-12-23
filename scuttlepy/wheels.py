@@ -18,8 +18,14 @@ class Wheel:
         self.invertMotor = invertMotor                                  # Invert motor mode
         self.invertEncoder = invertEncoder                              # Invert encoder mode
 
-        self.motor = motor.Motor(motorOutput, invert=invertMotor)       # Create motor object
-        self.encoder = encoder.Encoder(encoderAddress, bus=I2C_BUS)     # Create encoder object
+        self.motor = motor.Motor(motorOutput,                           # Create motor object
+                                 invert=invertMotor
+                                 )
+
+        self.encoder = encoder.Encoder(encoderAddress,                  # Create encoder object
+                                       bus=I2C_BUS,
+                                       invert=self.invertEncoder
+                                       )
 
         self.radius = wheelRadius                                       # meters
         self.pulleyRatio = 15/30                                        # number of teeth on motor pulley / number of teeth on wheel pulley
@@ -110,18 +116,23 @@ class Wheel:
 
 if __name__ == "__main__":
 
-    # leftWheel = Wheel((11,12), 0x43, invertEncoder=True, openLoop=True)	# Create Left Wheel Object
-    rightWheel = Wheel((15,16), 0x41, openLoop=True) 	               	    # Create Right Wheel Object
+    leftWheel = Wheel((11,12), 0x43, invertEncoder=True, invertMotor=True, openLoop=True)	# Create Left Wheel Object
+    # rightWheel = Wheel((15,16), 0x41, openLoop=True) 	               	    # Create Right Wheel Object
 
     try:
 
+        leftWheel.motor.setDuty(1)
         # rightWheel.motor.setDuty(1)
-        rightWheel.setAngularVelocity(2*np.pi)
+
+        leftWheel.setAngularVelocity(2*np.pi)
+        # rightWheel.setAngularVelocity(-2*np.pi)
 
         while True:
 
-            rightWheel.update()
-            print(rightWheel.getAngularVelocity())
+            leftWheel.update()
+            # rightWheel.update()
+            print(leftWheel.getAngularVelocity())
+            # print(rightWheel.getAngularVelocity())
             # leftWheel.setAngularVelocity(2*np.pi)
             # print(round(leftWheel.getAngularVelocity(),3), ' rad/s\t', round(rightWheel.getAngularVelocity(), 3), ' rad/s')
             # print(rightWheel.getTravel())
@@ -137,6 +148,6 @@ if __name__ == "__main__":
 
     finally:
 
-        # leftWheel.stop()
-        rightWheel.stop()
+        leftWheel.stop()
+        # rightWheel.stop()
         print('Stopped.')

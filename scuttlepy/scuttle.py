@@ -76,10 +76,10 @@ class SCUTTLE:
                                    self.globalPosition[1]+(wheelbaseTravel*np.sin(self.heading))    # Calculate global Y position
                                    ]
 
-            self.heading = self.heading + ((rightWheelTravel - leftWheelTravel)/self.wheelBase)     # Calculate global heading
+            self.heading += ((rightWheelTravel - leftWheelTravel)/(self.wheelBase*2))           # Calculate global heading
 
             time.sleep(sorted([self._wait-((time.monotonic_ns()-startTime)/1e9), 0])[1])            # Measure time since start and subtract from sleep time
-            print((time.monotonic_ns()-startTime)/1e6)                                    # Print loop time in ms
+            # print((time.monotonic_ns()-startTime)/1e6)                                    # Print loop time in ms
 
         self.rightWheel.stop()
         self.leftWheel.stop()
@@ -154,12 +154,15 @@ if __name__ == "__main__":
 
     try:
 
-        scuttle.setMotion([0.4, 0])
+        # scuttle.setMotion([0.4, 0])
+        scuttle.setMotion([0, 0.4])
         # while scuttle.getGlobalPosition()[0] < 0.3:
-        while True:
+        while scuttle.getHeading() < (np.pi/2):
+        # while True:        scuttle.setMotion([0.4, 0])
+
             # print(scuttle.velocity, scuttle.angularVelocity)
             pos = scuttle.getGlobalPosition()
-            # print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
+            print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
             # print(scuttle.getMotion())
             time.sleep(1/45)
 

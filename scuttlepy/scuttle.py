@@ -76,7 +76,7 @@ class SCUTTLE:
                                    self.globalPosition[1]+(wheelbaseTravel*np.sin(self.heading))    # Calculate global Y position
                                    ]
 
-            self.heading += ((rightWheelTravel - leftWheelTravel)/(self.wheelBase*2))       # Calculate global heading
+            self.heading += ((rightWheelTravel - leftWheelTravel)/(self.wheelBase))       # Calculate global heading
 
             time.sleep(sorted([self._wait-((time.monotonic_ns()-startTime)/1e9), 0])[1])    # Measure time since start and subtract from sleep time
             # print((time.monotonic_ns()-startTime)/1e6)                                      # Print loop time in ms
@@ -113,7 +113,7 @@ class SCUTTLE:
                                                                 # argument: [x_dot, theta_dot]
         # self.targetMotion = targetMotion
 
-        L = self.wheelBase
+        L = self.wheelBase/2
         R = self.wheelRadius
 
         A = np.array([[ 1/R, -L/R],                             # This matrix relates chassis to wheels
@@ -129,7 +129,7 @@ class SCUTTLE:
 
     def getMotion(self):                                        # Forward Kinematics
                                                                 # Function to update and return [x_dot,theta_dot]
-        L = self.wheelBase
+        L = self.wheelBase/2
         R = self.wheelRadius
 
         A = np.array([[     R/2,     R/2],                      # This matrix relates [PDL, PDR] to [XD,TD]

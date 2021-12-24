@@ -53,9 +53,6 @@ class SCUTTLE:
         self._loopFreq = 50                                     # Target Wheel Loop frequency (Hz)
         self._wait = 1/self._loopFreq                           # Corrected wait time between encoder measurements (s)
 
-        # self._loopTime = self._wait
-        # self._startTime = time.monotonic_ns()
-
         self.wheelsThread = threading.Thread(target=self._wheelsLoop)
         self.wheelsThread.start()
 
@@ -63,19 +60,26 @@ class SCUTTLE:
 
         while not self.stopped:
 
-            startTime = time.monotonic_ns()
+            startTime = time.monotonic_ns()     # Record loop start time
 
-            self.leftWheel.update()
-            self.rightWheel.update()
+            self.leftWheel.update()             # Update left wheel readings
+            self.rightWheel.update()            # Update right wheel readings
 
-            self.velocity, self.angularVelocity = self.getMotion()
+            self.velocity, self.angularVelocity = self.getMotion()          # Get scuttle linear and angular velocities
 
+            leftWheelTravel = self.leftWheel.getTravel()                    # Get left wheel travel
+            rightWheelTravel = self.rightWheel.getTravel()                  # Get right wheel travel
 
+            wheelbaseTravel = (leftWheelTravel + rightWheelTravel)/2        # Calculate wheel displacement
 
+            self.globalPosition = [self.globalPosition[0]+(wheelbaseTravel*np.cos(self.heading)),   # Calculate global X position
+                                   self.globalPosition[1]+(wheelbaseTravel*np.sin(self.heading))    # Calculate global Y position
+                                   ]
 
+            self.heading = self.heading + ((rightWheelTravel - leftWheelTravel)/self.wheelBase)     # Calculate global heading
 
-            time.sleep(sorted([self._wait-((time.monotonic_ns()-startTime)/1e9), 0])[1])
-            # print((time.monotonic_ns()-startTime)/1e6)                                    # Print loop time in ms
+            time.sleep(sorted([self._wait-((time.monotonic_ns()-startTime)/1e9), 0])[1])            # Measure time since start and subtract from sleep time
+            print((time.monotonic_ns()-startTime)/1e6)                                    # Print loop time in ms
 
         self.rightWheel.stop()
         self.leftWheel.stop()
@@ -98,6 +102,12 @@ class SCUTTLE:
 
     def getHeading(self):
         return self.heading
+
+    def getLinearVelocity(self):
+        return self.velocity
+
+    def getAngularVelocity(self):
+        return self.angularVelocity
 
     def setMotion(self, targetMotion):                          # Take chassis speed and command wheels
                                                                 # argument: [x_dot, theta_dot]
@@ -136,18 +146,7 @@ class SCUTTLE:
 
         return [self.velocity, self.angularVelocity]          # return [speed, angularVelocity]
 
-
-
-
-
-
-
-
-
-
-
-
-
+# TESTING
 
 if __name__ == "__main__":
 
@@ -159,8 +158,9 @@ if __name__ == "__main__":
         # while scuttle.getGlobalPosition()[0] < 0.3:
         while True:
             # print(scuttle.velocity, scuttle.angularVelocity)
-            # pos = scuttle.getGlobalPosition()
+            pos = scuttle.getGlobalPosition()
             # print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
+            # print(scuttle.getMotion())
             time.sleep(1/45)
 
         scuttle.setMotion([0, 0])

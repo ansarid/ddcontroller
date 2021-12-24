@@ -2,86 +2,95 @@
 
 import time
 import numpy as np
+from collections import deque
 
 import scuttlepy.PID as PID
 import scuttlepy.motor as motor
 import scuttlepy.encoder as encoder
 from scuttlepy.constants import *
 
+# from fastlogging import LogInit
+
 class Wheel:
 
-    def __init__(self, motor_output, encoder_address, wheel_radius=0.04165, invert_motor=False, invert_encoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
+    def __init__(self, motorOutput, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
 
         self.openLoop = openLoop
+        self.invertMotor = invertMotor                                  # Invert motor mode
+        self.invertEncoder = invertEncoder                              # Invert encoder mode
 
-        self.targetSpeed = 0                                            # (rad/s), use self.speed instead when possible!
-        self.speed = 0                                                  # (rad/s), use self.speed instead when possible!
-        self.radius = wheel_radius                                      # m
-        self.motor = motor.Motor(motor_output, invert=invert_motor)     # Create motor object
-        self.encoder = encoder.Encoder(encoder_address, bus=I2C_BUS)
-        self.invert_motor = invert_motor
-        self.invert_encoder = invert_encoder
+        self.motor = motor.Motor(motorOutput,                           # Create motor object
+                                 invert=invertMotor
+                                 )
 
-        self.pulleyRatio = 0.5                                          # pulley ratio = 0.5 wheel turns per pulley turn
+        self.encoder = encoder.Encoder(encoderAddress,                  # Create encoder object
+                                       bus=I2C_BUS,
+                                       invert=self.invertEncoder
+                                       )
 
-        self.KP = KP
-        self.KI = KI
-        self.KD = KD
+        self.radius = wheelRadius                                       # meters
+        self.pulleyRatio = 15/30                                        # number of teeth on motor pulley / number of teeth on wheel pulley
 
-        self.pid = PID.PID(self.KP, self.KI, self.KD)
-        # self.pid.setWindup(1)
+        self.targetAngularVelocity = 0                                  # Create target angular velocity
 
-        self.roll = 2 * np.pi / self.encoder.resolution
-        self.gap = 0.5 * self.roll                                      # degrees specified as limit for rollover
-        self.loopFreq = 50                                              # Target Wheel Loop frequency (Hz)
-        self.period = 1/self.loopFreq                                   # corrected wait time between encoder measurements (s)
+        self.position = self.encoder.readPosition()                     # Raw encoder 'ticks'
+        self.timestamp = time.monotonic_ns()                            # Stores age of data
+        self.targetVelocity = 0                                         # (radians/second)
+        self.angularVelocity = 0                                        # (radians/second)
+        self.linearVelocity = 0                                         # (meters/second)
 
-        self._positionFinal = 0
-        self._positionInitial = 0
+        # PID Gains
+        self.KP = KP                                                    # PID controller P gain
+        self.KI = KI                                                    # PID controller I gain
+        self.KD = KD                                                    # PID controller D gain
 
-        # self.pid.setSampleTime(1/self.loopFreq)
+        self.pid = PID.PID(self.KP, self.KI, self.KD)                                       # Create PID controller object
 
-    def getRotation(self, position0, position1):                        # calculate the increment of a wheel in ticks
-        if not self.invert_encoder:
-            changeInRotation = position1 - position0                    # take in the values in raw encoder position
-        elif self.invert_encoder:
-            changeInRotation = position0 - position1
-        rotation = changeInRotation                                     # reset the rotation reading
-        if(-rotation >= self.gap):                                      # if movement is large (has rollover)
-            rotation = (changeInRotation + self.roll)                   # handle forward rollover
-        if(rotation >= self.gap):
-            rotation = (changeInRotation - self.roll)                   # handle reverse rollover
+        self.rolloverLimit = self.pulleyRatio * self.encoder.resolution                     # limit for rollover
+        self._positions = deque([self.position, self.encoder.readPosition()], maxlen=2)     # Create FIFO queue object for wheel positions
+        self._timestamps = deque([time.monotonic_ns()]*2, maxlen=2)                         # Create FIFO queue object for wheel positions timestamps
+        self.update()                                                                       # Update values in object
 
-        rotation = rotation * self.encoder.resolution                   # go from raw value to radians
-        rotation = rotation * self.pulleyRatio                          # go from motor pulley to wheel pulley
+    def update(self):
+        self._positions.append(self.encoder.readPosition())             # append new position to _positions queue. This will push out the oldest item in the queue
+        self._timestamps.append(time.monotonic_ns())                    # append new timestamp to _timestamps queue. This will push out the oldest item in the queue
+        self.position = self._positions[1]                              # Set latest position
+        self.timestamp = self._timestamps[1]                            # set timestamp of latest data
+
+    def getRotation(self):                                              # calculate the increment of a wheel in ticks
+        rotation = self._positions[1] - self._positions[0]              # calculate how much wheel has rotated
+        if(-rotation >= self.rolloverLimit):                            # if movement is large (has rollover)
+            rotation = (rotation + self.encoder.resolution)             # handle forward rollover
+        if(rotation >= self.rolloverLimit):                             # if movement is large (has rollover) in the negative direction
+            rotation = (rotation - self.encoder.resolution)             # handle reverse rollover
+        rotation *= self.pulleyRatio                                    # go from motor pulley to wheel pulley
         return rotation                                                 # return wheel advancement in ticks
 
-    def getTravel(self):                                      # calculate travel of the wheel in meters
-        initialPosition = self.encoder.readPos()
-        initialTime = time.monotonic_ns()                               # time.monotonic_ns() reports in nanoseconds
-        time.sleep(self.period)                                         # delay specified amount
-        finalPosition = self.encoder.readPos()
-        finalTime = time.monotonic_ns()
-        deltaTime = (finalTime - initialTime)/1e9                       # new scalar delta time valuel, convert ns to s
-        rotation = self.getRotation(initialPosition, finalPosition)     # movement calculations
+    def getTravel(self):                                                                # calculate travel of the wheel in meters
+        rotation = self.getRotation()                                                   # get wheel rotation between measurements
+        distance = (2*np.pi*self.radius)*(rotation/self.encoder.resolution)             # calculate distance traveled in wheel rotation
+        return distance                                                                 # return distance traveled in meters
 
-        self.speed = (rotation / deltaTime)                             # speed produced from true wheel rotation (rad)
+    def getLinearVelocity(self):                                                        # get wheel linear velocity
+        distance = self.getTravel()                                                     # get wheel travel
+        deltaTime = (self._timestamps[1] - self._timestamps[0])/1e9                     # calculate deltaTime, convert from ns to s
+        self.linearVelocity = distance/deltaTime                                        # calculate wheel linear velocity
+        return self.linearVelocity                                                      # return wheel linear velocity in meters/second
 
-        D = (2 * np.pi * self.radius)*(rotation/self.encoder.resolution)
-        return D
+    def getAngularVelocity(self):                                                                           # get wheel angular velocity
+        rotation = self.getRotation()                                                                       # get wheel rotation between measurements
+        deltaTime = (self._timestamps[1] - self._timestamps[0])/1e9                                         # calculate deltaTime, convert from ns to s
+        self.angularVelocity = ((rotation * (np.pi/(self.encoder.resolution/2))) / deltaTime)               # speed produced from true wheel rotation (rad)
+        return self.angularVelocity                                                                         # returns wheel angular velocity in radians/second
 
-    def getAngularVelocity(self):                                       # Use self.speed instead when possible!
-        self.getTravel()
-        return self.speed                                               # returns wheel velocity in radians/second
+    def setAngularVelocity(self, angularVelocity):                                                          # set wheel angular velocity
+        self.targetAngularVelocity = angularVelocity                                                        # store target angular velocity
 
-    def setAngularVelocity(self, angularVelocity):
-        self.targetSpeed = angularVelocity
-
-        if not self.openLoop:
-            self.pid.SetPoint = self.targetSpeed
-            self.speed = self.getAngularVelocity()
-            self.pid.update(self.speed)
-            duty = self.pid.output
+        if not self.openLoop:                                           # If closed loop
+            self.pid.SetPoint = self.targetAngularVelocity              # update PID
+            self.angularVelocity = self.getAngularVelocity()            # Get latest angular velocity
+            self.pid.update(self.angularVelocity)                       # Give PID controller latest angular velocity
+            duty = self.pid.output                                      # Get duty cycle from PID controller
 
             ### THIS NEEDS TO BE REFACTORED ###
             if -0.222 < duty and duty < 0.222:
@@ -92,15 +101,15 @@ class Wheel:
                 duty = -0.666 + (-0.429*(duty+0.222))
             ### THIS NEEDS TO BE REFACTORED ###
 
-        else:       # VERY TEMPORARY CODE
-            if self.targetSpeed > 0.15:
-                duty = (0.098*self.targetSpeed)+0.148
-            elif self.targetSpeed < -0.15:
-                duty = (0.098*self.targetSpeed)-0.148
+        else:       # VERY TEMPORARY CODE                               # If open loop
+            if self.targetAngularVelocity > 0.15:
+                duty = (0.098*self.targetAngularVelocity)+0.148
+            elif self.targetAngularVelocity < -0.15:
+                duty = (0.098*self.targetAngularVelocity)-0.148
             else:
                 duty = 0
 
-        self.motor.setDuty(duty)
+        self.motor.setDuty(duty)                                        # Set duty cycle to motor
 
     def stop(self):
         self.motor.stop()

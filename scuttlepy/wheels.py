@@ -87,7 +87,7 @@ class Wheel:
         self.targetAngularVelocity = angularVelocity                                                        # store target angular velocity
 
         if not self.openLoop:                                           # If closed loop
-            self.pid.SetPoint = self.targetAngularVelocity
+            self.pid.SetPoint = self.targetAngularVelocity              # update PID
             self.angularVelocity = self.getAngularVelocity()            # Get latest angular velocity
             self.pid.update(self.angularVelocity)                       # Give PID controller latest angular velocity
             duty = self.pid.output                                      # Get duty cycle from PID controller

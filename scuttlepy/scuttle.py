@@ -50,20 +50,20 @@ class SCUTTLE:
 
         self.stopped = False
 
-        self._loopFreq = 50                                     # Target Wheel Loop frequency (Hz)
-        self._wait = 1/self._loopFreq                           # Corrected wait time between encoder measurements (s)
+        self._loopFreq = 50                                             # Target Wheel Loop frequency (Hz)
+        self._wait = 1/self._loopFreq                                   # Corrected wait time between encoder measurements (s)
 
-        self.wheelsThread = threading.Thread(target=self._wheelsLoop)
-        self.wheelsThread.start()
+        self.wheelsThread = threading.Thread(target=self._wheelsLoop)   # Create wheel loop thread object
+        self.wheelsThread.start()                                       # Start wheel loop thread object
 
     def _wheelsLoop(self):
 
         while not self.stopped:
 
-            startTime = time.monotonic_ns()     # Record loop start time
+            startTime = time.monotonic_ns()                                 # Record loop start time
 
-            self.leftWheel.update()             # Update left wheel readings
-            self.rightWheel.update()            # Update right wheel readings
+            self.leftWheel.update()                                         # Update left wheel readings
+            self.rightWheel.update()                                        # Update right wheel readings
 
             self.velocity, self.angularVelocity = self.getMotion()          # Get scuttle linear and angular velocities
 
@@ -76,38 +76,38 @@ class SCUTTLE:
                                    self.globalPosition[1]+(wheelbaseTravel*np.sin(self.heading))    # Calculate global Y position
                                    ]
 
-            self.heading += ((rightWheelTravel - leftWheelTravel)/(self.wheelBase*2))           # Calculate global heading
+            self.heading += ((rightWheelTravel - leftWheelTravel)/(self.wheelBase*2))       # Calculate global heading
 
-            time.sleep(sorted([self._wait-((time.monotonic_ns()-startTime)/1e9), 0])[1])            # Measure time since start and subtract from sleep time
-            # print((time.monotonic_ns()-startTime)/1e6)                                    # Print loop time in ms
+            time.sleep(sorted([self._wait-((time.monotonic_ns()-startTime)/1e9), 0])[1])    # Measure time since start and subtract from sleep time
+            # print((time.monotonic_ns()-startTime)/1e6)                                      # Print loop time in ms
 
-        self.rightWheel.stop()
-        self.leftWheel.stop()
+        self.rightWheel.stop()                                  # Once wheels thread loop has broken, stop right wheel
+        self.leftWheel.stop()                                   # Once wheels thread loop has broken, stop left wheel
 
-    def stop(self):
-        self.setMotion([0, 0])
-        self.stopped = True
-        self.wheelsThread.join()
+    def stop(self):                                             # Stop SCUTTLE
+        self.setMotion([0, 0])                                  # Set linear and angular velocity to 0
+        self.stopped = True                                     # Set stopped flag to True
+        self.wheelsThread.join()                                # Wait for the wheels thread to stop
 
-    def setGlobalPosition(self, pos):
-        self.globalPosition = pos
-        return self.globalPosition
+    def setGlobalPosition(self, pos):                           # Set global position
+        self.globalPosition = pos                               # Set global position to desired position
+        return self.globalPosition                              # return new global position
 
-    def setHeading(self, heading):
-        self.heading = heading
-        return self.heading
+    def setHeading(self, heading):                              # Set global heading
+        self.heading = heading                                  # Set heading to desired heading
+        return self.heading                                     # return new global heading
 
-    def getGlobalPosition(self):
-        return self.globalPosition
+    def getGlobalPosition(self):                                # get global position
+        return self.globalPosition                              # return global position
 
-    def getHeading(self):
-        return self.heading
+    def getHeading(self):                                       # get global heading
+        return self.heading                                     # return global heading
 
-    def getLinearVelocity(self):
-        return self.velocity
+    def getLinearVelocity(self):                                # get linear velocity
+        return self.velocity                                    # return linear velocity
 
-    def getAngularVelocity(self):
-        return self.angularVelocity
+    def getAngularVelocity(self):                               # get angular velocity
+        return self.angularVelocity                             # return angular velocity
 
     def setMotion(self, targetMotion):                          # Take chassis speed and command wheels
                                                                 # argument: [x_dot, theta_dot]
@@ -132,47 +132,15 @@ class SCUTTLE:
         L = self.wheelBase
         R = self.wheelRadius
 
-        A = np.array([[     R/2,     R/2],
-                      [-R/(2*L), R/(2*L)]])                     # This matrix relates [PDL, PDR] to [XD,TD]
+        A = np.array([[     R/2,     R/2],                      # This matrix relates [PDL, PDR] to [XD,TD]
+                      [-R/(2*L), R/(2*L)]])
 
         B = np.array([self.leftWheel.getAngularVelocity(),      # make an array of wheel speeds (rad/s)
                       self.rightWheel.getAngularVelocity()])
 
         C = np.matmul(A, B)                                     # perform matrix multiplication
-        C = np.round(C, decimals=3)                             # round the matrix
 
-        self.velocity = C[0]                                  # Update speed of SCUTTLE [m/s]
-        self.angularVelocity = C[1]                           # Update angularVelocity = [rad/s]
+        self.velocity = C[0]                                    # Update speed of SCUTTLE [m/s]
+        self.angularVelocity = C[1]                             # Update angularVelocity = [rad/s]
 
-        return [self.velocity, self.angularVelocity]          # return [speed, angularVelocity]
-
-# TESTING
-
-if __name__ == "__main__":
-
-    scuttle = SCUTTLE(openLoop=True)
-
-    try:
-
-        # scuttle.setMotion([0.4, 0])
-        scuttle.setMotion([0, 0.4])
-        # while scuttle.getGlobalPosition()[0] < 0.3:
-        while scuttle.getHeading() < (np.pi/2):
-        # while True:        scuttle.setMotion([0.4, 0])
-
-            # print(scuttle.velocity, scuttle.angularVelocity)
-            pos = scuttle.getGlobalPosition()
-            print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
-            # print(scuttle.getMotion())
-            time.sleep(1/45)
-
-        scuttle.setMotion([0, 0])
-        # print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
-
-    except KeyboardInterrupt:
-
-        pass
-
-    finally:
-
-        scuttle.stop()
+        return [self.velocity, self.angularVelocity]            # return [speed, angularVelocity]

@@ -1,6 +1,6 @@
 scuttle:
     chassis:
-        # Wheel base (L) in meters. Measured from center of wheel base to inside edge of wheel.
+        # Wheel base (L) in meters.
         wheel_base: 0.355
 
         # Wheel radius in meters

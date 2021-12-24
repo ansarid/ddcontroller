@@ -1,6 +1,6 @@
 I2C_BUS = 1
 
-WHEEL_BASE = 0.355                  # L - meters    Measured from center of wheel base to inside edge of wheel.
+WHEEL_BASE = 0.355                  # L - meters
 WHEEL_RADIUS = 0.04165              # R - meters
 
 LEFT_ENCODER_ADDRESS = 0x40         # Left wheel encoder address

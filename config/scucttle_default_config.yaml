@@ -1,0 +1,57 @@
+scuttle:
+    chassis:
+        # Wheel base (L) in meters. Measured from center of wheel base to inside edge of wheel.
+        wheel_base: 0.355
+
+        # Wheel radius in meters
+        wheel_radius: 0.04165
+
+        # Wheel information
+        wheels:
+            # I2C bus id
+            i2c_bus_id: 1
+
+            # Motor PWM frequency in Hz
+            pwm_frequence: 150
+
+            # Rear-left wheel details
+            rl_wheel:
+                # Encoder address
+                encoder_addr: 0x40
+
+                # Flag to indicate if the encoder data needs to be inverted
+                invert: True
+
+                # GPIO pins to be used to control the left motor
+                motor_control_gpio:
+                    # GPIO pin designed as PWM
+                    pwm: 11
+
+                    # GPIO pin designated as digital
+                    digital: 12
+
+            # Rear-right wheel details
+            rr_wheel:
+                # Encoder address
+                encoder_addr: 0x41
+
+                # Flag to indicate if the encoder data needs to be inverted
+                invert: False
+
+                # GPIO pins to be used to control the left motor
+                motor_control_gpio:
+                    # GPIO pin designed as PWM
+                    pwm: 15
+
+                    # GPIO pin designated as digital
+                    digital: 16
+
+        # Platform controlling the robot
+        # RPI - Raspberry PI
+        # Beagle - Beagle
+        # TISK - TI SK board
+        # Nano - NVIDIA Jetson Nano board
+        motor_control_platform: 'RPI'
+
+    # Sensor specific information
+    sensors: null

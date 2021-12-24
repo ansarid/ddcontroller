@@ -4,16 +4,14 @@ import time
 import numpy as np
 from collections import deque
 
-import scuttlepy.PID as PID
-import scuttlepy.motor as motor
-import scuttlepy.encoder as encoder
-from scuttlepy.constants import *
-
-# from fastlogging import LogInit
+from . import PID
+from . import motor
+from . import encoder
+from .constants import *
 
 class Wheel:
 
-    def __init__(self, motorOutput, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
+    def __init__(self, bus, motorOutput, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
 
         self.openLoop = openLoop
         self.invertMotor = invertMotor                                  # Invert motor mode
@@ -24,7 +22,7 @@ class Wheel:
                                  )
 
         self.encoder = encoder.Encoder(encoderAddress,                  # Create encoder object
-                                       bus=I2C_BUS,
+                                       bus=bus,
                                        invert=self.invertEncoder
                                        )
 

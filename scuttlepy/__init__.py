@@ -1,1 +1,1 @@
-from scuttlepy.scuttle import *
+from .scuttle import *

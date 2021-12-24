@@ -15,7 +15,7 @@ class SCUTTLE:
         self.heading = 0
         self.velocity = 0
         self.angularVelocity = 0
-        self.globalPosition = np.array([0, 0])
+        self.globalPosition = [0, 0]
 
         self.wheelBase = WHEEL_BASE                             # L - meters    Measured from center of wheel base to inside edge of wheel.
         self.wheelRadius = WHEEL_RADIUS                         # R - meters

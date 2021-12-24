@@ -1,52 +1,129 @@
 #!/usr/bin/python3
 
+import os
+import yaml
 import time
 import threading
 import numpy as np
-import scuttlepy.wheels as wheels
-from scuttlepy.constants import *
+import RPi.GPIO as GPIO
 
-# from fastlogging import LogInit
+from .constants import *
+from . import wheels
+
+def parse_yaml_config(config):
+    # Validate the config file name
+    if config is None:
+        raise Exception("Config file None.")
+
+    try:
+        # Parse the YAML config. Expand any environment variables
+        # inside, prior ro parsing.
+        with open(config, 'r') as f:
+            y = yaml.safe_load(os.path.expandvars(f.read()))
+    except IOError:
+        raise Exception("Could not read config file {}.".format(config))
+
+    #print(yaml.dump(y))
+
+    # Validate the YAML specification
+    try:
+        if 'scuttle' not in y:
+            raise Exception("'scuttle' section not present")
+        elif 'chassis' not in y['scuttle']:
+            raise Exception("'chassis' section not present")
+
+        chassis = y['scuttle']['chassis']
+
+        if 'wheels' not in chassis:
+            raise Exception("'chassis' section not present")
+
+        wheels = chassis['wheels']
+
+        if 'rl_wheel' not in wheels:
+            raise Exception("'rl_wheel' section not present")
+        elif 'rr_wheel' not in wheels:
+            raise Exception("'rr_wheel' section not present")
+
+        rl_wheel = wheels['rl_wheel']
+        rr_wheel = wheels['rr_wheel']
+
+        if 'motor_control_gpio' not in rl_wheel:
+            raise Exception("'motor_control_gpio' section not present in'rl_wheel'")
+        elif 'motor_control_gpio' not in rr_wheel:
+            raise Exception("'rr_wheel' section not present in'rr_wheel'")
+    except:
+        raise
+
+    return y
 
 class SCUTTLE:
 
-    def __init__(self, openLoop=False,):
+    def __init__(self, config=None, openLoop=False):
+
+        GPIO.setmode(GPIO.BOARD)
+
+        try:
+            y = parse_yaml_config(config)
+        except IOError:
+            print("Config file parse failed.")
+            raise
+
+        #print(yaml.dump(y))
 
         self.heading = 0
         self.velocity = 0
         self.angularVelocity = 0
         self.globalPosition = [0, 0]
 
-        self.wheelBase = WHEEL_BASE                             # L - meters    Measured from center of wheel base to inside edge of wheel.
-        self.wheelRadius = WHEEL_RADIUS                         # R - meters
-        self.wheelSpeeds = [0, 0]                               # [Left wheel speed, Right wheel speed.]
+        chassisdB = y['scuttle']['chassis']
+        wheelsdB  = chassisdB['wheels']
+        rl_wheel  = wheelsdB['rl_wheel']
+        rl_gpio   = rl_wheel['motor_control_gpio']
+        rl_invert = rl_wheel['invert']
+        rr_wheel  = wheelsdB['rr_wheel']
+        rr_gpio   = rr_wheel['motor_control_gpio']
+        rr_invert = rr_wheel['invert']
 
-        self.leftEncoderAddress = LEFT_ENCODER_ADDRESS          # Left wheel encoder address
-        self.rightEncoderAddress = RIGHT_ENCODER_ADDRESS        # Right wheel encoder address
+        # Get the wheel base from the config specification. If not
+        # present then use the default value
+        self.wheelBase = chassisdB.get('wheel_base', WHEEL_BASE)
 
-        self.targetMotion = [0,0]
+        # Get the wheel radius from the config specification. If not
+        # present then use the default value
+        self.wheelRadius = chassisdB.get('wheel_radius', WHEEL_RADIUS)
 
-        self._loopStart = time.monotonic_ns()                   # Updates when we grab chassis displacements
-        self._timeInitial = time.monotonic_ns()
-        self._timeFinal = 0
+        # Get the i2c bus id from the config specification. If not
+        # present then use the default value
+        bus = wheelsdB.get('i2c_bus_id', I2C_BUS)
+
+        self.leftEncoderAddress = rl_wheel.get('encoder_addr', LEFT_ENCODER_ADDRESS)
+        self.leftMotorChannel   = (rl_gpio['pwm'], rl_gpio['digital'])
+        self.leftWheel          = wheels.Wheel(bus,
+                                               self.leftMotorChannel,    # Create left wheel object
+                                               self.leftEncoderAddress,
+                                               invertEncoder=rl_invert,
+                                               invertMotor=rl_invert,
+                                               openLoop=openLoop,
+                                               )
+
+        self.rightEncoderAddress = rr_wheel.get('encoder_addr', RIGHT_ENCODER_ADDRESS)
+        self.rightMotorChannel   = (rr_gpio['pwm'], rr_gpio['digital'])
+        self.rightWheel          = wheels.Wheel(bus,
+                                                self.rightMotorChannel,  # Create right wheel object
+                                                self.rightEncoderAddress,
+                                               invertEncoder=rr_invert,
+                                               invertMotor=rr_invert,
+                                                openLoop=openLoop,
+                                                )
+
+        self.wheelSpeeds          = [0, 0]                      # [Left wheel speed, Right wheel speed.]
+        self.targetMotion         = [0, 0]
+        self._loopStart           = time.monotonic_ns()         # Updates when we grab chassis displacements
+        self._timeInitial         = time.monotonic_ns()
+        self._timeFinal           = 0
         self._angularDisplacement = 0                           # For tracking displacement between waypoints
         self._forwardDisplacement = 0                           # For tracking displacement between waypoints
-        self._wheelIncrements = np.array([0, 0])                # Latest increments of wheels
-
-        self.leftMotorChannel = LEFT_MOTOR_CHANNEL 	            # Create Left Motor Object (pwm, digital)
-        self.rightMotorChannel = RIGHT_MOTOR_CHANNEL 	        # Create Right Motor Object (pwm, digital)
-
-        self.rightWheel = wheels.Wheel(self.rightMotorChannel,  # Create right wheel object
-                                    self.rightEncoderAddress,
-                                    openLoop=openLoop,
-                                    )
-
-        self.leftWheel = wheels.Wheel(self.leftMotorChannel,    # Create left wheel object
-                                    self.leftEncoderAddress,
-                                    invertEncoder=True,
-                                    invertMotor=True,
-                                    openLoop=openLoop,
-                                    )
+        self._wheelIncrements     = np.array([0, 0])            # Latest increments of wheels
 
         self.stopped = False
 

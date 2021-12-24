@@ -9,6 +9,8 @@ import scuttlepy.motor as motor
 import scuttlepy.encoder as encoder
 from scuttlepy.constants import *
 
+# from fastlogging import LogInit
+
 class Wheel:
 
     def __init__(self, motorOutput, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
@@ -42,11 +44,11 @@ class Wheel:
         self.KI = KI                                                    # PID controller I gain
         self.KD = KD                                                    # PID controller D gain
 
-        self.pid = PID.PID(self.KP, self.KI, self.KD)                   # Create PID controller object
+        self.pid = PID.PID(self.KP, self.KI, self.KD)                                       # Create PID controller object
 
         self.rolloverLimit = self.pulleyRatio * self.encoder.resolution                     # limit for rollover
-        self._positions = deque([self.position, self.encoder.readPosition()], maxlen=2)     # Create FIFO queue for wheel positions
-        self._timestamps = deque([time.monotonic_ns()]*2, maxlen=2)                         # Create FIFO queue for wheel positions timestamps
+        self._positions = deque([self.position, self.encoder.readPosition()], maxlen=2)     # Create FIFO queue object for wheel positions
+        self._timestamps = deque([time.monotonic_ns()]*2, maxlen=2)                         # Create FIFO queue object for wheel positions timestamps
         self.update()                                                                       # Update values in object
 
     def update(self):
@@ -67,7 +69,7 @@ class Wheel:
     def getTravel(self):                                                                # calculate travel of the wheel in meters
         rotation = self.getRotation()                                                   # get wheel rotation between measurements
         distance = (2*np.pi*self.radius)*(rotation/self.encoder.resolution)             # calculate distance traveled in wheel rotation
-        return distance                                                                 # return distance traveled
+        return distance                                                                 # return distance traveled in meters
 
     def getLinearVelocity(self):                                                        # get wheel linear velocity
         distance = self.getTravel()                                                     # get wheel travel
@@ -125,15 +127,14 @@ if __name__ == "__main__":
         rightWheel.motor.setDuty(1)
 
         # leftWheel.setAngularVelocity(2*np.pi)
-        rightWheel.setAngularVelocity(-2*np.pi)
+        rightWheel.setAngularVelocity(2*np.pi)
 
         while True:
 
             # leftWheel.update()
             rightWheel.update()
-            # print(leftWheel.getAngularVelocity())
+            # print(rightWheel.getTravel())
             print(rightWheel.getAngularVelocity())
-            # leftWheel.setAngularVelocity(2*np.pi)
             # print(round(leftWheel.getAngularVelocity(),3), ' rad/s\t', round(rightWheel.getAngularVelocity(), 3), ' rad/s')
             # print(rightWheel.getTravel())
             # print(rightWheel.getRotation())

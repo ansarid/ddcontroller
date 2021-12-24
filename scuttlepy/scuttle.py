@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import time
-import math
 import threading
 import numpy as np
 import scuttlepy.wheels as wheels
@@ -18,43 +17,44 @@ class SCUTTLE:
         self.angularVelocity = 0
         self.globalPosition = np.array([0, 0])
 
-        self.wheelBase = WHEEL_BASE                                 # L - meters    Measured from center of wheel base to inside edge of wheel.
-        self.wheelRadius = WHEEL_RADIUS                             # R - meters
-        self.wheelSpeeds = [0, 0]                                   # [Left wheel speed, Right wheel speed.]
+        self.wheelBase = WHEEL_BASE                             # L - meters    Measured from center of wheel base to inside edge of wheel.
+        self.wheelRadius = WHEEL_RADIUS                         # R - meters
+        self.wheelSpeeds = [0, 0]                               # [Left wheel speed, Right wheel speed.]
 
-        self.leftEncoderAddress = LEFT_ENCODER_ADDRESS              # Left wheel encoder address
-        self.rightEncoderAddress = RIGHT_ENCODER_ADDRESS            # Right wheel encoder address
+        self.leftEncoderAddress = LEFT_ENCODER_ADDRESS          # Left wheel encoder address
+        self.rightEncoderAddress = RIGHT_ENCODER_ADDRESS        # Right wheel encoder address
 
         self.targetMotion = [0,0]
 
-        self._loopStart = time.monotonic_ns()                          # Updates when we grab chassis displacements
+        self._loopStart = time.monotonic_ns()                   # Updates when we grab chassis displacements
         self._timeInitial = time.monotonic_ns()
         self._timeFinal = 0
-        self._angularDisplacement = 0                               # For tracking displacement between waypoints
-        self._forwardDisplacement = 0                               # For tracking displacement between waypoints
-        self._wheelIncrements = np.array([0, 0])                    # Latest increments of wheels
+        self._angularDisplacement = 0                           # For tracking displacement between waypoints
+        self._forwardDisplacement = 0                           # For tracking displacement between waypoints
+        self._wheelIncrements = np.array([0, 0])                # Latest increments of wheels
 
-        self.leftMotorChannel = LEFT_MOTOR_CHANNEL 	                # Create Left Motor Object (pwm, digital)
-        self.rightMotorChannel = RIGHT_MOTOR_CHANNEL 	            # Create Right Motor Object (pwm, digital)
+        self.leftMotorChannel = LEFT_MOTOR_CHANNEL 	            # Create Left Motor Object (pwm, digital)
+        self.rightMotorChannel = RIGHT_MOTOR_CHANNEL 	        # Create Right Motor Object (pwm, digital)
 
-        self.rightWheel = wheels.Wheel(self.rightMotorChannel,      # Create right wheel object
+        self.rightWheel = wheels.Wheel(self.rightMotorChannel,  # Create right wheel object
                                     self.rightEncoderAddress,
                                     openLoop=openLoop,
                                     )
 
-        self.leftWheel = wheels.Wheel(self.leftMotorChannel,        # Create left wheel object
+        self.leftWheel = wheels.Wheel(self.leftMotorChannel,    # Create left wheel object
                                     self.leftEncoderAddress,
+                                    invertEncoder=True,
+                                    invertMotor=True,
                                     openLoop=openLoop,
-                                    invert_encoder=True,
                                     )
 
         self.stopped = False
 
-        self._loopFreq = 50                                         # Target Wheel Loop frequency (Hz)
-        self._wait = 1/self._loopFreq                               # Corrected wait time between encoder measurements (s)
+        self._loopFreq = 50                                     # Target Wheel Loop frequency (Hz)
+        self._wait = 1/self._loopFreq                           # Corrected wait time between encoder measurements (s)
 
-        self._loopTime = self._wait
-        self._startTime = time.monotonic_ns()
+        # self._loopTime = self._wait
+        # self._startTime = time.monotonic_ns()
 
         self.wheelsThread = threading.Thread(target=self._wheelsLoop)
         self.wheelsThread.start()
@@ -63,24 +63,19 @@ class SCUTTLE:
 
         while not self.stopped:
 
-            self._startTime = time.monotonic_ns()                           # reset startTime
+            startTime = time.monotonic_ns()
 
-            leftWheelDistance = self.leftWheel.getTravel()
-            rightWheelDistance = self.rightWheel.getTravel()
+            self.leftWheel.update()
+            self.rightWheel.update()
 
-            time.sleep(self._wait)
+            self.velocity, self.angularVelocity = self.getMotion()
 
-            displacement = self.getDisplacement()
-            # self.stackDisplacement(displacement[0], displacement[1])
-            # self.stackHeading(displacement[1])
 
-            self._loopTime = (time.monotonic_ns()-self._startTime)          # Calculate loop time
 
-            # print(self._wait)
-            # print(self._loopTime/1e6)
 
-            # _loopTimeOffset = (1/self._loopFreq)-self._loopTime           # Calculate time difference between target and actual loop time
-            # self._wait += _loopTimeOffset                                 # Adjust wait time to achieve target
+
+            time.sleep(sorted([self._wait-((time.monotonic_ns()-startTime)/1e9), 0])[1])
+            # print((time.monotonic_ns()-startTime)/1e6)                                    # Print loop time in ms
 
         self.rightWheel.stop()
         self.leftWheel.stop()
@@ -104,107 +99,42 @@ class SCUTTLE:
     def getHeading(self):
         return self.heading
 
-    # def _getWheelIncrements(self):                                          # get the wheel increment in radians
+    def setMotion(self, targetMotion):                          # Take chassis speed and command wheels
+                                                                # argument: [x_dot, theta_dot]
+        # self.targetMotion = targetMotion
 
-    #     self.leftWheel.positionInitial = self.leftWheel._positionFinal      # transfer previous reading.
-    #     self.rightWheel.positionInitial = self.rightWheel._positionFinal    # transfer previous reading.
-    #     self._timeInitial = self._timeFinal
+        L = self.wheelBase
+        R = self.wheelRadius
 
-    #     self.leftWheel._positionFinal = self.leftWheel.encoder.readPos()    # reading, raw.
-    #     self.rightWheel._positionFinal = self.rightWheel.encoder.readPos()  # reading, raw.
-    #     self._timeFinal = time.monotonic_ns()
+        A = np.array([[ 1/R, -L/R],                             # This matrix relates chassis to wheels
+                      [ 1/R,  L/R]])
 
-    #     wheelIncrements = np.array([self.leftWheel.getRotation(self.leftWheel.positionInitial,
-    #                                                        self.leftWheel._positionFinal),
-    #                                 self.rightWheel.getRotation(self.rightWheel.positionInitial,
-    #                                                        self.rightWheel._positionFinal)])        # store wheels travel in radians
-    #     timeIncrement = self._timeFinal - self._timeInitial
+        B = np.array([targetMotion[0],                          # Create an array for chassis speed
+                      targetMotion[1]])
 
-    #     self.wheelSpeeds = wheelIncrements / (timeIncrement/1e9)            # speed = distance/time
-    #     return wheelIncrements
+        C = np.matmul(A, B)                                     # Perform matrix multiplication
 
-    def getChassis(self, displacement):                                     # this function returns the chassis displacement
+        self.leftWheel.setAngularVelocity(C[0])                 # Set angularVelocity = [rad/s]
+        self.rightWheel.setAngularVelocity(C[1])                # Set angularVelocity = [rad/s]
 
+    def getMotion(self):                                        # Forward Kinematics
+                                                                # Function to update and return [x_dot,theta_dot]
         L = self.wheelBase
         R = self.wheelRadius
 
         A = np.array([[     R/2,     R/2],
-                      [-R/(2*L), R/(2*L)]])                                 # This matrix relates [PDL, PDR] to [XD,TD]
+                      [-R/(2*L), R/(2*L)]])                     # This matrix relates [PDL, PDR] to [XD,TD]
 
-        B = displacement                                                    # this array should store phi displacements (in radians)
-        C = np.matmul(A, B)                                                 # perform matrix multiplication
-        C = np.round(C, decimals=3)                                         # round the matrix
-
-        return C                                                            # returns a matrix containing [dx (m), dTheta (rad)]
-
-    def getMotion(self):                                                    # Forward Kinematics
-                                                                            # Function to update and return [x_dot,theta_dot]
-        B = np.array([self.leftWheel.getAngularVelocity(),                  # make an array of wheel speeds (rad/s)
+        B = np.array([self.leftWheel.getAngularVelocity(),      # make an array of wheel speeds (rad/s)
                       self.rightWheel.getAngularVelocity()])
 
-        C = self.getChassis(B)                                              # Perform matrix multiplication
-        self.velocity = C[0]                                                # Update speed of SCUTTLE [m/s]
-        self.angularVelocity = C[1]                                         # Update angularVelocity = [rad/s]
+        C = np.matmul(A, B)                                     # perform matrix multiplication
+        C = np.round(C, decimals=3)                             # round the matrix
 
-        return [self.velocity, self.angularVelocity]                        # return [speed, angularVelocity]
+        self.velocity = C[0]                                  # Update speed of SCUTTLE [m/s]
+        self.angularVelocity = C[1]                           # Update angularVelocity = [rad/s]
 
-    def calculateWheelSpeeds(self, targetMotion):                           # Inverse Kinematic function. Take x_dot, theta_dot as arguments
-
-        L = self.wheelBase
-        R = self.wheelRadius
-
-        A = np.array([[ 1/R, -L/R],                                         # This matrix relates chassis to wheels
-                      [ 1/R,  L/R]])
-
-        B = np.array([targetMotion[0],                                      # Create an array for chassis speed
-                      targetMotion[1]])
-
-        C = np.matmul(A, B)                                                 # Perform matrix multiplication
-        return C                                                            # Returns Phi_dots, (rad or rad/s)
-
-    def setMotion(self, targetMotion):                                      # Take chassis speed and command wheels
-                                                                            # argument: [x_dot, theta_dot]
-        # self.targetMotion = targetMotion
-        C = self.calculateWheelSpeeds(targetMotion)
-
-        self.leftWheel.setAngularVelocity(C[0])                             # Set angularVelocity = [rad/s]
-        self.rightWheel.setAngularVelocity(C[1])                            # Set angularVelocity = [rad/s]
-
-    def getDisplacement(self):                                              # store dispalcement info to the log var_AngularAndForwardDisplacements
-
-        chassisIncrement = self.getChassis(self.leftWheel.getTravel(), self.rightWheel.getTravel())      # get latest chassis travel (m, rad)
-        self._forwardDisplacement = chassisIncrement[0]                     # add the latest advancement(m) to the total
-        self._angularDisplacement = chassisIncrement[1]                     # add the latest advancement(rad) to the total
-
-        self._loopStart = time.monotonic_ns()                               # use for measuring loop time
-
-        return np.array([self._forwardDisplacement, self._angularDisplacement])
-
-                                                                            # THIS MAY BE THE TRICKIEST FUNCTION OF THE WHOLE PROGRAM.  IT IS SPECIAL BECAUSE IT USES THE
-                                                                            # INFORMATION ABOUT THE LATEST ANGULAR DISPLACEMENT TO CALCULATE A FORWARD DISPLACEMENT
-                                                                            # IN CARTESIAN SYSTEM.
-
-    def stackDisplacement(self, forwardDisplacement, angularDisplacement):  # add the latest displacement to the global position var_AngularAndForwardDisplacements
-        theta = self.heading + ( angularDisplacement / 2 )                  # use the "halfway" vector as the stackup heading
-        c, s = np.cos(theta), np.sin(theta)
-        R = np.array(((c, -s), (s, c)))                                     # create the rotation matrix
-        localVector = np.array([forwardDisplacement, 0])                    # x value is increment and y value is always 0
-        globalVector = np.matmul(R, localVector)
-        self.globalPosition = self.globalPosition + globalVector            # add the increment to the global position
-
-        return self.globalPosition
-
-    def stackHeading(self, angularDisplacement):                            # increment heading & ensure heading doesn't exceed 180 var_chassisImmediateAngularDisplacement
-        self.heading += angularDisplacement                                 # update heading by the turn amount executed
-        if self.heading > math.pi:
-            self.heading += (2 * math.pi)
-        if self.heading < -math.pi:
-            self.heading += (2 * math.pi)
-
-        return self.heading
-
-
-
+        return [self.velocity, self.angularVelocity]          # return [speed, angularVelocity]
 
 
 
@@ -225,15 +155,16 @@ if __name__ == "__main__":
 
     try:
 
-        while scuttle.getGlobalPosition()[0] < 0.3:
-
-            scuttle.setMotion([-0.4, 0])
-            pos = scuttle.getGlobalPosition()
-            print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
+        scuttle.setMotion([0.4, 0])
+        # while scuttle.getGlobalPosition()[0] < 0.3:
+        while True:
+            # print(scuttle.velocity, scuttle.angularVelocity)
+            # pos = scuttle.getGlobalPosition()
+            # print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
             time.sleep(1/45)
 
         scuttle.setMotion([0, 0])
-        print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
+        # print(pos[0], pos[1], '\t', np.degrees(scuttle.getHeading()))
 
     except KeyboardInterrupt:
 

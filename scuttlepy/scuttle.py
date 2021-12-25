@@ -31,7 +31,7 @@ class SCUTTLE:
                                        settings.LEFT_WHEEL_ENCODER_ADDRESS,
                                        invertEncoder=settings.LEFT_WHEEL_ENCODER_INVERT,
                                        invertMotor=settings.LEFT_WHEEL_MOTOR_INVERT,
-                                       openLoop=openLoop,
+                                       openLoop=settings.OPENLOOP,
                                        )
 
         self.rightWheel = wheels.Wheel(settings.RIGHT_WHEEL_MOTOR_PINS,                         # Create right wheel object
@@ -39,7 +39,7 @@ class SCUTTLE:
                                        settings.RIGHT_WHEEL_ENCODER_ADDRESS,
                                        invertEncoder=settings.RIGHT_WHEEL_ENCODER_INVERT,
                                        invertMotor=settings.RIGHT_WHEEL_MOTOR_INVERT,
-                                       openLoop=openLoop,
+                                       openLoop=settings.OPENLOOP,
                                        )
 
         self.wheelSpeeds          = [0, 0]                      # [Left wheel speed, Right wheel speed.]

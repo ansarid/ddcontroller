@@ -23,6 +23,9 @@ scuttle:
             # Motor PWM frequency in Hz
             pwm_frequency: 150
 
+            # Open loop wheel speed control
+            openloop: True
+
             # Left wheel details
             l_wheel:
 
@@ -133,6 +136,7 @@ class Settings:
             self.WHEEL_RADIUS = chassis['wheel_radius']
 
             self.I2C_BUS = chassis['wheels']['i2c_bus_id']
+            self.OPENLOOP = chassis['wheels']['openloop']
             self.MOTOR_PWM_FREQUENCY = chassis['wheels']['pwm_frequency']
             self.PLATFORM = chassis['motor_control_platform']
 

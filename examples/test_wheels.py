@@ -9,20 +9,20 @@ settings = Settings()
 
 
 leftWheel  = Wheel(settings.LEFT_WHEEL_MOTOR_PINS,                             # Create left wheel object
-                                settings.I2C_BUS,
-                                settings.LEFT_WHEEL_ENCODER_ADDRESS,
-                                invertEncoder=settings.LEFT_WHEEL_ENCODER_INVERT,
-                                invertMotor=settings.LEFT_WHEEL_MOTOR_INVERT,
-                                openLoop=True,
-                                )
+                   settings.I2C_BUS,
+                   settings.LEFT_WHEEL_ENCODER_ADDRESS,
+                   invertEncoder=settings.LEFT_WHEEL_ENCODER_INVERT,
+                   invertMotor=settings.LEFT_WHEEL_MOTOR_INVERT,
+                   openLoop=settings.OPENLOOP,
+                   )
 
 rightWheel = Wheel(settings.RIGHT_WHEEL_MOTOR_PINS,                            # Create right wheel object
-                                settings.I2C_BUS,
-                                settings.RIGHT_WHEEL_ENCODER_ADDRESS,
-                                invertEncoder=settings.RIGHT_WHEEL_ENCODER_INVERT,
-                                invertMotor=settings.RIGHT_WHEEL_MOTOR_INVERT,
-                                openLoop=True,
-                                )
+                   settings.I2C_BUS,
+                   settings.RIGHT_WHEEL_ENCODER_ADDRESS,
+                   invertEncoder=settings.RIGHT_WHEEL_ENCODER_INVERT,
+                   invertMotor=settings.RIGHT_WHEEL_MOTOR_INVERT,
+                   openLoop=settings.OPENLOOP,
+                   )
 
 try:
 

@@ -9,8 +9,9 @@ try:
 
     while True:
 
-        scuttle.setMotion([0.4, 0])
-        print(scuttle.getGlobalPosition())
+        scuttle.setMotion([100,0])
+        #print(scuttle.getGlobalPosition())
+        print(scuttle.getMotion())
 
 except KeyboardInterrupt:
 

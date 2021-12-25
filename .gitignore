@@ -12,3 +12,4 @@ dist
 **/*.egg-info
 test.py
 .vscode
+settings.yaml

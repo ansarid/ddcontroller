@@ -4,8 +4,10 @@ import time
 from scuttlepy.constants import *
 from scuttlepy.motor import Motor
 
-leftMotor = Motor((11,12)) 	                    # Create Left Motor Object (digital, pwm)
-rightMotor = Motor((15,16)) 	                # Create Right Motor Object (digital, pwm)
+settings = Settings()
+
+leftMotor = Motor(settings.LEFT_WHEEL_MOTOR_PINS)       # Create Left Motor Object (digital, pwm)
+rightMotor = Motor(settings.RIGHT_WHEEL_MOTOR_PINS)     # Create Right Motor Object (digital, pwm)
 
 try:
 

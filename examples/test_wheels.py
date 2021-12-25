@@ -5,10 +5,24 @@ import numpy as np
 from scuttlepy.constants import *
 from scuttlepy.wheels import Wheel
 
-settings = Settings(file=config)
+settings = Settings()
 
-leftWheel = Wheel((11,12), 1,0x40, invertEncoder=True)	    # Create Left Wheel Object
-rightWheel = Wheel((15,16), 1,0x41) 	               	    # Create Right Wheel Object
+
+leftWheel  = Wheel(settings.LEFT_WHEEL_MOTOR_PINS,                             # Create left wheel object
+                                settings.I2C_BUS,
+                                settings.LEFT_WHEEL_ENCODER_ADDRESS,
+                                invertEncoder=settings.LEFT_WHEEL_ENCODER_INVERT,
+                                invertMotor=settings.LEFT_WHEEL_MOTOR_INVERT,
+                                openLoop=True,
+                                )
+
+rightWheel = Wheel(settings.RIGHT_WHEEL_MOTOR_PINS,                            # Create right wheel object
+                                settings.I2C_BUS,
+                                settings.RIGHT_WHEEL_ENCODER_ADDRESS,
+                                invertEncoder=settings.RIGHT_WHEEL_ENCODER_INVERT,
+                                invertMotor=settings.RIGHT_WHEEL_MOTOR_INVERT,
+                                openLoop=True,
+                                )
 
 try:
 

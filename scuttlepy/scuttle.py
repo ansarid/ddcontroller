@@ -26,7 +26,7 @@ class SCUTTLE:
         self.wheelBase = settings.WHEEL_BASE                             # L - meters    Measured from center of wheel base to inside edge of wheel.
         self.wheelRadius = settings.WHEEL_RADIUS                         # R - meters
 
-        self.leftWheel  = wheels.Wheel(settings.LEFT_WHEEL_MOTOR_PINS,                             # Create left wheel object
+        self.leftWheel  = wheels.Wheel(settings.LEFT_WHEEL_MOTOR_PINS,                          # Create left wheel object
                                        settings.I2C_BUS,
                                        settings.LEFT_WHEEL_ENCODER_ADDRESS,
                                        invertEncoder=settings.LEFT_WHEEL_ENCODER_INVERT,
@@ -34,7 +34,7 @@ class SCUTTLE:
                                        openLoop=openLoop,
                                        )
 
-        self.rightWheel = wheels.Wheel(settings.RIGHT_WHEEL_MOTOR_PINS,                            # Create right wheel object
+        self.rightWheel = wheels.Wheel(settings.RIGHT_WHEEL_MOTOR_PINS,                         # Create right wheel object
                                        settings.I2C_BUS,
                                        settings.RIGHT_WHEEL_ENCODER_ADDRESS,
                                        invertEncoder=settings.RIGHT_WHEEL_ENCODER_INVERT,

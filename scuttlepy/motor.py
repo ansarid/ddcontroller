@@ -2,6 +2,9 @@
 
 import RPi.GPIO as GPIO
 
+if GPIO.getmode() is None:
+    GPIO.setmode(GPIO.BOARD)
+
 class Motor:
 
     def __init__(self, pins, freqency=150, invert=False):

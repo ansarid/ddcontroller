@@ -10,79 +10,101 @@ import RPi.GPIO as GPIO
 from .constants import *
 from . import wheels
 
-def parse_yaml_config(config):
+def parse_yaml_config(configPath):
     # Validate the config file name
-    if config is None:
-        raise Exception("Config file None.")
+    # if configPath is None:
+    #     raise Exception("Config file None.")
+
+    if configPath is None:
+        if os.path.exists('./config.yaml'):
+            # print('yo')
+            configPath = './config.yaml'
+        else:
+            # Place config in current directory
+            print('Cannot find config file:', configPath)
+            exit(1)
+            # pass
+    else:
+        if os.path.exists(configPath):
+            pass
+        else:
+            print('Cannot find config file:', configPath)
+            exit(1)
 
     try:
         # Parse the YAML config. Expand any environment variables
-        # inside, prior ro parsing.
-        with open(config, 'r') as f:
-            y = yaml.safe_load(os.path.expandvars(f.read()))
+        # inside, prior to parsing.
+        with open(configPath, 'r') as configFile:
+            config = yaml.safe_load(os.path.expandvars(configFile.read()))
     except IOError:
-        raise Exception("Could not read config file {}.".format(config))
-
-    #print(yaml.dump(y))
+        raise Exception("Could not read config file {}.".format(configPath))
 
     # Validate the YAML specification
     try:
-        if 'scuttle' not in y:
+        if 'scuttle' not in config:
             raise Exception("'scuttle' section not present")
-        elif 'chassis' not in y['scuttle']:
+        elif 'chassis' not in config['scuttle']:
             raise Exception("'chassis' section not present")
 
-        chassis = y['scuttle']['chassis']
+        chassis = config['scuttle']['chassis']
 
         if 'wheels' not in chassis:
             raise Exception("'chassis' section not present")
 
         wheels = chassis['wheels']
 
-        if 'rl_wheel' not in wheels:
-            raise Exception("'rl_wheel' section not present")
-        elif 'rr_wheel' not in wheels:
-            raise Exception("'rr_wheel' section not present")
+        if 'l_wheel' not in wheels:
+            raise Exception("'l_wheel' section not present")
+        elif 'r_wheel' not in wheels:
+            raise Exception("'r_wheel' section not present")
 
-        rl_wheel = wheels['rl_wheel']
-        rr_wheel = wheels['rr_wheel']
+        l_wheel = wheels['l_wheel']
+        r_wheel = wheels['r_wheel']
 
-        if 'motor_control_gpio' not in rl_wheel:
-            raise Exception("'motor_control_gpio' section not present in'rl_wheel'")
-        elif 'motor_control_gpio' not in rr_wheel:
-            raise Exception("'rr_wheel' section not present in'rr_wheel'")
+        if 'motor_control_gpio' not in l_wheel:
+            raise Exception("'motor_control_gpio' section not present in'l_wheel'")
+        elif 'motor_control_gpio' not in r_wheel:
+            raise Exception("'r_wheel' section not present in'r_wheel'")
     except:
         raise
 
-    return y
+    return config
 
 class SCUTTLE:
 
-    def __init__(self, config=None, openLoop=False):
+    def __init__(self, config=None, openLoop=True):
 
         GPIO.setmode(GPIO.BOARD)
 
         try:
-            y = parse_yaml_config(config)
+            config = parse_yaml_config(config)
         except IOError:
             print("Config file parse failed.")
             raise
 
-        #print(yaml.dump(y))
+        # print(yaml.dump(config))
 
         self.heading = 0
         self.velocity = 0
         self.angularVelocity = 0
         self.globalPosition = [0, 0]
 
-        chassisdB = y['scuttle']['chassis']
+        chassisdB = config['scuttle']['chassis']
         wheelsdB  = chassisdB['wheels']
-        rl_wheel  = wheelsdB['rl_wheel']
-        rl_gpio   = rl_wheel['motor_control_gpio']
-        rl_invert = rl_wheel['invert']
-        rr_wheel  = wheelsdB['rr_wheel']
-        rr_gpio   = rr_wheel['motor_control_gpio']
-        rr_invert = rr_wheel['invert']
+
+        l_wheel  = wheelsdB['l_wheel']
+        l_gpio   = l_wheel['motor_control_gpio']
+        l_motor_invert = l_wheel['motor_control_gpio']['invert']
+        l_encoder_invert = l_wheel['encoder']['invert']
+        l_encoder_address = l_wheel['encoder']['address']
+        l_motor_channel   = (l_gpio['digital'], l_gpio['pwm'])
+
+        r_wheel  = wheelsdB['r_wheel']
+        r_gpio   = r_wheel['motor_control_gpio']
+        r_motor_invert = r_wheel['motor_control_gpio']['invert']
+        r_encoder_invert = r_wheel['encoder']['invert']
+        r_encoder_address = r_wheel['encoder']['address']
+        r_motor_channel  = (r_gpio['digital'], r_gpio['pwm'])
 
         # Get the wheel base from the config specification. If not
         # present then use the default value
@@ -94,27 +116,23 @@ class SCUTTLE:
 
         # Get the i2c bus id from the config specification. If not
         # present then use the default value
-        bus = wheelsdB.get('i2c_bus_id', I2C_BUS)
+        i2c_bus = wheelsdB.get('i2c_bus_id', I2C_BUS)
 
-        self.leftEncoderAddress = rl_wheel.get('encoder_addr', LEFT_ENCODER_ADDRESS)
-        self.leftMotorChannel   = (rl_gpio['pwm'], rl_gpio['digital'])
-        self.leftWheel          = wheels.Wheel(bus,
-                                               self.leftMotorChannel,    # Create left wheel object
-                                               self.leftEncoderAddress,
-                                               invertEncoder=rl_invert,
-                                               invertMotor=rl_invert,
+        self.leftWheel          = wheels.Wheel(l_motor_channel,                             # Create left wheel object
+                                               i2c_bus,
+                                               l_encoder_address,
+                                               invertEncoder=l_encoder_invert,
+                                               invertMotor=l_motor_invert,
                                                openLoop=openLoop,
                                                )
 
-        self.rightEncoderAddress = rr_wheel.get('encoder_addr', RIGHT_ENCODER_ADDRESS)
-        self.rightMotorChannel   = (rr_gpio['pwm'], rr_gpio['digital'])
-        self.rightWheel          = wheels.Wheel(bus,
-                                                self.rightMotorChannel,  # Create right wheel object
-                                                self.rightEncoderAddress,
-                                               invertEncoder=rr_invert,
-                                               invertMotor=rr_invert,
-                                                openLoop=openLoop,
-                                                )
+        self.rightWheel         = wheels.Wheel(r_motor_channel,                            # Create right wheel object
+                                               i2c_bus,
+                                               r_encoder_address,
+                                               invertEncoder=r_encoder_invert,
+                                               invertMotor=r_motor_invert,
+                                               openLoop=openLoop,
+                                               )
 
         self.wheelSpeeds          = [0, 0]                      # [Left wheel speed, Right wheel speed.]
         self.targetMotion         = [0, 0]

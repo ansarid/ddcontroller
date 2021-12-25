@@ -9,9 +9,14 @@ from . import motor
 from . import encoder
 from .constants import *
 
+import RPi.GPIO as GPIO
+
+if GPIO.getmode() is None:
+    GPIO.setmode(GPIO.BOARD)
+
 class Wheel:
 
-    def __init__(self, bus, motorOutput, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
+    def __init__(self, motorOutput, bus, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=False):
 
         self.openLoop = openLoop
         self.invertMotor = invertMotor                                  # Invert motor mode

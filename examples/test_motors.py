@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import time
+from scuttlepy.constants import *
 from scuttlepy.motor import Motor
 
 leftMotor = Motor((11,12)) 	                    # Create Left Motor Object (digital, pwm)

@@ -1,10 +1,18 @@
 import time
+from scuttlepy.constants import *
 from scuttlepy.encoder import Encoder
+
+settings = Settings(file=config)
 
 if __name__ == "__main__":
 
-    leftEncoder = Encoder(0x40, invert=True)				# Create encoder object for left encoder on address 0x41
-    rightEncoder = Encoder(0x41)           # Create encoder object for right encoder on address 0x40
+    leftEncoder = Encoder(settings.LEFT_WHEEL_ENCODER_ADDRESS,      # Create encoder object for left encoder
+                          settings.LEFT_WHEEL_ENCODER_INVERT
+                          )
+
+    rightEncoder = Encoder(settings.RIGHT_WHEEL_ENCODER_ADDRESS,     # Create encoder object for right encoder
+                          settings.RIGHT_WHEEL_ENCODER_INVERT
+                          )
 
     try:
 

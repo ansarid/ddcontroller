@@ -7,8 +7,8 @@ import threading
 import numpy as np
 import RPi.GPIO as GPIO
 
-from .constants import *
 from . import wheels
+from .constants import *
 
 class SCUTTLE:
 

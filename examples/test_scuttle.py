@@ -1,4 +1,7 @@
+#!/usr/bin/python3
+
 from scuttlepy import SCUTTLE
+from scuttlepy.constants import *
 
 scuttle = SCUTTLE()
 

@@ -23,5 +23,10 @@ try:
         time.sleep(0.05)
 
 except KeyboardInterrupt:
+
+    pass
+
+finally:
+
     gamepad.close()
     scuttle.stop()

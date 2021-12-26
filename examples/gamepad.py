@@ -112,5 +112,7 @@ if __name__ == "__main__":
             print(gamepad.axes, gamepad.buttons, gamepad.hat)
             time.sleep(0.05)
     except KeyboardInterrupt:
+        pass
+    finally:
         gamepad.close()
         # This code does not exit cleanly. Needs to be fixed.

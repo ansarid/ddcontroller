@@ -173,6 +173,8 @@ class Settings:
 
             self.WHEEL_BASE = chassis['wheel_base']
             self.WHEEL_RADIUS = chassis['wheel_radius']
+            self.MAXIMUM_LINEAR_VELOCITY = chassis['maximum_linear_velocity']
+            self.MAXIMUM_ANGULAR_VELOCITY = chassis['maximum_angular_velocity']
 
             self.I2C_BUS = chassis['wheels']['i2c_bus_id']
             self.OPENLOOP = chassis['wheels']['openloop']

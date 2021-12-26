@@ -37,6 +37,11 @@ scuttle:
             # Open loop wheel speed control
             openloop: True
 
+            # PID controller for turning
+            turning_kp: 3
+            turning_ki: 0.1
+            turning_kd: 0.05
+
             # Left wheel details
             l_wheel:
 
@@ -179,6 +184,11 @@ class Settings:
             self.I2C_BUS = chassis['wheels']['i2c_bus_id']
             self.OPENLOOP = chassis['wheels']['openloop']
             self.MOTOR_PWM_FREQUENCY = chassis['wheels']['pwm_frequency']
+
+            self.TURNING_KP = chassis['wheels']['turning_kp']
+            self.TURNING_KI = chassis['wheels']['turning_ki']
+            self.TURNING_KD = chassis['wheels']['turning_kd']
+
             self.PLATFORM = chassis['motor_control_platform']
 
             self.LEFT_WHEEL_MOTOR_PINS = (chassis['wheels']['l_wheel']['motor']['digital'], chassis['wheels']['l_wheel']['motor']['pwm'])

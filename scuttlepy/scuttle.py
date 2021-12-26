@@ -61,7 +61,10 @@ class SCUTTLE:
         self._loopFreq = 50                                             # Target Wheel Loop frequency (Hz)
         self._wait = 1/self._loopFreq                                   # Corrected wait time between encoder measurements (s)
 
-        self.turningPID = PID.PID(3, 0.1, 0.05)                         # Create PID controller object for turning
+        self.turningPID = PID.PID(settings.TURNING_KP,                  # Create PID controller object for turning
+                                  settings.TURNING_KI,
+                                  settings.TURNING_KD
+                                  )
 
         self.wheelsThread = threading.Thread(target=self._wheelsLoop)   # Create wheel loop thread object
         self.wheelsThread.start()                                       # Start wheel loop thread object

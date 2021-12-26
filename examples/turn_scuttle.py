@@ -10,8 +10,8 @@ scuttle = SCUTTLE()
 try:
 
     print(np.degrees(scuttle.getHeading()))
-    # scuttle.turn(90, 2)                         # Turn 90 degrees at 1 rad/s
-    scuttle.turnPID(-90)                       # Turn 90 degrees using PID
+    # scuttle.turn(90, 2)                         # Turn 90 degrees at 2 rad/s
+    scuttle.turnPID(-90)                        # Turn 90 degrees using PID
     print(np.degrees(scuttle.getHeading()))
 
 except KeyboardInterrupt:

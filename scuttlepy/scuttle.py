@@ -95,7 +95,7 @@ class SCUTTLE:
             self.setHeading(self.heading + ((rightWheelTravel - leftWheelTravel)/(self.wheelBase))) # Calculate and update global heading
 
             self.sleep(startTime)
-            # print((time.monotonic_ns()-startTime)/1e6)                                      # Print loop time in ms
+            # print((time.monotonic_ns()-startTime)/1e6)        # Print loop time in ms
 
         self.rightWheel.stop()                                  # Once wheels thread loop has broken, stop right wheel
         self.leftWheel.stop()                                   # Once wheels thread loop has broken, stop left wheel
@@ -167,19 +167,19 @@ class SCUTTLE:
 
     # Basic Motion
 
-    def turn(self, angle, speed, threshold=1.5):                       # Turn the robot, angle in degrees, withing + or - threshhold
-        angle = np.radians(angle)                              # Convert to radians
+    def turn(self, angle, speed, threshold=1.5):                # Turn the robot, angle in degrees, withing + or - threshhold
+        angle = np.radians(angle)                               # Convert to radians
         threshold = np.radians(threshold)                       # Convert to radians
         angle = self.getHeading()+angle
 
-        if angle < -np.pi:                                    # Keep heading within -pi to pi, [-180, 180]
+        if angle < -np.pi:                                      # Keep heading within -pi to pi, [-180, 180]
             angle += 2 * np.pi
         elif angle > np.pi:
             angle -= 2 * np.pi
 
         while not ((angle - threshold) <= self.getHeading()):
 
-            startTime = time.monotonic_ns()                                 # Record loop start time
+            startTime = time.monotonic_ns()                     # Record loop start time
 
             if angle > 0:
                 self.setMotion([0, speed])
@@ -192,18 +192,18 @@ class SCUTTLE:
 
         while np.linalg.norm(startPosition - np.array(self.getGlobalPosition())) < distance:
 
-            startTime = time.monotonic_ns()                                 # Record loop start time
+            startTime = time.monotonic_ns()                     # Record loop start time
             self.setMotion([self.maxVelocity/3,0])
             self.sleep(startTime)
 
         self.setMotion([0, 0])
 
-    def turnPID(self, angle, threshold=0):                       # Turn the robot, angle in degrees, withing + or - threshhold
-        angle = np.radians(angle)                              # Convert to radians
+    def turnPID(self, angle, threshold=0):                      # Turn the robot, angle in degrees, withing + or - threshhold
+        angle = np.radians(angle)                               # Convert to radians
         threshold = np.radians(threshold)                       # Convert to radians
         angle = self.getHeading()+angle
 
-        if angle < -np.pi:                                    # Keep heading within -pi to pi, [-180, 180]
+        if angle < -np.pi:                                      # Keep heading within -pi to pi, [-180, 180]
             angle += 2 * np.pi
         elif angle > np.pi:
             angle -= 2 * np.pi
@@ -211,9 +211,12 @@ class SCUTTLE:
         self.turningPID.SetPoint=angle
 
         while int(np.degrees(self.getHeading())) != int(np.degrees(angle)):
-            startTime = time.monotonic_ns()                                 # Record loop start time
+            startTime = time.monotonic_ns()                     # Record loop start time
             self.turningPID.update(self.getHeading())
             self.setMotion([0, self.turningPID.output])
             self.sleep(startTime)
 
         self.setMotion([0, 0])
+
+    def goTo(self, position):
+        pass

@@ -33,6 +33,7 @@ class SCUTTLE:
 
         self.leftWheel  = wheels.Wheel(settings.LEFT_WHEEL_MOTOR_PINS,                          # Create left wheel object
                                        settings.I2C_BUS,
+                                       settings.MOTOR_PWM_FREQUENCY,
                                        settings.LEFT_WHEEL_ENCODER_ADDRESS,
                                        invertEncoder=settings.LEFT_WHEEL_ENCODER_INVERT,
                                        invertMotor=settings.LEFT_WHEEL_MOTOR_INVERT,
@@ -41,6 +42,7 @@ class SCUTTLE:
 
         self.rightWheel = wheels.Wheel(settings.RIGHT_WHEEL_MOTOR_PINS,                         # Create right wheel object
                                        settings.I2C_BUS,
+                                       settings.MOTOR_PWM_FREQUENCY,
                                        settings.RIGHT_WHEEL_ENCODER_ADDRESS,
                                        invertEncoder=settings.RIGHT_WHEEL_ENCODER_INVERT,
                                        invertMotor=settings.RIGHT_WHEEL_MOTOR_INVERT,

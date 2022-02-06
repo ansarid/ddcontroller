@@ -17,7 +17,9 @@ try:
                   joystickX*scuttle.maxAngularVelocity      # Mutiply joystick x axis by scuttle max angular velocity to get angular velocity
                  ]
 
-        print(scuttle.getGlobalPosition())
+
+        position = scuttle.getGlobalPosition()
+        print('Global Position:', round(position[0], 3), ',', round(position[1], 3))
         scuttle.setMotion(motion)               # Set motion to SCUTTLE
 
         time.sleep(0.05)

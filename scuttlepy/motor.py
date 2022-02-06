@@ -7,17 +7,17 @@ if GPIO.getmode() is None:
 
 class Motor:
 
-    def __init__(self, pins, freqency=150, invert=False):
+    def __init__(self, pins, frequency=150, invert=False):
 
         self.pins = pins                                # First pin will be digital and second pin will be PWM
         self.duty = 0                                   # Initial Duty %
-        self.freqency = freqency                        # PWM freqency (Hz)
+        self.frequency = frequency                      # PWM frequency (Hz)
         self.invert = invert                            # Reverse motor direction? Duty of 1 becomes -1 and duty of -1 becomes 1
 
         for pin in pins:                                # Set motor pins as outputs
             GPIO.setup(pin, GPIO.OUT)
 
-        self.motor = GPIO.PWM(pins[1], self.freqency)   # set first pin as PWM and set freq
+        self.motor = GPIO.PWM(pins[1], self.frequency)   # set first pin as PWM and set freq
         self.motor.start(self.duty)
 
     def setDuty(self, duty):

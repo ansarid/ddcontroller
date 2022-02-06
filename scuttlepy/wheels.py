@@ -16,13 +16,14 @@ if GPIO.getmode() is None:
 
 class Wheel:
 
-    def __init__(self, motorOutput, bus, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=True):
+    def __init__(self, motorOutput, bus, motorPwmFreq, encoderAddress, wheelRadius=0.04165, invertMotor=False, invertEncoder=False, KP=0.004, KI=0.025, KD=0, openLoop=True):
 
         self.openLoop = openLoop
         self.invertMotor = invertMotor                                  # Invert motor mode
         self.invertEncoder = invertEncoder                              # Invert encoder mode
 
         self.motor = motor.Motor(motorOutput,                           # Create motor object
+                                 frequency=motorPwmFreq,
                                  invert=invertMotor
                                  )
 

@@ -90,11 +90,11 @@ class SCUTTLE:
 
             wheelbaseTravel = (leftWheelTravel + rightWheelTravel)/2        # Calculate wheel displacement
 
-            self.setHeading(self.heading + np.arctan((rightWheelTravel - leftWheelTravel)/(self.wheelBase))) # Calculate and update global heading
-
             self.globalPosition = [self.globalPosition[0]+(wheelbaseTravel*np.cos(self.heading)),   # Calculate global X position
                                    self.globalPosition[1]+(wheelbaseTravel*np.sin(self.heading))    # Calculate global Y position
                                    ]
+
+            self.setHeading(self.heading + ((rightWheelTravel - leftWheelTravel)/(self.wheelBase))) # Calculate and update global heading
 
             self.sleep(startTime)
             # print((time.monotonic_ns()-startTime)/1e6)        # Print loop time in ms

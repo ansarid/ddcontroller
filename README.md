@@ -8,6 +8,7 @@ Still a work in progress.
 Install Prerequisites:
 ```
 sudo pip3 install Adafruit-PlatformDetect
+sudo pip3 install yaml
 ```
 Install RTIMULib:
 ```

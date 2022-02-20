@@ -9,6 +9,7 @@ with open(path.join(this_directory, 'README.md')) as f:
 
 install_requires=['smbus2',
                   'fastlogging',
+                  'pyyaml',
                  ]
 
 setuptools.setup(

@@ -1,4 +1,4 @@
-# ScuttlePy
+# SCUTTLEPy
 The SCUTTLE robot control library for advanced use of the SCUTTLE robot.
 
 ## Install

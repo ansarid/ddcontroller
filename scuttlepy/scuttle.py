@@ -126,7 +126,7 @@ class SCUTTLE:
     def setHeading(self, heading):                              # set global heading
         self.heading = heading
         return self.heading                                     # return new global heading
-    
+
     def getGlobalPosition(self):                                # get global position
         return self.globalPosition                              # return global position
 
@@ -151,7 +151,7 @@ class SCUTTLE:
 
     def setMotion(self, targetMotion):                          # Take chassis speed and command wheels
                                                                 # argument: [x_dot, theta_dot]
-         self.targetMotion = targetMotion
+        self.targetMotion = targetMotion
 
         L = self.wheelBase/2
         R = self.wheelRadius

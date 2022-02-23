@@ -131,9 +131,19 @@ class SCUTTLE:
     def getAngularVelocity(self):                               # get angular velocity
         return self.angularVelocity                             # return angular velocity
 
+    def setLinearVelocity(self, linearVelocity):                # set linear velocity
+        self.targetMotion[0] = linearVelocity
+        self.setMotion(self.targetMotion)
+        return self.targetMotion                                # return linear velocity
+
+    def setAngularVelocity(self, angularVelocity):              # set angular velocity
+        self.targetMotion[1] = angularVelocity
+        self.setMotion(self.targetMotion)
+        return self.targetMotion                                # return angular velocity
+
     def setMotion(self, targetMotion):                          # Take chassis speed and command wheels
                                                                 # argument: [x_dot, theta_dot]
-        # self.targetMotion = targetMotion
+         self.targetMotion = targetMotion
 
         L = self.wheelBase/2
         R = self.wheelRadius

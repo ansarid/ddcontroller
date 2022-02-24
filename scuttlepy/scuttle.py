@@ -24,6 +24,8 @@ class SCUTTLE:
         self.angularVelocity = 0
         self.globalPosition = [0, 0]
 
+        self.headingOffset = 0
+        
         self.wheelBase = settings.WHEEL_BASE                             # L - meters    Measured from center of wheel base to inside edge of wheel.
         self.wheelRadius = settings.WHEEL_RADIUS                         # R - meters
 
@@ -111,12 +113,18 @@ class SCUTTLE:
         self.globalPosition = pos                               # Set global position to desired position
         return self.globalPosition                              # return new global position
 
-    def setHeading(self, heading):                              # Set global heading
-        if heading < -np.pi:                                    # Keep heading within -pi to pi, [-180, 180]
+    def offsetHeading(self, offset):                           # offset global heading
+        self.headingOffset = offset
+        heading = self.heading + self.headingOffset
+        if heading < -np.pi:                                    # Keep heading within -pi to pi, [-180, 180] degrees
             heading += 2 * np.pi
         elif heading > np.pi:
             heading -= 2 * np.pi
-        self.heading = heading                                  # Set heading to desired heading
+        self.setHeadin(heading)                                 # Set heading to heading with offset
+        return self.heading                                     # return new global heading
+
+    def setHeading(self, heading):                              # set global heading
+        self.heading = heading
         return self.heading                                     # return new global heading
 
     def getGlobalPosition(self):                                # get global position
@@ -131,9 +139,19 @@ class SCUTTLE:
     def getAngularVelocity(self):                               # get angular velocity
         return self.angularVelocity                             # return angular velocity
 
+    def setLinearVelocity(self, linearVelocity):                # set linear velocity
+        self.targetMotion[0] = linearVelocity
+        self.setMotion(self.targetMotion)
+        return self.targetMotion                                # return linear velocity
+
+    def setAngularVelocity(self, angularVelocity):              # set angular velocity
+        self.targetMotion[1] = angularVelocity
+        self.setMotion(self.targetMotion)
+        return self.targetMotion                                # return angular velocity
+
     def setMotion(self, targetMotion):                          # Take chassis speed and command wheels
                                                                 # argument: [x_dot, theta_dot]
-        # self.targetMotion = targetMotion
+        self.targetMotion = targetMotion
 
         L = self.wheelBase/2
         R = self.wheelRadius

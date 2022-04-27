@@ -71,10 +71,10 @@ scuttle:
                     invert: False
 
                     # GPIO pin designated as digital
-                    digital: 15
+                    digital: 36
 
                     # GPIO pin designed as PWM
-                    pwm: 16
+                    pwm: 35
 
         # Platform controlling the robot
         # RPi - Raspberry PI

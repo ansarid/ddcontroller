@@ -1,9 +1,9 @@
 import os
 import yaml
 
-_defaultSettingsFile = 'settings.yaml'
+_defaultSettingsFile = "settings.yaml"
 
-_defaultSettings = '''
+_defaultSettings = """
 label: None
 
 scuttle:
@@ -15,6 +15,12 @@ scuttle:
 
         # Wheel radius in meters
         wheel_radius: 0.04165
+
+        # Number of teeth on motor pulley
+        motor_pulley: 13
+
+        # Number of teeth on wheel pulley
+        wheel_pulley: 25
 
         # Maximum Linear Velocity (m/s)
         maximum_linear_velocity: 0.45
@@ -34,30 +40,8 @@ scuttle:
             # Motor PWM frequency in Hz
             pwm_frequency: 150
 
-            # Open loop wheel speed control
-            openloop: True
-
-            # PID controller for turning
-            turning_kp: 3
-            turning_ki: 0.1
-            turning_kd: 0.05
-
             # Left wheel details
             l_wheel:
-
-                minimum_forward_duty: 0.22
-                maximum_forward_duty: 1
-                minimum_forward_angular_velocity: 1
-                maximum_forward_angular_velocity: 10
-                minimum_backward_duty: -0.22
-                maximum_backward_duty: -1
-                minimum_backward_angular_velocity: -1
-                maximum_backward_angular_velocity: -10
-
-                # minimum_matching_forward_duty: 1
-                # maximum_matching_forward_duty: 1
-                # minimum_matching_backward_duty: 1
-                # maximum_matching_backward_duty: 1
 
                 encoder:
                     # Encoder address
@@ -68,7 +52,7 @@ scuttle:
 
                 motor:
 
-                    # Flag to indicate if the motor duty cycle needs to be inverted
+                    # Indicate if the motor duty cycle needs to be inverted
                     invert: False
 
                     # GPIO pin designated as digital
@@ -80,20 +64,6 @@ scuttle:
             # Right wheel details
             r_wheel:
 
-                minimum_forward_duty: 0.22
-                maximum_forward_duty: 1
-                minimum_forward_angular_velocity: 1
-                maximum_forward_angular_velocity: 10
-                minimum_backward_duty: -0.22
-                maximum_backward_duty: -1
-                minimum_backward_angular_velocity: -1
-                maximum_backward_angular_velocity: -10
-
-                # minimum_matching_forward_duty: 1
-                # maximum_matching_forward_duty: 1
-                # minimum_matching_backward_duty: 1
-                # maximum_matching_backward_duty: 1
-
                 encoder:
                     # Encoder address
                     address: 0x41
@@ -103,7 +73,7 @@ scuttle:
 
                 motor:
 
-                    # Flag to indicate if the motor duty cycle needs to be inverted
+                    # Indicate if the motor duty cycle needs to be inverted
                     invert: False
 
                     # GPIO pin designated as digital
@@ -121,10 +91,10 @@ scuttle:
 
     # Sensor specific information
     sensors: None
-'''
+"""
+
 
 class Settings:
-
     def __init__(self, file=None):
 
         if file is None:
@@ -141,15 +111,15 @@ class Settings:
 
         # If settings file does not exist and none is specified
         elif not os.path.exists(file) and file is _defaultSettingsFile:
-            print('Could not find config file', file)
+            print("Could not find config file", file)
             with open(self.path, "w") as settingsFile:
                 settingsFile.write(_defaultSettings)
                 settingsFile.close()
-                print('Created config file', file)
+                print("Created config file", file)
 
         # If specified settings file does not exist
         else:
-            raise Exception('Config file "'+file+'" does not exist.')
+            raise Exception('Config file "' + file + '" does not exist.')
 
         # Open settings file
         with open(self.path, "r") as settingsFile:
@@ -158,49 +128,71 @@ class Settings:
 
             # Validate the YAML specification
             # There's gotta be a more efficient way to do this.
-            if 'scuttle' not in settings.keys():
+            if "scuttle" not in settings.keys():
                 raise Exception("Cannot find 'scuttle' section in " + file)
-            elif 'chassis' not in settings['scuttle'].keys():
+            elif "chassis" not in settings["scuttle"].keys():
                 raise Exception("Cannot find 'chassis' section in " + file)
-            elif 'wheels' not in settings['scuttle']['chassis'].keys():
+            elif "wheels" not in settings["scuttle"]["chassis"].keys():
                 raise Exception("Cannot find 'wheels' section in " + file)
-            elif 'l_wheel' not in settings['scuttle']['chassis']['wheels'].keys():
+            elif "l_wheel" not in settings["scuttle"]["chassis"]["wheels"].keys():
                 raise Exception("Cannot find 'l_wheel' section in " + file)
-            elif 'r_wheel' not in settings['scuttle']['chassis']['wheels'].keys():
+            elif "r_wheel" not in settings["scuttle"]["chassis"]["wheels"].keys():
                 raise Exception("Cannot find 'r_wheel' section in " + file)
-            elif 'motor' not in settings['scuttle']['chassis']['wheels']['l_wheel'].keys():
+            elif (
+                "motor"
+                not in settings["scuttle"]["chassis"]["wheels"]["l_wheel"].keys()
+            ):
                 raise Exception("Cannot find 'motor' section in " + file)
-            elif 'motor' not in settings['scuttle']['chassis']['wheels']['r_wheel'].keys():
+            elif (
+                "motor"
+                not in settings["scuttle"]["chassis"]["wheels"]["r_wheel"].keys()
+            ):
                 raise Exception("Cannot find 'motor' section in " + file)
 
             # There's gotta be a more efficient way to do this too.
-            chassis = settings['scuttle']['chassis']
+            chassis = settings["scuttle"]["chassis"]
 
-            self.WHEEL_BASE = chassis['wheel_base']
-            self.WHEEL_RADIUS = chassis['wheel_radius']
-            self.MAXIMUM_LINEAR_VELOCITY = chassis['maximum_linear_velocity']
-            self.MAXIMUM_ANGULAR_VELOCITY = chassis['maximum_angular_velocity']
+            self.WHEEL_BASE = chassis["wheel_base"]
+            self.WHEEL_RADIUS = chassis["wheel_radius"]
+            self.MOTOR_PULLEY = chassis["motor_pulley"]
+            self.WHEEL_PULLEY = chassis["wheel_pulley"]
+            self.MAXIMUM_LINEAR_VELOCITY = chassis["maximum_linear_velocity"]
+            self.MAXIMUM_ANGULAR_VELOCITY = chassis["maximum_angular_velocity"]
 
-            self.I2C_BUS = chassis['wheels']['i2c_bus_id']
-            self.OPENLOOP = chassis['wheels']['openloop']
-            self.MOTOR_PWM_FREQUENCY = chassis['wheels']['pwm_frequency']
+            self.I2C_BUS = chassis["wheels"]["i2c_bus_id"]
+            self.OPENLOOP = chassis["wheels"]["openloop"]
+            self.MOTOR_PWM_FREQUENCY = chassis["wheels"]["pwm_frequency"]
 
-            self.TURNING_KP = chassis['wheels']['turning_kp']
-            self.TURNING_KI = chassis['wheels']['turning_ki']
-            self.TURNING_KD = chassis['wheels']['turning_kd']
+            self.TURNING_KP = chassis["wheels"]["turning_kp"]
+            self.TURNING_KI = chassis["wheels"]["turning_ki"]
+            self.TURNING_KD = chassis["wheels"]["turning_kd"]
 
-            self.PLATFORM = chassis['motor_control_platform']
+            self.PLATFORM = chassis["motor_control_platform"]
 
-            self.LEFT_WHEEL_MOTOR_PINS = (chassis['wheels']['l_wheel']['motor']['digital'], chassis['wheels']['l_wheel']['motor']['pwm'])
-            self.LEFT_WHEEL_ENCODER_ADDRESS = chassis['wheels']['l_wheel']['encoder']['address']
-            self.LEFT_WHEEL_MOTOR_INVERT = chassis['wheels']['l_wheel']['motor']['invert']
-            self.LEFT_WHEEL_ENCODER_INVERT = chassis['wheels']['l_wheel']['encoder']['invert']
+            self.LEFT_WHEEL_MOTOR_PINS = (
+                chassis["wheels"]["l_wheel"]["motor"]["digital"],
+                chassis["wheels"]["l_wheel"]["motor"]["pwm"],
+            )
+            self.LEFT_WHEEL_ENCODER_ADDRESS = chassis["wheels"]["l_wheel"]["encoder"][
+                "address"
+            ]
+            self.LEFT_WHEEL_MOTOR_INVERT = chassis["wheels"]["l_wheel"]["motor"][
+                "invert"
+            ]
+            self.LEFT_WHEEL_ENCODER_INVERT = chassis["wheels"]["l_wheel"]["encoder"][
+                "invert"
+            ]
 
-            self.RIGHT_WHEEL_MOTOR_PINS = (chassis['wheels']['r_wheel']['motor']['digital'], chassis['wheels']['r_wheel']['motor']['pwm'])
-            self.RIGHT_WHEEL_ENCODER_ADDRESS = chassis['wheels']['r_wheel']['encoder']['address']
-            self.RIGHT_WHEEL_MOTOR_INVERT = chassis['wheels']['r_wheel']['motor']['invert']
-            self.RIGHT_WHEEL_ENCODER_INVERT = chassis['wheels']['r_wheel']['encoder']['invert']
-
-    # def read(self):
-
-    # def write(self):
+            self.RIGHT_WHEEL_MOTOR_PINS = (
+                chassis["wheels"]["r_wheel"]["motor"]["digital"],
+                chassis["wheels"]["r_wheel"]["motor"]["pwm"],
+            )
+            self.RIGHT_WHEEL_ENCODER_ADDRESS = chassis["wheels"]["r_wheel"]["encoder"][
+                "address"
+            ]
+            self.RIGHT_WHEEL_MOTOR_INVERT = chassis["wheels"]["r_wheel"]["motor"][
+                "invert"
+            ]
+            self.RIGHT_WHEEL_ENCODER_INVERT = chassis["wheels"]["r_wheel"]["encoder"][
+                "invert"
+            ]

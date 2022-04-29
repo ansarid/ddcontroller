@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-'''
+"""
 This file is part of the SCUTTLEPy library (https://github.com/ansarid/scuttlepy).
 Copyright (C) 2022  Daniyal Ansari
 
@@ -16,7 +16,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-'''
+"""
 
 import time
 import threading
@@ -27,51 +27,47 @@ from inputs import get_gamepad
 
 
 class Gamepad:
-
     def __init__(self):
 
         gamepads = [device.name for device in devices if type(device) is inputs.GamePad]
 
         if gamepads:
-            if 'ESM-9013' in gamepads:
+            if "ESM-9013" in gamepads:
                 pass
             else:
-                print('\nGamepad in incorrect mode.\n')
+                print("\nGamepad in incorrect mode.\n")
         else:
             print("\nNo gamepad detected.\n")
             return None
             # exit(1)
 
         self.axes_map = {
-            'ABS_X':'LEFT_X',
-            'ABS_Y':'LEFT_Y',
-            'ABS_Z':'RIGHT_X',
-            'ABS_RZ':'RIGHT_Y',
+            "ABS_X": "LEFT_X",
+            "ABS_Y": "LEFT_Y",
+            "ABS_Z": "RIGHT_X",
+            "ABS_RZ": "RIGHT_Y",
         }
 
         self.button_map = {
-            'BTN_SOUTH':'Y',
-            'BTN_EAST':'B',
-            'BTN_C':'A',
-            'BTN_NORTH':'X',
-            'BTN_WEST':'LB',
-            'BTN_Z':'RB',
-            'BTN_TL':'LT',
-            'BTN_TR':'RT',
-            'BTN_TL2':'BACK',
-            'BTN_TR2':'START',
-            'BTN_SELECT':'L_JOY',
-            'BTN_START':'R_JOY',
-            'BTN_MODE':'MODE',
+            "BTN_SOUTH": "Y",
+            "BTN_EAST": "B",
+            "BTN_C": "A",
+            "BTN_NORTH": "X",
+            "BTN_WEST": "LB",
+            "BTN_Z": "RB",
+            "BTN_TL": "LT",
+            "BTN_TR": "RT",
+            "BTN_TL2": "BACK",
+            "BTN_TR2": "START",
+            "BTN_SELECT": "L_JOY",
+            "BTN_START": "R_JOY",
+            "BTN_MODE": "MODE",
         }
 
         self.buttons = {}
         self.axes = {}
-        self.hat = [0,0]
-        self.states = { 'axes': self.axes,
-                        'buttons': self.buttons,
-                        'hat': self.hat
-                    }
+        self.hat = [0, 0]
+        self.states = {"axes": self.axes, "buttons": self.buttons, "hat": self.hat}
 
         for button in self.button_map.keys():
             self.buttons[self.button_map[button]] = 0
@@ -89,10 +85,10 @@ class Gamepad:
         for event in events:
             # print(event.ev_type, event.code, event.state)
             if event.ev_type == "Absolute":
-                if 'ABS_HAT' in event.code:
-                    if 'ABS_HAT0X' == event.code:
+                if "ABS_HAT" in event.code:
+                    if "ABS_HAT0X" == event.code:
                         self.hat[0] = event.state
-                    elif 'ABS_HAT0Y' == event.code:
+                    elif "ABS_HAT0Y" == event.code:
                         self.hat[1] = event.state
                 else:
                     self.axes[self.axes_map[event.code]] = event.state
@@ -101,10 +97,7 @@ class Gamepad:
             else:
                 pass
 
-        self.states = {'axes': self.axes,
-                       'buttons': self.buttons,
-                       'hat': self.hat
-                       }
+        self.states = {"axes": self.axes, "buttons": self.buttons, "hat": self.hat}
 
         return self.states
 

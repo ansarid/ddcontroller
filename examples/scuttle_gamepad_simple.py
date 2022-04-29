@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-'''
+"""
 This file is part of the SCUTTLEPy library (https://github.com/ansarid/scuttlepy).
 Copyright (C) 2022  Daniyal Ansari
 
@@ -16,7 +16,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-'''
+"""
 
 import time
 from .utils.gamepad import Gamepad
@@ -30,25 +30,21 @@ try:
     while True:
 
         # Get joystick x and y values and scale values to be between -1 and 1
-        joystickX, joystickY = [((-2/255)*gamepad.axes['LEFT_X'])+1,
-                                ((-2/255)*gamepad.axes['LEFT_Y'])+1
-                                ]
+        joystickX, joystickY = [
+            ((-2 / 255) * gamepad.axes["LEFT_X"]) + 1,
+            ((-2 / 255) * gamepad.axes["LEFT_Y"]) + 1,
+        ]
 
         # Mutiply joystick x & y axis by scuttle max linear & angular
         # velocity to get linear & angular velocity
         motion = [
-                  joystickY*scuttle.max_velocity,
-                  joystickX*scuttle.max_angular_velocity
-                  ]
+            joystickY * scuttle.max_velocity,
+            joystickX * scuttle.max_angular_velocity,
+        ]
 
         x, y = scuttle.get_global_position()
 
-        print(
-              'Global Position:',
-              round(x, 3),
-              ',',
-              round(y, 3)
-              )
+        print("Global Position:", round(x, 3), ",", round(y, 3))
 
         # Set motion to SCUTTLE
         scuttle.set_motion(motion)

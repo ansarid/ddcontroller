@@ -20,12 +20,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import setuptools
 from os import path
-# read the contents of your README file
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md')) as f:
     long_description = f.read()
 
-install_requires = ['smbus2',
+install_requires = ['numpy',
+                    'smbus2',
                     'pyyaml',
                     ]
 

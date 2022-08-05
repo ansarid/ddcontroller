@@ -95,6 +95,9 @@ scuttle:
 
 
 class Settings:
+    '''
+    '''
+
     def __init__(self, file=None):
 
         if file is None:
@@ -125,6 +128,8 @@ class Settings:
         with open(self.path, "r") as settingsFile:
             # self.settings = yaml.load(settingsFile)
             settings = yaml.safe_load(os.path.expandvars(settingsFile.read()))
+
+            print(settings['scuttle'])
 
             # Validate the YAML specification
             # There's gotta be a more efficient way to do this.

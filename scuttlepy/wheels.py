@@ -24,24 +24,24 @@ from collections import deque
 
 from . import motor
 from . import encoder
-from .constants import *
-
-# import RPi.GPIO as GPIO
-
-# if GPIO.getmode() is None:
-#     GPIO.setmode(GPIO.BOARD)
 
 
 class Wheel:
+
+    """_summary_
+
+    """
+
     def __init__(
         self,
-        motor_output,
-        bus,
-        motor_pwm_freq,
+        digital_pin,
+        pwm_pin,
+        pwm_frequency,
+        i2c_bus,
         encoder_address,
-        wheel_radius=0.04165,
-        motor_pulley_teeth=13,
-        wheel_pulley_teeth=25,
+        wheel_radius,
+        motor_pulley_teeth,
+        wheel_pulley_teeth,
         invert_motor=False,
         invert_encoder=False,
     ):
@@ -50,25 +50,26 @@ class Wheel:
         Args:
             motor_output (_type_): _description_
             bus (_type_): _description_
-            motor_pwm_freq (_type_): _description_
+            pwm_frequency (_type_): _description_
             encoder_address (_type_): _description_
-            wheel_radius (float, optional): _description_. Defaults to 0.04165.
-            motor_pulley_teeth (int, optional): _description_. Defaults to 13.
-            wheel_pulley_teeth (int, optional): _description_. Defaults to 25.
+            wheel_radius (float, optional): _description_.
+            motor_pulley_teeth (int, optional): _description_.
+            wheel_pulley_teeth (int, optional): _description_.
             invert_motor (bool, optional): _description_. Defaults to False.
             invert_encoder (bool, optional): _description_. Defaults to False.
         """
         self.invert_motor = invert_motor
         self.invert_encoder = invert_encoder
 
-        self.motor = motor.motor(
-            motor_output,
-            frequency=motor_pwm_freq,
+        self.motor = motor.Motor(
+            digital_pin,
+            pwm_pin,
+            pwm_frequency,
             invert=invert_motor,
         )
 
-        self.encoder = encoder.encoder(
-            encoder_address, bus=bus, invert=self.invert_encoder
+        self.encoder = encoder.Encoder(
+            encoder_address, bus=i2c_bus, invert=self.invert_encoder
         )
 
         self.radius = wheel_radius
@@ -107,9 +108,9 @@ class Wheel:
         self.position = self._positions[1]  # set latest position
         self.timestamp = self._timestamps[1]  # set timestamp of latest data
 
-    def get_rotation(self):  # calculate the increment of a wheel in ticks
+    def get_rotation(self):
         """_summary_
-
+            Calculate the increment of a wheel in ticks.
         Returns:
             _type_: _description_
         """

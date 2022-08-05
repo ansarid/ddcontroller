@@ -18,28 +18,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
-import os
-import yaml
 import time
 import threading
 import numpy as np
 
-# import RPi.GPIO as GPIO
-
 from . import wheels
-from .constants import *
-
+# from .config import *
 
 class SCUTTLE:
+
+    """_summary_
+    SCUTTLE
+    """
+
     def __init__(self, config=None):
         """_summary_
 
         Args:
             config (_type_, optional): _description_. Defaults to None.
         """
-        # GPIO.setmode(GPIO.BOARD)
 
-        settings = settings(file=config)
+        # settings = Settings(file=config)
 
         self.heading = 0
         self.velocity = 0
@@ -48,29 +47,35 @@ class SCUTTLE:
 
         self.heading_offset = 0
 
-        self.wheel_base = settings.wheel_base
+        self.wheel_base = 0.355
 
-        self.wheel_radius = settings.wheel_radius
-
-        self.max_velocity = settings.maximum_linear_velocity
-        self.max_angular_velocity = settings.maximum_angular_velocity
+        self.max_velocity = 0.45
+        self.max_angular_velocity = 2.7
 
         self.left_wheel = wheels.Wheel(
-            settings.left_wheel_motor_pins,
-            settings.i2c_bus,
-            settings.motor_pwm_frequency,
-            settings.left_wheel_encoder_address,
-            invert_encoder=settings.left_wheel_encoder_invert,
-            invert_motor=settings.left_wheel_motor_invert,
+            digital_pin=11,
+            pwm_pin=12,
+            pwm_frequency=150,
+            i2c_bus=1,
+            encoder_address=0x40,
+            wheel_radius=0.04165,
+            motor_pulley_teeth=15,
+            wheel_pulley_teeth=30,
+            invert_motor=False,
+            invert_encoder=False,
         )
 
         self.right_wheel = wheels.Wheel(
-            settings.right_wheel_motor_pins,
-            settings.i2c_bus,
-            settings.motor_pwm_frequency,
-            settings.right_wheel_encoder_address,
-            invert_encoder=settings.right_wheel_encoder_invert,
-            invert_motor=settings.right_wheel_motor_invert,
+            digital_pin=15,
+            pwm_pin=16,
+            pwm_frequency=150,
+            i2c_bus=1,
+            encoder_address=0x40,
+            wheel_radius=0.04165,
+            motor_pulley_teeth=15,
+            wheel_pulley_teeth=30,
+            invert_motor=False,
+            invert_encoder=False,
         )
 
         self.wheel_speeds = [0, 0]
@@ -90,7 +95,7 @@ class SCUTTLE:
             1 / self._loop_freq
         )  # corrected wait time between encoder measurements (s)
 
-        self.wheels_thread = threading.thread(
+        self.wheels_thread = threading.Thread(
             target=self._wheels_loop
         )  # create wheel loop thread object
         self.wheels_thread.start()  # start wheel loop thread object
@@ -109,7 +114,9 @@ class SCUTTLE:
         time.sleep(sleep_time)
 
     def _wheels_loop(self):
-        """_summary_"""
+        """_summary_
+        """
+
         while not self.stopped:
 
             start_time = time.monotonic_ns()  # record loop start time
@@ -187,7 +194,7 @@ class SCUTTLE:
             heading += 2 * np.pi
         elif heading > np.pi:
             heading -= 2 * np.pi
-        self.set_headin(heading)
+        self.set_heading(heading)
         return self.heading
 
     def set_heading(self, heading):
@@ -268,19 +275,22 @@ class SCUTTLE:
         """
         self.target_motion = target_motion
 
-        A = np.array(
-            [
-                [1 / self.wheel_radius, -(self.wheel_base / 2) / self.wheel_radius],
-                [1 / self.wheel_radius, (self.wheel_base / 2) / self.wheel_radius],
-            ]
-        )
+        L = self.wheel_base/2
 
-        B = np.array([target_motion[0], target_motion[1]])
+        A = np.array([
+                      [ 1/self.left_wheel.radius, -L/self.left_wheel.radius],
+                      [ 1/self.right_wheel.radius,  L/self.right_wheel.radius]
+                    ])
+
+        B = np.array([target_motion[0],
+                      target_motion[1]])
 
         C = np.matmul(A, B)
 
         self.left_wheel.set_angular_velocity(C[0])
         self.right_wheel.set_angular_velocity(C[1])
+
+        return C
 
     def get_motion(self):
         """_summary_
@@ -290,10 +300,10 @@ class SCUTTLE:
         """
         A = np.array(
             [
-                [self.wheel_radius / 2, self.wheel_radius / 2],
+                [self.left_wheel.radius / 2, self.right_wheel.radius / 2],
                 [
-                    -self.wheel_radius / (2 * (self.wheel_base / 2)),
-                    (self.wheel_radius) / (2 * (self.wheel_base / 2)),
+                    -self.left_wheel.radius / (2 * (self.left_wheel.radius / 2)),
+                    (self.right_wheel.radius) / (2 * (self.right_wheel.radius / 2)),
                 ],
             ]
         )

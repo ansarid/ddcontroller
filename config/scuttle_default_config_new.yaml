@@ -1,0 +1,95 @@
+label: 'Default SCUTTLE Config'
+
+scuttle:
+
+    # Wheel base (L) in meters.
+    wheel_base: 0.355
+
+    # Maximum Linear Velocity (m/s)
+    maximum_linear_velocity: 0.45
+
+    # Maximum Angular Velocity (rad/s)
+    maximum_angular_velocity: 2.7
+
+    # Wheel Loop Frequency
+    wheel_frequency: 50
+
+    # Left Wheel Parameters
+    l_wheel:
+
+        # Wheel radius in meters
+        wheel_radius: 0.04165
+
+        # Number of teeth on motor pulley
+        motor_pulley_teeth: 15
+
+        # Number of teeth on wheel pulley
+        wheel_pulley_teeth: 30
+
+        encoder:
+            # I2C bus id
+            i2c_bus: 1
+
+            # Encoder address
+            address: 0x40
+
+            # Flag to indicate if the encoder data needs to be inverted
+            invert: True
+
+        motor:
+
+            # Motor PWM frequency in Hz
+            pwm_frequency: 150
+
+            # Indicate if the motor duty cycle needs to be inverted
+            invert: False
+
+            # GPIO pin designated as digital
+            digital_pin: 11
+
+            # GPIO pin designed as PWM
+            pwm_pin: 12
+
+    # Right wheel parameters
+    r_wheel:
+
+        # Wheel radius in meters
+        wheel_radius: 0.04165
+
+        # Number of teeth on motor pulley
+        motor_pulley_teeth: 15
+
+        # Number of teeth on wheel pulley
+        wheel_pulley_teeth: 30
+
+        encoder:
+
+            # I2C bus id
+            i2c_bus: 1
+
+            # Motor PWM frequency in Hz
+            pwm_frequency: 150
+
+            # Encoder address
+            address: 0x41
+
+            # Flag to indicate if the encoder data needs to be inverted
+            invert: False
+
+        motor:
+
+            # Indicate if the motor duty cycle needs to be inverted
+            invert: False
+
+            # GPIO pin designated as digital
+            digital_pin: 15
+
+            # GPIO pin designed as PWM
+            pwm_pin: 16
+
+    # Platform controlling the robot
+    # RPi - Raspberry PI
+    # Beagle - Beagle
+    # TISK - TI SK board
+    # Nano - NVIDIA Jetson Nano board
+    motor_control_platform: 'RPi'

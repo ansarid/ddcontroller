@@ -22,40 +22,44 @@ import time
 from .utils.gamepad import Gamepad
 from scuttlepy import SCUTTLE
 
+# Create gamepad object
 gamepad = Gamepad()
+
+# Create SCUTTLE Object
 scuttle = SCUTTLE()
 
 try:
 
+    # Create infinite loop
     while True:
 
-        # Get joystick x and y values and scale values to be between -1 and 1
-        joystickX, joystickY = [
-            ((-2 / 255) * gamepad.axes["LEFT_X"]) + 1,
-            ((-2 / 255) * gamepad.axes["LEFT_Y"]) + 1,
-        ]
+        # Get joystick x and y values and scale values to -1 to 1
+        joystickX, joystickY = [((-2/255)*gamepad.axes['LEFT_X'])+1,
+                                ((-2/255)*gamepad.axes['LEFT_Y'])+1
+                                ]
 
-        # Mutiply joystick x & y axis by scuttle max linear & angular
-        # velocity to get linear & angular velocity
         motion = [
-            joystickY * scuttle.max_velocity,
-            joystickX * scuttle.max_angular_velocity,
-        ]
+                  # Mutiply joystick y axis by SCUTTLE max linear velocity to get linear velocity
+                  joystickY*scuttle.maxVelocity,
 
-        x, y = scuttle.get_global_position()
+                  # Mutiply joystick x axis by SCUTTLE max angular velocity to get angular velocity
+                  joystickX*scuttle.maxAngularVelocity
+                 ]
+        # Get the SCUTTLE's latest location
+        x,y = scuttle.getGlobalPosition()
 
-        print("Global Position:", round(x, 3), ",", round(y, 3))
+        # Print the location of the SCUTTLE
+        print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
 
-        # Set motion to SCUTTLE
-        scuttle.set_motion(motion)
-
-        time.sleep(0.05)
+        # Run loop at 50Hz
+        time.sleep(1/50)
 
 except KeyboardInterrupt:
 
     pass
 
 finally:
-
+    # Clean up.
     gamepad.close()
     scuttle.stop()
+    print('Stopped.')

@@ -18,38 +18,50 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
+
 import RPi.GPIO as GPIO
-
-if GPIO.getmode() is None:
-    GPIO.setmode(GPIO.BOARD)
-
+GPIO.setwarnings(False)
 
 class Motor:
-    def __init__(self, pins, frequency=150, invert=False):
+    """_summary_
+        Motor
+    """
+
+    def __init__(self, digital_pin, pwm_pin, pwm_frequency, invert=False):
         """_summary_
 
         Args:
-            pins (_type_): _description_
-            frequency (int, optional): _description_. Defaults to 150.
+            digital_pin (int, optional): _description_.
+            pwm_pin (int, optional): _description_.
+            pwm_frequency (int, optional): _description_.
             invert (bool, optional): _description_. Defaults to False.
         """
+
+        self.digital_pin = digital_pin
+        self.pwm_pin = pwm_pin
+
         # First pin will be digital and second pin will be PWM
-        self.pins = pins
+        self.pins = (self.digital_pin, self.pwm_pin)
 
         # Initial Duty %
         self.duty = 0
 
         # PWM frequency (Hz)
-        self.frequency = frequency
+        self.pwm_frequency = pwm_frequency
 
         # Reverse motor direction
         self.invert = invert
 
-        for pin in pins:  # Set motor pins as outputs
+        if GPIO.getmode() is None:
+            GPIO.setmode(GPIO.BOARD)
+        else:
+            pass
+
+        for pin in self.pins:  # Set motor pins as outputs
             GPIO.setup(pin, GPIO.OUT)
 
         self.motor = GPIO.PWM(  # set first pin as PWM and set freq
-            pins[1], self.frequency
+            self.pins[1], self.pwm_frequency
         )
         self.motor.start(self.duty)
 
@@ -77,7 +89,9 @@ class Motor:
             self.motor.ChangeDutyCycle(duty if (duty > 0) else abs(100 + duty))
 
     def stop(self):
-        """_summary_"""
+        """_summary_
+
+        """
         GPIO.output(self.pins[0], False)
         self.motor.stop()
         GPIO.cleanup(self.pins)

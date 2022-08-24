@@ -1,4 +1,4 @@
-from scuttlepy import SCUTTLE
+from ddcontroller import DDRobot
 
-scuttle = SCUTTLE()
+robot = DDRobot()
 

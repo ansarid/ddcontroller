@@ -6,7 +6,7 @@ _defaultSettingsFile = "settings.yaml"
 _defaultSettings = """
 label: None
 
-scuttle:
+robot:
 
     chassis:
 
@@ -129,33 +129,33 @@ class Settings:
             # self.settings = yaml.load(settingsFile)
             settings = yaml.safe_load(os.path.expandvars(settingsFile.read()))
 
-            print(settings['scuttle'])
+            print(settings['robot'])
 
             # Validate the YAML specification
             # There's gotta be a more efficient way to do this.
-            if "scuttle" not in settings.keys():
-                raise Exception("Cannot find 'scuttle' section in " + file)
-            elif "chassis" not in settings["scuttle"].keys():
+            if "robot" not in settings.keys():
+                raise Exception("Cannot find 'robot' section in " + file)
+            elif "chassis" not in settings["robot"].keys():
                 raise Exception("Cannot find 'chassis' section in " + file)
-            elif "wheels" not in settings["scuttle"]["chassis"].keys():
+            elif "wheels" not in settings["robot"]["chassis"].keys():
                 raise Exception("Cannot find 'wheels' section in " + file)
-            elif "l_wheel" not in settings["scuttle"]["chassis"]["wheels"].keys():
+            elif "l_wheel" not in settings["robot"]["chassis"]["wheels"].keys():
                 raise Exception("Cannot find 'l_wheel' section in " + file)
-            elif "r_wheel" not in settings["scuttle"]["chassis"]["wheels"].keys():
+            elif "r_wheel" not in settings["robot"]["chassis"]["wheels"].keys():
                 raise Exception("Cannot find 'r_wheel' section in " + file)
             elif (
                 "motor"
-                not in settings["scuttle"]["chassis"]["wheels"]["l_wheel"].keys()
+                not in settings["robot"]["chassis"]["wheels"]["l_wheel"].keys()
             ):
                 raise Exception("Cannot find 'motor' section in " + file)
             elif (
                 "motor"
-                not in settings["scuttle"]["chassis"]["wheels"]["r_wheel"].keys()
+                not in settings["robot"]["chassis"]["wheels"]["r_wheel"].keys()
             ):
                 raise Exception("Cannot find 'motor' section in " + file)
 
             # There's gotta be a more efficient way to do this too.
-            chassis = settings["scuttle"]["chassis"]
+            chassis = settings["robot"]["chassis"]
 
             self.WHEEL_BASE = chassis["wheel_base"]
             self.WHEEL_RADIUS = chassis["wheel_radius"]

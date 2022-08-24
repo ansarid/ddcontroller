@@ -1,6 +1,6 @@
 import time
 import numpy as np
-from scuttlepy.wheels import Wheel
+from ddcontroller.wheels import Wheel
 
 # Create right wheel object
 wheel = Wheel(digital_pin=11,

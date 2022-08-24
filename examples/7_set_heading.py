@@ -1,20 +1,20 @@
 import math
 import time
-from scuttlepy import SCUTTLE
+from ddcontroller import DDRobot
 
-# Create SCUTTLE object
-scuttle = SCUTTLE()
+# Create robot object
+robot = DDRobot()
 
 try:
 
     # Create infinite loop
     while True:
 
-        # Set SCUTTLE's heading to pi/2
-        scuttle.setHeading(math.pi/2)
+        # Set robot's heading to pi/2
+        robot.setHeading(math.pi/2)
 
-        # Print the motion of the SCUTTLE
-        print(scuttle.getHeading())
+        # Print the motion of the robot
+        print(robot.getHeading())
 
         # Run loop at 50Hz
         time.sleep(1/50)
@@ -24,5 +24,5 @@ except KeyboardInterrupt:
 
 finally:
     # Clean up.
-    scuttle.stop()
+    robot.stop()
     print('Stopped.')

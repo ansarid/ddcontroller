@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-This file is part of the SCUTTLEPy library (https://github.com/ansarid/scuttlepy).
+This file is part of the robotPy library (https://github.com/ansarid/ddcontroller).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import cv2
 import time
 import numpy as np
-from scuttlepy import SCUTTLE
+from ddcontroller import DDRobot
 
 # Color Range, described in HSV
 
@@ -41,11 +41,11 @@ deadband = (
 
 image_resize = (240, 160)  # Reduce image size to speed up processing
 
-scuttle = SCUTTLE()  # Create SCUTTLE object
+robot = DDRobot()  # Create robot object
 
 linearVelocityMultiplier = 1
-# scuttle.maxLinearVelocity = 0.3 # Set the maximum linear velocity
-scuttle.maxAngularVelocity = 1.5  # Set the angular linear velocity
+# robot.maxLinearVelocity = 0.3 # Set the maximum linear velocity
+robot.maxAngularVelocity = 1.5  # Set the angular linear velocity
 
 loop_freq = 15
 
@@ -126,15 +126,15 @@ try:
                     # Calculate angular velocity
                     a, b = slope_intercept(
                         0,
-                        scuttle.maxAngularVelocity,
+                        robot.maxAngularVelocity,
                         image_resize[0],
-                        -scuttle.maxAngularVelocity,
+                        -robot.maxAngularVelocity,
                     )
                     angular_velocity = (a * x) + b
 
                     # Calculate linear velocity
                     a, b = slope_intercept(
-                        image_resize[1], -scuttle.maxVelocity, target_radius, 0
+                        image_resize[1], -robot.maxVelocity, target_radius, 0
                     )
                     linear_velocity = (
                         (a * (radius * 2)) + b
@@ -147,14 +147,14 @@ try:
                         # Set angular velocity to 0
                         angular_velocity = 0
 
-                    # Set SCUTTLE linear and angular velocity
-                    scuttle.setMotion(
+                    # Set robot linear and angular velocity
+                    robot.setMotion(
                         [round(linear_velocity, 2), round(angular_velocity, 2)]
                     )
 
             else:
-                # Set SCUTTLE linear velocity to 0
-                scuttle.setLinearVelocity(0)
+                # Set robot linear velocity to 0
+                robot.setLinearVelocity(0)
 
         #         sleep(loop_freq,startTime)
         print(round(1 / (time.monotonic() - startTime), 2), "Hz", end="\r")
@@ -166,5 +166,5 @@ except KeyboardInterrupt:
 finally:
     # Clean up.
     camera.release()
-    scuttle.stop()
+    robot.stop()
     print("Stopped.")

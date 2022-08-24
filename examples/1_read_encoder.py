@@ -1,5 +1,5 @@
 import time
-from scuttlepy.encoder import Encoder
+from ddcontroller.encoder import Encoder
 
 # Create encoder object
 encoder = Encoder(0x40)

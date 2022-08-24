@@ -1,6 +1,6 @@
-label: 'Default SCUTTLE Config'
+label: 'Default Robot Config'
 
-scuttle:
+robot:
 
     chassis:
 

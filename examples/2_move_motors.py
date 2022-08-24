@@ -1,5 +1,5 @@
 import time
-from scuttlepy.motor import Motor
+from ddcontroller.motor import Motor
 
 # Create motor object (digital_pin, pwm_pin, pwm_frequency)
 motor = Motor(11, 12, 150)

@@ -1,8 +1,8 @@
 import time
-from scuttlepy import SCUTTLE
+from ddcontroller import DDRobot
 
-# Create SCUTTLE object
-scuttle = SCUTTLE()
+# Create robot object
+robot = DDRobot()
 
 # Create Path with list of Points
 path = [
@@ -14,16 +14,16 @@ path = [
 
 try:
 
-    # Set path for SCUTTLE to navigate
-    scuttle.followPath(path)
+    # Set path for robot to navigate
+    robot.followPath(path)
 
-    # Loop while SCUTTLE is in motion
-    while scuttle.isMoving():
+    # Loop while robot is in motion
+    while robot.isMoving():
 
-        # Get the SCUTTLE's latest location
-        x,y = scuttle.getGlobalPosition()
+        # Get the robot's latest location
+        x,y = robot.getGlobalPosition()
 
-        # Print the location of the SCUTTLE
+        # Print the location of the robot
         print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
 
         # Run loop at 50Hz
@@ -34,5 +34,5 @@ except KeyboardInterrupt:
 
 finally:
     # Clean up.
-    scuttle.stop()
+    robot.stop()
     print('Stopped.')

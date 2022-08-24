@@ -1,6 +1,6 @@
-label: 'Default SCUTTLE Config'
+label: 'Default Robot Config'
 
-scuttle:
+robot:
 
     # Wheel base (L) in meters.
     wheel_base: 0.355

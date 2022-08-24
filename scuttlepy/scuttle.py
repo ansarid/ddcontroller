@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-This file is part of the SCUTTLEPy library (https://github.com/ansarid/scuttlepy).
+This file is part of the robotPy library (https://github.com/ansarid/ddcontroller).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -25,10 +25,10 @@ import numpy as np
 from . import wheels
 # from .config import *
 
-class SCUTTLE:
+class robot:
 
     """_summary_
-    SCUTTLE
+    robot
     """
 
     def __init__(self, config=None):
@@ -127,7 +127,7 @@ class SCUTTLE:
             (
                 self.velocity,
                 self.angular_velocity,
-            ) = self.get_motion()  # get scuttle linear and angular velocities
+            ) = self.get_motion()  # get robot linear and angular velocities
 
             left_wheel_travel = self.left_wheel.get_travel()
             right_wheel_travel = self.right_wheel.get_travel()

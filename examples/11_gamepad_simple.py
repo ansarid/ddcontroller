@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-This file is part of the SCUTTLEPy library (https://github.com/ansarid/scuttlepy).
+This file is part of the robotPy library (https://github.com/ansarid/ddcontroller).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -20,13 +20,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import time
 from .utils.gamepad import Gamepad
-from scuttlepy import SCUTTLE
+from ddcontroller import DDRobot
 
 # Create gamepad object
 gamepad = Gamepad()
 
-# Create SCUTTLE Object
-scuttle = SCUTTLE()
+# Create robot Object
+robot = DDRobot()
 
 try:
 
@@ -39,16 +39,16 @@ try:
                                 ]
 
         motion = [
-                  # Mutiply joystick y axis by SCUTTLE max linear velocity to get linear velocity
-                  joystickY*scuttle.maxVelocity,
+                  # Mutiply joystick y axis by robot max linear velocity to get linear velocity
+                  joystickY*robot.maxVelocity,
 
-                  # Mutiply joystick x axis by SCUTTLE max angular velocity to get angular velocity
-                  joystickX*scuttle.maxAngularVelocity
+                  # Mutiply joystick x axis by robot max angular velocity to get angular velocity
+                  joystickX*robot.maxAngularVelocity
                  ]
-        # Get the SCUTTLE's latest location
-        x,y = scuttle.getGlobalPosition()
+        # Get the robot's latest location
+        x,y = robot.getGlobalPosition()
 
-        # Print the location of the SCUTTLE
+        # Print the location of the robot
         print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
 
         # Run loop at 50Hz
@@ -61,5 +61,5 @@ except KeyboardInterrupt:
 finally:
     # Clean up.
     gamepad.close()
-    scuttle.stop()
+    robot.stop()
     print('Stopped.')

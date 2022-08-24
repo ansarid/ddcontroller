@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-This file is part of the SCUTTLEPy library (https://github.com/ansarid/scuttlepy).
+This file is part of the robotPy library (https://github.com/ansarid/ddcontroller).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -18,4 +18,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
-from .scuttle import *
+from .ddcontroller import *

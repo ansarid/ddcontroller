@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-This file is part of the SCUTTLEPy library (https://github.com/ansarid/scuttlepy).
+This file is part of the DDController library (https://github.com/ansarid/scuttlepy).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -31,13 +31,13 @@ install_requires = ['numpy',
                    ]
 
 setuptools.setup(
-    name='scuttlepy',
+    name='ddcontroller',
     version='0.0.1',
-    description='SCUTTLE Python Library',
+    description='Python controller for differential drive robots.',
     packages=setuptools.find_packages(),
     install_requires=install_requires,
-    keywords=['scuttle', 'robot', 'python'],
-    url='https://github.com/ansarid/scuttlepy',
+    keywords=['python', 'robot', 'controller', 'differential drive', 'differential drive controller'],
+    url='https://github.com/ansarid/ddcontroller',
     long_description=long_description,
     long_description_content_type='text/markdown'
 )

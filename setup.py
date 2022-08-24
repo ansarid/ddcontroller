@@ -26,8 +26,9 @@ with open(path.join(this_directory, 'README.md')) as f:
 
 install_requires = ['numpy',
                     'smbus2',
-                    'pyyaml',
-                    ]
+                    'ruamel.yaml',
+                    'simple-pid',
+                   ]
 
 setuptools.setup(
     name='scuttlepy',

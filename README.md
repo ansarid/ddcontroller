@@ -1,19 +1,19 @@
-# SCUTTLEPy
+# DDController
 
-The SCUTTLE robot control library for advanced use of the SCUTTLE robot.
+Python controller for differential drive robots.
 
 ## Install
 
 ### Pip Install
 
 ```bash
-pip install scuttlepy
+pip install ddcontroller
 ```
 
 ### Manual Install
 
 ```bash
-git clone https://github.com/ansarid/scuttlepy
-cd scuttlepy
+git clone https://github.com/ansarid/ddcontroller
+cd ddcontroller
 sudo python3 setup.py install
 ```

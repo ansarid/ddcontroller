@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 '''
-This file is part of the robotPy library (https://github.com/ansarid/ddcontroller).
+This file is part of the ddcontroller library (https://github.com/ansarid/ddcontroller).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import numpy as np
 from collections import deque
 
 from . import motor
-from . import encoder
+from as5048b import AS5048B
 
 
 class Wheel:
@@ -68,7 +68,7 @@ class Wheel:
             invert=invert_motor,
         )
 
-        self.encoder = encoder.Encoder(
+        self.encoder = AS5048B(
             encoder_address, bus=i2c_bus, invert=self.invert_encoder
         )
 

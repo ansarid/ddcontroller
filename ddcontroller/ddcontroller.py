@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 '''
-This file is part of the robotPy library (https://github.com/ansarid/ddcontroller).
+This file is part of the ddcontroller library (https://github.com/ansarid/ddcontroller).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify

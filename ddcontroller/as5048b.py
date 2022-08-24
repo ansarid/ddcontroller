@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 '''
-This file is part of the robotPy library (https://github.com/ansarid/ddcontroller).
+This file is part of the ddcontroller library (https://github.com/ansarid/ddcontroller).
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -22,9 +22,9 @@ import numpy as np
 from smbus2 import SMBus
 
 
-class Encoder:
+class AS5048B:
     """_summary_
-        Encoder
+        AS5048B Absolute Magnetic Rotary Encoder
     """
     def __init__(self, address, bus=1, invert=False):
         """_summary_

@@ -24,7 +24,7 @@ from collections import deque
 
 from . import motor
 from as5048b import AS5048B
-
+from simple_pid import PID
 
 class Wheel:
 

@@ -27,7 +27,7 @@ class Motor:
         Motor
     """
 
-    def __init__(self, digital_pin, pwm_pin, pwm_frequency, invert=False):
+    def __init__(self, digital_pin, pwm_pin, pwm_frequency, invert=False, rpm=175):
         """_summary_
 
         Args:
@@ -51,6 +51,15 @@ class Motor:
 
         # Reverse motor direction
         self.invert = invert
+
+        # Motor RPM
+        self.rpm = rpm
+
+        # Min motor Duty
+        self.min_duty = 0
+
+        # Max motor Duty
+        self.max_duty = 1
 
         if GPIO.getmode() is None:
             GPIO.setmode(GPIO.BOARD)

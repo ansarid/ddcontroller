@@ -6,7 +6,7 @@ from ddcontroller.wheels import Wheel
 wheel = Wheel(digital_pin=11,
               pwm_pin=12,
               pwm_frequency=150,
-              bus=1,
+              i2c_bus=1,
               encoder_address=0x40,
               wheel_radius=0.04165,
               motor_pulley_teeth=13,

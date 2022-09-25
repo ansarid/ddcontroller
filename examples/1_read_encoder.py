@@ -1,8 +1,8 @@
 import time
-from ddcontroller.encoder import Encoder
+from as5048b import AS5048B
 
 # Create encoder object
-encoder = Encoder(0x40)
+encoder = AS5048B(0x40)
 
 try:
 

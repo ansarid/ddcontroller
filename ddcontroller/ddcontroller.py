@@ -26,10 +26,10 @@ from . import wheels
 # from .config import *
 from simple_pid import PID
 
-class robot:
+class DDRobot:
 
     """_summary_
-    robot
+    DDRobot
     """
 
     def __init__(self, config=None):
@@ -56,7 +56,7 @@ class robot:
         self.left_wheel = wheels.Wheel(
             digital_pin=11,
             pwm_pin=12,
-            pwm_frequency=150,
+            pwm_frequency=25,
             i2c_bus=1,
             encoder_address=0x40,
             wheel_radius=0.04165,
@@ -69,7 +69,7 @@ class robot:
         self.right_wheel = wheels.Wheel(
             digital_pin=15,
             pwm_pin=16,
-            pwm_frequency=150,
+            pwm_frequency=25,
             i2c_bus=1,
             encoder_address=0x40,
             wheel_radius=0.04165,

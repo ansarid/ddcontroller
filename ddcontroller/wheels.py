@@ -44,6 +44,10 @@ class Wheel:
         wheel_pulley_teeth,
         invert_motor=False,
         invert_encoder=False,
+        closed_loop=False,
+        Kp=0,
+        Ki=0,
+        Kd=0,
     ):
         """_summary_
 
@@ -60,6 +64,7 @@ class Wheel:
         """
         self.invert_motor = invert_motor
         self.invert_encoder = invert_encoder
+        self.closed_loop = closed_loop
 
         self.motor = motor.Motor(
             digital_pin,
@@ -72,14 +77,22 @@ class Wheel:
             encoder_address, bus=i2c_bus, invert=self.invert_encoder
         )
 
+        if self.closed_loop:
+            self.pid = PID(Kp, Ki, Kd, setpoint=0)
+            self.pid.output_limits = (-self.motor.max_duty, self.motor.max_duty)
+
         self.radius = wheel_radius
         self.pulley_ratio = motor_pulley_teeth / wheel_pulley_teeth
+
+        self.rpm = self.motor.rpm * self.pulley_ratio
+        self.max_angular_velocity = (self.rpm/60)*(np.pi*2)
 
         # create target angular velocity
         self.target_angular_velocity = 0
 
         # stores raw encoder 'ticks'
         self.position = self.encoder.read_position()
+
         # stores age of data
         self.timestamp = time.monotonic_ns()
         self.target_velocity = 0
@@ -180,12 +193,14 @@ class Wheel:
         """
         self.target_angular_velocity = angular_velocity
 
-        if self.target_angular_velocity > 0.15:
-            duty = (0.098 * self.target_angular_velocity) + 0.148
-        elif self.target_angular_velocity < -0.15:
-            duty = (0.098 * self.target_angular_velocity) - 0.148
-        else:
-            duty = 0
+        if not self.closed_loop:
+            # Rough open loop calculation
+            duty = ((-(self.motor.max_duty)*2)/(-self.max_angular_velocity*2))*self.target_angular_velocity
+
+        elif self.closed_loop:
+            # Closed loop PID control
+            self.pid.setpoint = self.target_angular_velocity
+            duty = self.pid(self.get_angular_velocity())
 
         # set duty cycle to motor
         self.motor.set_duty(duty)

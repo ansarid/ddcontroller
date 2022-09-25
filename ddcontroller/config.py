@@ -17,10 +17,10 @@ robot:
         wheel_radius: 0.04165
 
         # Number of teeth on motor pulley
-        motor_pulley: 13
+        motor_pulley: 15
 
         # Number of teeth on wheel pulley
-        wheel_pulley: 25
+        wheel_pulley: 30
 
         # Maximum Linear Velocity (m/s)
         maximum_linear_velocity: 0.45

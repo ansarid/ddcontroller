@@ -10,10 +10,10 @@ try:
     while True:
 
         # Set robot's linear velocity to 0.2 m/s
-        robot.setLinearVelocity(0.2)
+        robot.set_linear_velocity(0.2)
 
         # Print the motion of the robot
-        print(robot.getMotion())
+        print(robot.get_motion())
 
         # Run loop at 50Hz
         time.sleep(1/50)

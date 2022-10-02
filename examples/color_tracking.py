@@ -45,7 +45,7 @@ robot = DDRobot()  # Create robot object
 
 linearVelocityMultiplier = 1
 # robot.maxLinearVelocity = 0.3 # Set the maximum linear velocity
-robot.maxAngularVelocity = 1.5  # Set the angular linear velocity
+robot.max_angular_velocity = 1.5  # Set the angular linear velocity
 
 loop_freq = 15
 
@@ -63,9 +63,9 @@ def rotateImage(image, angle):
     return result
 
 
-def sleep(target_freq, startTime):
+def sleep(target_freq, start_time):
     # Measure time since start and subtract from sleep time
-    time.sleep(sorted([(1 / target_freq) - ((time.monotonic() - startTime)), 0])[1])
+    time.sleep(sorted([(1 / target_freq) - ((time.monotonic() - start_time)), 0])[1])
 
 
 # Create video capture object with camera at index 0
@@ -81,7 +81,7 @@ try:
     # Loop while camera is open
     while camera.isOpened():
 
-        startTime = time.monotonic()
+        start_time = time.monotonic()
 
         # Read image from camera
         ret, image = camera.read()
@@ -126,15 +126,15 @@ try:
                     # Calculate angular velocity
                     a, b = slope_intercept(
                         0,
-                        robot.maxAngularVelocity,
+                        robot.max_angular_velocity,
                         image_resize[0],
-                        -robot.maxAngularVelocity,
+                        -robot.max_angular_velocity,
                     )
                     angular_velocity = (a * x) + b
 
                     # Calculate linear velocity
                     a, b = slope_intercept(
-                        image_resize[1], -robot.maxVelocity, target_radius, 0
+                        image_resize[1], -robot.max_velocity, target_radius, 0
                     )
                     linear_velocity = (
                         (a * (radius * 2)) + b
@@ -148,16 +148,16 @@ try:
                         angular_velocity = 0
 
                     # Set robot linear and angular velocity
-                    robot.setMotion(
+                    robot.set_motion(
                         [round(linear_velocity, 2), round(angular_velocity, 2)]
                     )
 
             else:
                 # Set robot linear velocity to 0
-                robot.setLinearVelocity(0)
+                robot.set_linear_velocity(0)
 
-        #         sleep(loop_freq,startTime)
-        print(round(1 / (time.monotonic() - startTime), 2), "Hz", end="\r")
+        #         sleep(loop_freq,start_time)
+        print(round(1 / (time.monotonic() - start_time), 2), "Hz", end="\r")
 
 except KeyboardInterrupt:
 

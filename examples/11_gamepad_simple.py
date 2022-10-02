@@ -40,13 +40,13 @@ try:
 
         motion = [
                   # Mutiply joystick y axis by robot max linear velocity to get linear velocity
-                  joystickY*robot.maxVelocity,
+                  joystickY*robot.max_velocity,
 
                   # Mutiply joystick x axis by robot max angular velocity to get angular velocity
-                  joystickX*robot.maxAngularVelocity
+                  joystickX*robot.max_angular_velocity
                  ]
         # Get the robot's latest location
-        x,y = robot.getGlobalPosition()
+        x,y = robot.get_global_position()
 
         # Print the location of the robot
         print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))

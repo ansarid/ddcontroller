@@ -191,10 +191,14 @@ class DDRobot:
         """
         self.heading_offset = offset
         heading = self.heading + self.heading_offset
-        if heading < -np.pi:
-            heading += 2 * np.pi
-        elif heading > np.pi:
-            heading -= 2 * np.pi
+
+        # if heading < -np.pi:
+        #     heading += 2 * np.pi
+        # elif heading > np.pi:
+        #     heading -= 2 * np.pi
+
+        heading = np.arctan2(np.sin(heading), np.cos(heading))
+
         self.set_heading(heading)
         return self.heading
 
@@ -207,6 +211,7 @@ class DDRobot:
         Returns:
             _type_: _description_
         """
+        heading = np.arctan2(np.sin(heading), np.cos(heading))
         self.heading = heading
         return self.heading
 

@@ -364,9 +364,9 @@ class DDRobot:
         C = np.matmul(A, B)
 
         if C[0] > self.left_wheel.max_angular_velocity and self.debug:
-            print('Left Wheel Maximum Angular Velocity Exceeded:', C[0])
+            print('Left wheel requested angular velocity exceeded maximum:', C[0])
         if C[1] > self.right_wheel.max_angular_velocity and self.debug:
-            print('Right Wheel Maximum Angular Velocity Exceeded:', C[1])
+            print('Right wheel requested angular velocity exceeded maximum:', C[1])
 
         self.left_wheel.set_angular_velocity(C[0])
         self.right_wheel.set_angular_velocity(C[1])

@@ -29,8 +29,8 @@ wheel = Wheel(digital_pin=11,
               i2c_bus=1,
               encoder_address=0x40,
               wheel_radius=0.04165,
-              motor_pulley_teeth=13,
-              wheel_pulley_teeth=25,
+              motor_pulley_teeth=15,
+              wheel_pulley_teeth=30,
               )
 
 try:

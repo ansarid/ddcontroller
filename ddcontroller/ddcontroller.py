@@ -32,7 +32,7 @@ class DDRobot:
     DDRobot
     """
 
-    def __init__(self, config=None):
+    def __init__(self, config=None, debug=False):
         """_summary_
 
         Args:
@@ -56,22 +56,22 @@ class DDRobot:
         self.left_wheel = wheels.Wheel(
             digital_pin=11,
             pwm_pin=12,
-            pwm_frequency=25,
+            pwm_frequency=150,
             i2c_bus=1,
             encoder_address=0x40,
             wheel_radius=0.04165,
             motor_pulley_teeth=15,
             wheel_pulley_teeth=30,
             invert_motor=False,
-            invert_encoder=False,
+            invert_encoder=True,
         )
 
         self.right_wheel = wheels.Wheel(
             digital_pin=15,
             pwm_pin=16,
-            pwm_frequency=25,
+            pwm_frequency=150,
             i2c_bus=1,
-            encoder_address=0x40,
+            encoder_address=0x41,
             wheel_radius=0.04165,
             motor_pulley_teeth=15,
             wheel_pulley_teeth=30,
@@ -81,7 +81,10 @@ class DDRobot:
 
         self.wheel_speeds = [0, 0]
         self.target_motion = [0, 0]
+        self.target_heading = self.heading
         self._loop_start = time.monotonic_ns()
+
+        self.debug = debug
 
         self._time_initial = time.monotonic_ns()
         self._time_final = 0
@@ -89,15 +92,16 @@ class DDRobot:
         self._forward_displacement = 0
         self._wheel_increments = np.array([0, 0])
 
-        self.loop_period = 0    # in ms
+        self.loop_period = 0            # in ms
 
         self.stopped = False
 
-        self.control_level = 0
+        self.control_level = 1
 
-        heading_Kp = 0
-        heading_Ki = 0
-        heading_Kd = 0
+        # These'll need to be revisited. Did rough PID tuning.
+        heading_Kp = 20
+        heading_Ki = 0.3
+        heading_Kd = 1
 
         self.heading_pid = PID(heading_Kp, heading_Ki, heading_Kd, setpoint=0)
         self.heading_pid.output_limits = (-self.max_angular_velocity, self.max_angular_velocity)
@@ -107,10 +111,16 @@ class DDRobot:
             1 / self._loop_freq
         )  # corrected wait time between encoder measurements (s)
 
-        self.wheels_thread = threading.Thread(
+        self.odometry_thread = threading.Thread(
             target=self._odometry_loop
-        )  # create wheel loop thread object
-        self.wheels_thread.start()  # start wheel loop thread object
+        )  # create odometry thread object
+
+        self.heading_controller_thread = threading.Thread(
+            target=self._heading_controller
+        )  # create heading controller thread object
+
+        self.odometry_thread.start()            # start odometry thread
+        self.heading_controller_thread.start()  # start heading controller thread
 
     def sleep(self, start_time):
         """_summary_
@@ -136,10 +146,7 @@ class DDRobot:
             self.left_wheel.update()  # update left wheel readings
             self.right_wheel.update()  # update right wheel readings
 
-            (
-                self.velocity,
-                self.angular_velocity,
-            ) = self.get_motion()  # get robot linear and angular velocities
+            self.velocity, self.angular_velocity  = self.get_motion()  # get robot linear and angular velocities
 
             left_wheel_travel = self.left_wheel.get_travel()
             right_wheel_travel = self.right_wheel.get_travel()
@@ -159,7 +166,7 @@ class DDRobot:
                 ),  # calculate global y position
             ]
 
-            self.set_heading(
+            self._write_heading(
                 # calculate and update global heading
                 self.heading
                 + ((right_wheel_travel - left_wheel_travel) / self.wheel_base)
@@ -174,28 +181,34 @@ class DDRobot:
         self.right_wheel.stop()
         self.left_wheel.stop()
 
-    def _heading_loop(self):
+    def _heading_controller(self):
 
         while not self.stopped:
 
             start_time = time.monotonic_ns()  # record loop start time
 
-            self.heading_pid.setpoint = self.target_heading
-            angular_velocity = self.heading_pid(self.get_heading())
-            self.set_angular_velocity(angular_velocity)
+            if self.control_level >= 2:
+
+                # self.heading_pid.setpoint = self.target_heading
+                self.heading_pid.setpoint = 0
+                error = self.get_heading()-self.target_heading
+                error = np.arctan2(np.sin(error), np.cos(error))
+                angular_velocity = self.heading_pid(error)
+                self.set_angular_velocity(angular_velocity)
 
             self.sleep(start_time)
 
             # print loop time in ms
             # print((time.monotonic_ns()-start_time)/1e6)
 
-        self.stop()
+        # self.stop()
 
     def stop(self):
         """_summary_"""
         self.set_motion([0, 0])
         self.stopped = True
-        self.wheels_thread.join()
+        self.odometry_thread.join()
+        self.heading_controller_thread.join()
 
     def set_global_position(self, pos):
         """_summary_
@@ -209,29 +222,29 @@ class DDRobot:
         self.global_position = pos
         return self.global_position
 
-    def offset_heading(self, offset):
-        """_summary_
+    # def offset_heading(self, offset):
+    #     """_summary_
 
-        Args:
-            offset (_type_): _description_
+    #     Args:
+    #         offset (_type_): _description_
 
-        Returns:
-            _type_: _description_
-        """
-        self.heading_offset = offset
-        heading = self.heading + self.heading_offset
+    #     Returns:
+    #         _type_: _description_
+    #     """
+    #     self.heading_offset = offset
+    #     heading = self.heading + self.heading_offset
 
-        # if heading < -np.pi:
-        #     heading += 2 * np.pi
-        # elif heading > np.pi:
-        #     heading -= 2 * np.pi
+    #     if heading < -np.pi:
+    #         heading += 2 * np.pi
+    #     elif heading > np.pi:
+    #         heading -= 2 * np.pi
 
-        # heading = np.arctan2(np.sin(heading), np.cos(heading))
+    #     heading = np.arctan2(np.sin(heading), np.cos(heading))
 
-        self.set_heading(heading)
-        return self.heading
+    #     self.set_heading(heading)
+    #     return self.heading
 
-    def set_heading(self, heading):
+    def _write_heading(self, heading):
         """_summary_
 
         Args:
@@ -240,9 +253,36 @@ class DDRobot:
         Returns:
             _type_: _description_
         """
+
         heading = np.arctan2(np.sin(heading), np.cos(heading))
         self.heading = heading
         return self.heading
+
+    def _set_heading(self, target_heading):
+        """_summary_
+
+        Args:
+            target_heading (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        self.control_level = 2
+        target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
+        self.target_heading = target_heading
+        return self.target_heading
+
+    def set_heading(self, target_heading):
+        """_summary_
+
+        Args:
+            target_heading (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        self.control_level = 2
+        return self._set_heading(target_heading)
 
     def get_global_position(self):
         """_summary_
@@ -308,6 +348,7 @@ class DDRobot:
         Args:
             target_motion (_type_): _description_
         """
+
         self.target_motion = target_motion
 
         L = self.wheel_base/2
@@ -322,6 +363,11 @@ class DDRobot:
 
         C = np.matmul(A, B)
 
+        if C[0] > self.left_wheel.max_angular_velocity and self.debug:
+            print('Left Wheel Maximum Angular Velocity Exceeded:', C[0])
+        if C[1] > self.right_wheel.max_angular_velocity and self.debug:
+            print('Right Wheel Maximum Angular Velocity Exceeded:', C[1])
+
         self.left_wheel.set_angular_velocity(C[0])
         self.right_wheel.set_angular_velocity(C[1])
 
@@ -333,12 +379,13 @@ class DDRobot:
         Returns:
             _type_: _description_
         """
+
         A = np.array(
             [
                 [self.left_wheel.radius / 2, self.right_wheel.radius / 2],
                 [
-                    -self.left_wheel.radius / (2 * (self.left_wheel.radius / 2)),
-                    (self.right_wheel.radius) / (2 * (self.right_wheel.radius / 2)),
+                    -self.left_wheel.radius / self.wheel_base,
+                    self.right_wheel.radius / self.wheel_base,
                 ],
             ]
         )
@@ -356,4 +403,3 @@ class DDRobot:
         self.angular_velocity = C[1]
 
         return [self.velocity, self.angular_velocity]
-

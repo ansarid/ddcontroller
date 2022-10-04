@@ -33,7 +33,8 @@ try:
         robot.set_linear_velocity(0.2)
 
         # Print the motion of the robot
-        print(robot.get_motion())
+        linear_velocity, angular_velocity = robot.get_motion()
+        print(linear_velocity, ',', angular_velocity)
 
         # Run loop at 50Hz
         time.sleep(1/50)

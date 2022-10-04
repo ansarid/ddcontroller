@@ -194,7 +194,7 @@ class Wheel:
         self.target_angular_velocity = angular_velocity
 
         if not self.closed_loop:
-            # Rough open loop calculation
+            # Open loop control
             duty = ((-(self.motor.max_duty)*2)/(-self.max_angular_velocity*2))*self.target_angular_velocity
 
         elif self.closed_loop:

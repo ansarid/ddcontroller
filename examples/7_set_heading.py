@@ -21,20 +21,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import math
 import time
 from ddcontroller import DDRobot
+import numpy as np
 
 # Create robot object
 robot = DDRobot()
 
+
+print('Target', ',', 'Actual')
+
 try:
+
+    # Set robot's heading to pi/2
+    robot.set_heading(math.pi)
 
     # Create infinite loop
     while True:
 
-        # Set robot's heading to pi/2
-        robot.set_heading(math.pi/2)
-
         # Print the motion of the robot
-        print(robot.get_heading())
+        print(robot.control_level, math.pi,',',robot.get_heading())
 
         # Run loop at 50Hz
         time.sleep(1/50)

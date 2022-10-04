@@ -89,7 +89,18 @@ class DDRobot:
         self._forward_displacement = 0
         self._wheel_increments = np.array([0, 0])
 
+        self.loop_period = 0    # in ms
+
         self.stopped = False
+
+        self.control_level = 0
+
+        heading_Kp = 0
+        heading_Ki = 0
+        heading_Kd = 0
+
+        self.heading_pid = PID(heading_Kp, heading_Ki, heading_Kd, setpoint=0)
+        self.heading_pid.output_limits = (-self.max_angular_velocity, self.max_angular_velocity)
 
         self._loop_freq = 50  # target wheel loop frequency (hz)
         self._wait = (
@@ -97,7 +108,7 @@ class DDRobot:
         )  # corrected wait time between encoder measurements (s)
 
         self.wheels_thread = threading.Thread(
-            target=self._wheels_loop
+            target=self._odometry_loop
         )  # create wheel loop thread object
         self.wheels_thread.start()  # start wheel loop thread object
 
@@ -114,9 +125,9 @@ class DDRobot:
 
         time.sleep(sleep_time)
 
-    def _wheels_loop(self):
-        """_summary_
-        """
+        return sleep_time
+
+    def _odometry_loop(self):
 
         while not self.stopped:
 
@@ -157,10 +168,28 @@ class DDRobot:
             self.sleep(start_time)
 
             # print loop time in ms
-            # print((time.monotonic_ns()-start_time)/1e6)
+            self.loop_period = (time.monotonic_ns()-start_time)/1e6
+            # print(self.loop_period)
 
         self.right_wheel.stop()
         self.left_wheel.stop()
+
+    def _heading_loop(self):
+
+        while not self.stopped:
+
+            start_time = time.monotonic_ns()  # record loop start time
+
+            self.heading_pid.setpoint = self.target_heading
+            angular_velocity = self.heading_pid(self.get_heading())
+            self.set_angular_velocity(angular_velocity)
+
+            self.sleep(start_time)
+
+            # print loop time in ms
+            # print((time.monotonic_ns()-start_time)/1e6)
+
+        self.stop()
 
     def stop(self):
         """_summary_"""
@@ -197,7 +226,7 @@ class DDRobot:
         # elif heading > np.pi:
         #     heading -= 2 * np.pi
 
-        heading = np.arctan2(np.sin(heading), np.cos(heading))
+        # heading = np.arctan2(np.sin(heading), np.cos(heading))
 
         self.set_heading(heading)
         return self.heading
@@ -327,3 +356,4 @@ class DDRobot:
         self.angular_velocity = C[1]
 
         return [self.velocity, self.angular_velocity]
+

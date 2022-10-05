@@ -30,8 +30,8 @@ try:
     # Create infinite loop
     while True:
 
-        # Set robot's heading to pi/2
-        robot.set_heading(math.pi/2)
+        # Set robot's heading to pi/2 with a maximum angular velocity of 1 rad/s
+        robot.set_heading(math.pi/2, max_angular_velocity=1)
 
         # Print the motion of the robot
         print(robot.get_heading())

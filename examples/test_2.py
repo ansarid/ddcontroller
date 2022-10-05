@@ -19,24 +19,31 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import time
+import math
 from ddcontroller import DDRobot
 
 # Create Robot object
-robot = DDRobot()
+robot = DDRobot(debug=True)
+
+goals = [
+        [1, 0],
+        [1,-1],
+        [0,-1],
+        [0, 0],
+        ]
 
 try:
 
-    # Create infinite loop
     while True:
 
-        # Set robot's linear velocity to 0.2 m/s
-        robot.set_linear_velocity(0.2)
+        for goal in goals:
+            print('Headed to target:', goal)
+            error = robot.go_to(goal, tolerance=0.2, max_linear_velocity=0.2, max_angular_velocity=0.75)
+            print('Error:', error)
+            print('Reached target:', goal, error)
 
-        # Print the motion of the robot
-        print(robot.get_motion())
-
-        # Run loop at 50Hz
-        time.sleep(1/50)
+    # Run loop at 50Hz
+    # time.sleep(1/50)
 
 except KeyboardInterrupt:
     print('Stopping...')
@@ -45,3 +52,4 @@ finally:
     # Clean up.
     robot.stop()
     print('Stopped.')
+

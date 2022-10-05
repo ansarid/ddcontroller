@@ -82,6 +82,7 @@ class DDRobot:
         self.wheel_speeds = [0, 0]
         self.target_motion = [0, 0]
         self.target_heading = self.heading
+        self.target_goal = [0,0]
         self._loop_start = time.monotonic_ns()
 
         self.debug = debug
@@ -105,6 +106,7 @@ class DDRobot:
 
         self.heading_pid = PID(heading_Kp, heading_Ki, heading_Kd, setpoint=0)
         self.heading_pid.output_limits = (-self.max_angular_velocity, self.max_angular_velocity)
+        self.heading_pid.setpoint = 0
 
         self._loop_freq = 50  # target wheel loop frequency (hz)
         self._wait = (
@@ -190,12 +192,11 @@ class DDRobot:
             if self.control_level >= 2:
 
                 # self.heading_pid.setpoint = self.target_heading
-                self.heading_pid.setpoint = 0
                 error = self.get_heading()-self.target_heading
                 error = np.arctan2(np.sin(error), np.cos(error))
                 angular_velocity = self.heading_pid(error)
                 self.set_angular_velocity(angular_velocity)
-
+                # print(angular_velocity)
             self.sleep(start_time)
 
             # print loop time in ms
@@ -267,12 +268,13 @@ class DDRobot:
         Returns:
             _type_: _description_
         """
+
         self.control_level = 2
         target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
         self.target_heading = target_heading
         return self.target_heading
 
-    def set_heading(self, target_heading):
+    def set_heading(self, target_heading, max_angular_velocity=None):
         """_summary_
 
         Args:
@@ -281,6 +283,10 @@ class DDRobot:
         Returns:
             _type_: _description_
         """
+
+        if max_angular_velocity:
+            self.heading_pid.output_limits = (-max_angular_velocity, max_angular_velocity)
+
         self.control_level = 2
         return self._set_heading(target_heading)
 
@@ -364,9 +370,9 @@ class DDRobot:
         C = np.matmul(A, B)
 
         if C[0] > self.left_wheel.max_angular_velocity and self.debug:
-            print('Left wheel requested angular velocity exceeded maximum:', C[0])
+            print('Left wheel requested angular velocity exceeded maximum(',self.right_wheel.max_angular_velocity,'):', C[0])
         if C[1] > self.right_wheel.max_angular_velocity and self.debug:
-            print('Right wheel requested angular velocity exceeded maximum:', C[1])
+            print('Right wheel requested angular velocity exceeded maximum(',self.right_wheel.max_angular_velocity,'):', C[1])
 
         self.left_wheel.set_angular_velocity(C[0])
         self.right_wheel.set_angular_velocity(C[1])
@@ -403,3 +409,29 @@ class DDRobot:
         self.angular_velocity = C[1]
 
         return [self.velocity, self.angular_velocity]
+
+    def go_to(self, goal, tolerance=0.1, max_linear_velocity=None, max_angular_velocity=None):
+
+        # This needs to be a controller thread
+        self.target_goal = goal
+
+        error = np.linalg.norm(np.array(goal)-self.global_position)
+
+        # Ideally this should be inside the while loop so that the heading is recalculated constantly
+        target_heading = np.arctan((self.target_goal[1]-self.global_position[1])/(self.target_goal[0]-self.global_position[0]))
+        self.set_heading(target_heading, max_angular_velocity=max_angular_velocity)
+
+        while error > tolerance and round(np.linalg.norm(np.array(goal)-self.global_position),1) <= round(error,1):
+
+            start_time = time.monotonic_ns()  # record loop start time
+
+            if max_linear_velocity:
+                self.set_linear_velocity(max_linear_velocity)
+            else:
+                self.set_linear_velocity(self.max_velocity)
+
+            error = np.linalg.norm(np.array(goal)-self.global_position)
+
+            self.sleep(start_time)
+
+        return np.linalg.norm(np.array(goal)-self.global_position)

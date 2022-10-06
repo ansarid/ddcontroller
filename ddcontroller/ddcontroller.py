@@ -23,8 +23,10 @@ import threading
 import numpy as np
 
 from . import wheels
-# from .config import *
 from simple_pid import PID
+from ruamel.yaml import YAML
+
+yaml = YAML(typ='safe')   # default, if not specfied, is 'rt' (round-trip)
 
 class DDRobot:
 
@@ -32,7 +34,7 @@ class DDRobot:
     DDRobot
     """
 
-    def __init__(self, config=None, debug=False):
+    def __init__(self, config_path='/opt/ddcontroller/config/default.yaml', debug=False):
         """_summary_
 
         Args:
@@ -40,6 +42,7 @@ class DDRobot:
         """
 
         # settings = Settings(file=config)
+        config = yaml.load(open(config_path,"r").read())
 
         self.heading = 0
         self.velocity = 0
@@ -48,35 +51,35 @@ class DDRobot:
 
         self.heading_offset = 0
 
-        self.wheel_base = 0.355
+        self.wheel_base = config['robot']['wheel_base']
 
-        self.max_velocity = 0.45
-        self.max_angular_velocity = 2.7
+        self.max_velocity = config['robot']['max_velocity']
+        self.max_angular_velocity = config['robot']['max_angular_velocity']
 
         self.left_wheel = wheels.Wheel(
-            digital_pin=11,
-            pwm_pin=12,
-            pwm_frequency=150,
-            i2c_bus=1,
-            encoder_address=0x40,
-            wheel_radius=0.04165,
-            motor_pulley_teeth=15,
-            wheel_pulley_teeth=30,
-            invert_motor=False,
-            invert_encoder=True,
+            digital_pin=config['robot']['l_wheel']['motor']['digital_pin'],
+            pwm_pin=config['robot']['l_wheel']['motor']['pwm_pin'],
+            pwm_frequency=config['robot']['l_wheel']['motor']['pwm_frequency'],
+            i2c_bus=config['robot']['l_wheel']['encoder']['i2c_bus'],
+            encoder_address=config['robot']['l_wheel']['encoder']['address'],
+            wheel_radius=config['robot']['l_wheel']['wheel_radius'],
+            motor_pulley_teeth=config['robot']['l_wheel']['motor_pulley_teeth'],
+            wheel_pulley_teeth=config['robot']['l_wheel']['wheel_pulley_teeth'],
+            invert_motor=config['robot']['l_wheel']['motor']['invert'],
+            invert_encoder=config['robot']['l_wheel']['encoder']['invert'],
         )
 
         self.right_wheel = wheels.Wheel(
-            digital_pin=15,
-            pwm_pin=16,
-            pwm_frequency=150,
-            i2c_bus=1,
-            encoder_address=0x41,
-            wheel_radius=0.04165,
-            motor_pulley_teeth=15,
-            wheel_pulley_teeth=30,
-            invert_motor=False,
-            invert_encoder=False,
+            digital_pin=config['robot']['r_wheel']['motor']['digital_pin'],
+            pwm_pin=config['robot']['r_wheel']['motor']['pwm_pin'],
+            pwm_frequency=config['robot']['r_wheel']['motor']['pwm_frequency'],
+            i2c_bus=config['robot']['r_wheel']['encoder']['i2c_bus'],
+            encoder_address=config['robot']['r_wheel']['encoder']['address'],
+            wheel_radius=config['robot']['r_wheel']['wheel_radius'],
+            motor_pulley_teeth=config['robot']['r_wheel']['motor_pulley_teeth'],
+            wheel_pulley_teeth=config['robot']['r_wheel']['wheel_pulley_teeth'],
+            invert_motor=config['robot']['r_wheel']['motor']['invert'],
+            invert_encoder=config['robot']['r_wheel']['encoder']['invert'],
         )
 
         self.wheel_speeds = [0, 0]
@@ -108,7 +111,8 @@ class DDRobot:
         self.heading_pid.output_limits = (-self.max_angular_velocity, self.max_angular_velocity)
         self.heading_pid.setpoint = 0
 
-        self._loop_freq = 50  # target wheel loop frequency (hz)
+        self._loop_freq = config['robot']['wheel_frequency']  # target wheel loop frequency (hz)
+
         self._wait = (
             1 / self._loop_freq
         )  # corrected wait time between encoder measurements (s)
@@ -409,29 +413,3 @@ class DDRobot:
         self.angular_velocity = C[1]
 
         return [self.velocity, self.angular_velocity]
-
-    def go_to(self, goal, tolerance=0.1, max_linear_velocity=None, max_angular_velocity=None):
-
-        # This needs to be a controller thread
-        self.target_goal = goal
-
-        error = np.linalg.norm(np.array(goal)-self.global_position)
-
-        # Ideally this should be inside the while loop so that the heading is recalculated constantly
-        target_heading = np.arctan((self.target_goal[1]-self.global_position[1])/(self.target_goal[0]-self.global_position[0]))
-        self.set_heading(target_heading, max_angular_velocity=max_angular_velocity)
-
-        while error > tolerance and round(np.linalg.norm(np.array(goal)-self.global_position),1) <= round(error,1):
-
-            start_time = time.monotonic_ns()  # record loop start time
-
-            if max_linear_velocity:
-                self.set_linear_velocity(max_linear_velocity)
-            else:
-                self.set_linear_velocity(self.max_velocity)
-
-            error = np.linalg.norm(np.array(goal)-self.global_position)
-
-            self.sleep(start_time)
-
-        return np.linalg.norm(np.array(goal)-self.global_position)

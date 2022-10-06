@@ -18,10 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
+import os
+import shutil
+import filecmp
 import setuptools
-from os import path
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md')) as f:
+this_directory = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_directory, 'README.md')) as f:
     long_description = f.read()
 
 install_requires = [
@@ -43,3 +45,14 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown'
 )
+
+if os.path.exists('/opt/ddcontroller'):
+    pass
+else:
+    os.mkdir('/opt/ddcontroller')
+    os.mkdir('/opt/ddcontroller/config')
+
+if filecmp.cmp(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml'):
+    pass
+else:
+    shutil.copyfile(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml')

@@ -6,10 +6,10 @@ robot:
     wheel_base: 0.355
 
     # Maximum Linear Velocity (m/s)
-    maximum_linear_velocity: 0.45
+    max_velocity: 0.45
 
     # Maximum Angular Velocity (rad/s)
-    maximum_angular_velocity: 2.7
+    max_angular_velocity: 2.7
 
     # Wheel Loop Frequency
     wheel_frequency: 50
@@ -67,9 +67,6 @@ robot:
             # I2C bus id
             i2c_bus: 1
 
-            # Motor PWM frequency in Hz
-            pwm_frequency: 150
-
             # Encoder address
             address: 0x41
 
@@ -77,6 +74,9 @@ robot:
             invert: False
 
         motor:
+
+            # Motor PWM frequency in Hz
+            pwm_frequency: 150
 
             # Indicate if the motor duty cycle needs to be inverted
             invert: False
@@ -86,10 +86,3 @@ robot:
 
             # GPIO pin designed as PWM
             pwm_pin: 16
-
-    # Platform controlling the robot
-    # RPi - Raspberry PI
-    # Beagle - Beagle
-    # TISK - TI SK board
-    # Nano - NVIDIA Jetson Nano board
-    motor_control_platform: 'RPi'

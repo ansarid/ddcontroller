@@ -26,7 +26,7 @@ from . import wheels
 from simple_pid import PID
 from ruamel.yaml import YAML
 
-yaml = YAML(typ='safe')   # default, if not specfied, is 'rt' (round-trip)
+yaml = YAML(typ='safe')
 
 class DDRobot:
 
@@ -41,7 +41,6 @@ class DDRobot:
             config (_type_, optional): _description_. Defaults to None.
         """
 
-        # settings = Settings(file=config)
         config = yaml.load(open(config_path,"r").read())
 
         self.heading = 0

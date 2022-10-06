@@ -1,27 +1,57 @@
+#!/usr/bin/env python3
+
+'''
+This file is part of the ddcontroller library (https://github.com/ansarid/ddcontroller).
+Copyright (C) 2022  Daniyal Ansari
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+'''
+
 import time
 import numpy as np
 from ddcontroller.wheels import Wheel
+from ruamel.yaml import YAML
+
+yaml = YAML(typ='safe')
+config = yaml.load(open('/opt/ddcontroller/config/default.yaml',"r").read())
 
 # Create right wheel object
-right_wheel = Wheel(digital_pin=15,
-              pwm_pin=16,
-              pwm_frequency=150,
-              i2c_bus=1,
-              encoder_address=0x41,
-              wheel_radius=0.04165,
-              motor_pulley_teeth=15,
-              wheel_pulley_teeth=30,
-              )
+left_wheel = Wheel(
+    digital_pin=config['robot']['l_wheel']['motor']['digital_pin'],
+    pwm_pin=config['robot']['l_wheel']['motor']['pwm_pin'],
+    pwm_frequency=config['robot']['l_wheel']['motor']['pwm_frequency'],
+    i2c_bus=config['robot']['l_wheel']['encoder']['i2c_bus'],
+    encoder_address=config['robot']['l_wheel']['encoder']['address'],
+    wheel_radius=config['robot']['l_wheel']['wheel_radius'],
+    motor_pulley_teeth=config['robot']['l_wheel']['motor_pulley_teeth'],
+    wheel_pulley_teeth=config['robot']['l_wheel']['wheel_pulley_teeth'],
+    invert_motor=config['robot']['l_wheel']['motor']['invert'],
+    invert_encoder=config['robot']['l_wheel']['encoder']['invert'],
+)
 
-left_wheel  = Wheel(digital_pin=11,
-              pwm_pin=12,
-              pwm_frequency=150,
-              i2c_bus=1,
-              encoder_address=0x40,
-              wheel_radius=0.04165,
-              motor_pulley_teeth=15,
-              wheel_pulley_teeth=30,
-              )
+right_wheel = Wheel(
+    digital_pin=config['robot']['r_wheel']['motor']['digital_pin'],
+    pwm_pin=config['robot']['r_wheel']['motor']['pwm_pin'],
+    pwm_frequency=config['robot']['r_wheel']['motor']['pwm_frequency'],
+    i2c_bus=config['robot']['r_wheel']['encoder']['i2c_bus'],
+    encoder_address=config['robot']['r_wheel']['encoder']['address'],
+    wheel_radius=config['robot']['r_wheel']['wheel_radius'],
+    motor_pulley_teeth=config['robot']['r_wheel']['motor_pulley_teeth'],
+    wheel_pulley_teeth=config['robot']['r_wheel']['wheel_pulley_teeth'],
+    invert_motor=config['robot']['r_wheel']['motor']['invert'],
+    invert_encoder=config['robot']['r_wheel']['encoder']['invert'],
+)
 
 try:
 

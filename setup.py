@@ -52,7 +52,7 @@ else:
     os.mkdir('/opt/ddcontroller')
     os.mkdir('/opt/ddcontroller/config')
 
-if filecmp.cmp(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml'):
+if os.path.exists('/opt/ddcontroller/config/default.yaml') and filecmp.cmp(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml'):
     pass
 else:
     shutil.copyfile(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml')

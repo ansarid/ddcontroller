@@ -22,7 +22,7 @@ import time
 from ddcontroller import DDRobot
 
 # Create robot object
-robot = DDRobot()
+robot = DDRobot(debug=True)
 
 # Create Path with list of Points
 waypoints = {
@@ -40,8 +40,8 @@ try:
         # Set path for robot to navigate
         robot.go_to(waypoints[waypoint])
 
-        # Loop while robot is in motion
-        while robot.is_moving():
+        # Loop while robot is not at target location
+        while not robot.reached_target_position:
 
             # Get the robot's latest location
             x,y = robot.get_global_position()

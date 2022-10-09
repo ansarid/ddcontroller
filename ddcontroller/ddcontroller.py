@@ -44,7 +44,7 @@ class DDRobot:
         config = yaml.load(open(config_path,"r").read())
 
         self.heading = 0
-        self.velocity = 0
+        self.linear_velocity = 0
         self.angular_velocity = 0
         self.global_position = [0, 0]
 
@@ -54,6 +54,9 @@ class DDRobot:
 
         self.max_velocity = config['robot']['max_velocity']
         self.max_angular_velocity = config['robot']['max_angular_velocity']
+
+        self.max_traveling_linear_velocity = config['robot']['max_traveling_linear_velocity']
+        self.max_traveling_angular_velocity = config['robot']['max_traveling_angular_velocity']
 
         self.left_wheel = wheels.Wheel(
             digital_pin=config['robot']['l_wheel']['motor']['digital_pin'],
@@ -84,8 +87,13 @@ class DDRobot:
         self.wheel_speeds = [0, 0]
         self.target_motion = [0, 0]
         self.target_heading = self.heading
-        self.target_goal = [0,0]
+        self.target_position = [0,0]
+        self.reached_target_position = False
+        self.position_tolerance = 0.1
         self._loop_start = time.monotonic_ns()
+
+        self.heading_error = 0
+        self.position_error = 0
 
         self.debug = debug
 
@@ -124,8 +132,17 @@ class DDRobot:
             target=self._heading_controller
         )  # create heading controller thread object
 
-        self.odometry_thread.start()            # start odometry thread
-        self.heading_controller_thread.start()  # start heading controller thread
+        self.position_controller_thread = threading.Thread(
+            target=self._position_controller
+        )  # create position controller thread object
+
+        self.odometry_frequency = 0
+        self.heading_controller_frequency = 0
+        self.position_controller_frequency = 0
+
+        self.odometry_thread.start()                # start odometry thread
+        self.heading_controller_thread.start()      # start heading controller thread
+        self.position_controller_thread.start()     # start position contoller thread
 
     def sleep(self, start_time):
         """_summary_
@@ -151,14 +168,14 @@ class DDRobot:
             self.left_wheel.update()  # update left wheel readings
             self.right_wheel.update()  # update right wheel readings
 
-            self.velocity, self.angular_velocity  = self.get_motion()  # get robot linear and angular velocities
+            self.linear_velocity, self.angular_velocity  = self.get_motion()  # get robot linear and angular velocities
 
             left_wheel_travel = self.left_wheel.get_travel()
             right_wheel_travel = self.right_wheel.get_travel()
 
             wheelbase_travel = (
                 left_wheel_travel + right_wheel_travel
-            ) / 2  # calculate wheel displacement
+            ) / 2  # calculate wheelbase displacement
 
             self.global_position = [
                 self.global_position[0]
@@ -178,10 +195,7 @@ class DDRobot:
             )
 
             self.sleep(start_time)
-
-            # print loop time in ms
-            self.loop_period = (time.monotonic_ns()-start_time)/1e6
-            # print(self.loop_period)
+            self.odometry_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
 
         self.right_wheel.stop()
         self.left_wheel.stop()
@@ -194,25 +208,61 @@ class DDRobot:
 
             if self.control_level >= 2:
 
-                # self.heading_pid.setpoint = self.target_heading
-                error = self.get_heading()-self.target_heading
-                error = np.arctan2(np.sin(error), np.cos(error))
-                angular_velocity = self.heading_pid(error)
+                heading_error = self.target_heading-self.get_heading()
+
+                self.heading_error = heading_error
+                self.heading_error = np.arctan2(np.sin(heading_error), np.cos(heading_error))
+
+                angular_velocity = self.heading_pid(self.heading_error)
                 self.set_angular_velocity(angular_velocity)
-                # print(angular_velocity)
+
             self.sleep(start_time)
+            self.heading_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
 
-            # print loop time in ms
-            # print((time.monotonic_ns()-start_time)/1e6)
+    def _position_controller(self):
 
-        # self.stop()
+        def position_error():
+            self.position_error = np.linalg.norm(np.array(self.target_position)-self.global_position)
+            return self.position_error
+
+        while not self.stopped:
+
+            start_time = time.monotonic_ns()  # record loop start time
+
+            if self.control_level >= 2:
+
+                self.reached_target_position = False
+
+                while position_error() > self.position_tolerance:
+                    start_time = time.monotonic_ns()  # record loop start time
+
+                    target_heading = np.arctan2((self.target_position[1]-self.global_position[1]),(self.target_position[0]-self.global_position[0]))
+                    self.set_heading(target_heading, max_angular_velocity=self.max_traveling_linear_velocity)
+
+                    start_time = time.monotonic_ns()  # record loop start time
+
+                    if self.max_traveling_linear_velocity:
+                        self.set_linear_velocity(self.max_traveling_linear_velocity)
+                    else:
+                        self.set_linear_velocity(self.max_velocity)
+
+                    self.sleep(start_time)
+                    self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
+
+                self.reached_target_position = True
+
+            self.sleep(start_time)
+            self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
 
     def stop(self):
         """_summary_"""
         self.set_motion([0, 0])
         self.stopped = True
+        # if self.heading_controller_thread.is_alive():
+        #     self.heading_controller_thread.join()
+        # if self.position_controller_thread.is_alive():
+        #     self.position_controller_thread.join()
         self.odometry_thread.join()
-        self.heading_controller_thread.join()
 
     def set_global_position(self, pos):
         """_summary_
@@ -258,8 +308,7 @@ class DDRobot:
             _type_: _description_
         """
 
-        heading = np.arctan2(np.sin(heading), np.cos(heading))
-        self.heading = heading
+        self.heading = np.arctan2(np.sin(heading), np.cos(heading))
         return self.heading
 
     def _set_heading(self, target_heading):
@@ -272,9 +321,7 @@ class DDRobot:
             _type_: _description_
         """
 
-        self.control_level = 2
-        target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
-        self.target_heading = target_heading
+        self.target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
         return self.target_heading
 
     def set_heading(self, target_heading, max_angular_velocity=None):
@@ -291,7 +338,7 @@ class DDRobot:
             self.heading_pid.output_limits = (-max_angular_velocity, max_angular_velocity)
 
         self.control_level = 2
-        return self._set_heading(target_heading)
+        self._set_heading(target_heading)
 
     def get_global_position(self):
         """_summary_
@@ -315,7 +362,7 @@ class DDRobot:
         Returns:
             _type_: _description_
         """
-        return self.velocity
+        return self.linear_velocity
 
     def get_angular_velocity(self):
         """_summary_
@@ -360,11 +407,9 @@ class DDRobot:
 
         self.target_motion = target_motion
 
-        L = self.wheel_base/2
-
         A = np.array([
-                      [ 1/self.left_wheel.radius, -L/self.left_wheel.radius],
-                      [ 1/self.right_wheel.radius,  L/self.right_wheel.radius]
+                      [ 1/self.left_wheel.radius, -(self.wheel_base/2)/self.left_wheel.radius],
+                      [ 1/self.right_wheel.radius, (self.wheel_base/2)/self.right_wheel.radius]
                     ])
 
         B = np.array([target_motion[0],
@@ -408,7 +453,15 @@ class DDRobot:
 
         C = np.matmul(A, B)
 
-        self.velocity = C[0]
+        self.linear_velocity = C[0]
         self.angular_velocity = C[1]
 
-        return [self.velocity, self.angular_velocity]
+        return [self.linear_velocity, self.angular_velocity]
+
+    def go_to(self, target_position, tolerance=0.1, max_linear_velocity=None, max_angular_velocity=None):
+
+        self.target_position = target_position
+        self.position_tolerance = tolerance
+        self.max_linear_velocity = max_linear_velocity
+        self.max_angular_velocity = max_angular_velocity
+        self.control_level = 2

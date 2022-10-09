@@ -1,4 +1,4 @@
-label: 'SCUTTLE Robot Default Config'
+label: 'Default Robot Config'
 
 robot:
 
@@ -13,6 +13,12 @@ robot:
 
     # Wheel Loop Frequency
     wheel_frequency: 50
+
+    #  Maximum Linear Velocity During Goal-to-Goal Navigation (m/s)
+    max_traveling_linear_velocity: 0.2
+
+    #  Maximum Angular Velocity During Goal-to-Goal Navigation (m/s)
+    max_traveling_angular_velocity: 0.75
 
     # Left Wheel Parameters
     l_wheel:

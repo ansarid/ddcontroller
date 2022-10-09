@@ -30,7 +30,7 @@ try:
     while True:
 
         # Set robot's linear velocity to 0.2 m/s
-        robot.set_linear_velocity(0.2)
+        robot.set_linear_velocity(0.1)
 
         # Print the motion of the robot
         print(robot.get_motion())

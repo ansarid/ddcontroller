@@ -30,8 +30,8 @@ robot = DDRobot()
 
 try:
 
-    # Create infinite loop
-    while True:
+    # While robot is running
+    while robot.running:
 
         # Get joystick x and y values and scale values to -1 to 1
         joystickX, joystickY = [((-2/255)*gamepad.axes['LEFT_X'])+1,
@@ -45,6 +45,7 @@ try:
                   # Mutiply joystick x axis by robot max angular velocity to get angular velocity
                   joystickX*robot.max_angular_velocity
                  ]
+
         # Get the robot's latest location
         x,y = robot.get_global_position()
 

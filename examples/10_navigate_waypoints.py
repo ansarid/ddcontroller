@@ -40,8 +40,8 @@ try:
         # Set path for robot to navigate
         robot.go_to(waypoints[waypoint])
 
-        # Loop while robot is not at target location
-        while not robot.reached_target_position:
+        # Loop while robot is running and not at target location
+        while robot.running and not robot.reached_target_position:
 
             # Get the robot's latest location
             x,y = robot.get_global_position()

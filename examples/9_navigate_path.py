@@ -37,8 +37,8 @@ try:
     # Set path for robot to navigate
     robot.follow_path(path)
 
-    # Loop while robot is in motion
-    while robot.is_moving():
+    # While robot is running
+    while robot.running:
 
         # Get the robot's latest location
         x,y = robot.get_global_position()

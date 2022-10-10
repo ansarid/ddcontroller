@@ -19,36 +19,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import time
-import math
 from ddcontroller import DDRobot
 
 # Create robot object
-# robot = DDRobot(debug=True)
-robot = DDRobot()
-
-robot.heading_Kp = 80
-robot.heading_Ki = 0
-robot.heading_Kd = 0
-
-start_time = time.monotonic()
+robot = DDRobot(debug=True)
 
 try:
 
     # Set target location for navigation to (1,1)
-    robot.go_to([0.5,0.5], tolerance=0.2, max_linear_velocity=0.2, max_angular_velocity=2)
+    robot.go_to([1, 1], tolerance=0.2, max_linear_velocity=0.2, max_angular_velocity=1)
 
-    print('Time (s), X Position (m), Y Position (m), Heading (deg), X Target (m), Y Target (m), Heading Target (deg), XY Error (m), Heading Error (deg)')
-
-    # Loop while robot is not at target location
-    while not robot.reached_target_position:
+    # Loop while robot is running and not at target location
+    while robot.running and not robot.reached_target_position:
 
         # Get the robot's latest location
         x,y = robot.get_global_position()
 
         # Print the location of the robot
-        # print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
-
-        print(round(time.monotonic()-start_time, 3),',', round(x,3),',', round(y,3),',', round(robot.heading, 3),',', robot.target_position[0],',', robot.target_position[1],',', round(robot.target_heading,3),',', round(robot.position_error,3),',', round(robot.heading_error,3))
+        print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
 
         # Run loop at 50Hz
         time.sleep(1/50)

@@ -19,10 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 import time
+import threading
 import numpy as np
 
 from . import wheels
-from . import controllers
 from simple_pid import PID
 from ruamel.yaml import YAML
 
@@ -105,7 +105,7 @@ class DDRobot:
 
         self.loop_period = 0            # in ms
 
-        self.stopped = False
+        self.running = True
 
         self.control_level = 1
 
@@ -161,7 +161,7 @@ class DDRobot:
 
     def _odometry_loop(self):
 
-        while not self.stopped:
+        while self.running:
 
             start_time = time.monotonic_ns()  # record loop start time
 
@@ -197,14 +197,119 @@ class DDRobot:
             self.sleep(start_time)
             self.odometry_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
 
-        self.right_wheel.stop()
-        self.left_wheel.stop()
+    def _heading_controller(self):
+
+        while self.running:
+
+            start_time = time.monotonic_ns()  # record loop start time
+
+            if self.control_level >= 2:
+
+                heading_error = self.target_heading-self.get_heading()
+
+                self.heading_error = heading_error
+                self.heading_error = np.arctan2(np.sin(heading_error), np.cos(heading_error))
+
+                angular_velocity = self.heading_pid(self.heading_error)
+                self.set_angular_velocity(angular_velocity)
+
+            self.sleep(start_time)
+            self.heading_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
+
+    def _position_controller(self):
+
+        def position_error():
+            self.position_error = np.linalg.norm(np.array(self.target_position)-self.global_position)
+            return self.position_error
+
+        while self.running:
+
+            start_time = time.monotonic_ns()  # record loop start time
+
+            if self.control_level >= 2:
+
+                self.reached_target_position = False
+
+                while position_error() > self.position_tolerance and self.running:
+                    start_time = time.monotonic_ns()  # record loop start time
+
+                    target_heading = np.arctan2((self.target_position[1]-self.global_position[1]),(self.target_position[0]-self.global_position[0]))
+                    self.set_heading(target_heading, max_angular_velocity=self.max_traveling_linear_velocity)
+
+                    start_time = time.monotonic_ns()  # record loop start time
+
+                    if self.max_traveling_linear_velocity:
+                        self.set_linear_velocity(self.max_traveling_linear_velocity)
+                    else:
+                        self.set_linear_velocity(self.max_velocity)
+
+                    self.sleep(start_time)
+                    self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
+
+                self.reached_target_position = True
+
+            self.sleep(start_time)
+            self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
 
     def stop(self):
         """_summary_"""
         self.set_motion([0, 0])
-        self.stopped = True
+        self.running = False
         self.odometry_thread.join()
+        self.heading_controller_thread.join()
+        self.position_controller_thread.join()
+        self.right_wheel.stop()
+        self.left_wheel.stop()
+
+    def _write_heading(self, heading):
+        """_summary_
+
+        Args:
+            heading (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+
+        self.heading = np.arctan2(np.sin(heading), np.cos(heading))
+        return self.heading
+
+    def _set_heading(self, target_heading):
+        """_summary_
+
+        Args:
+            target_heading (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+
+        self.target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
+        return self.target_heading
+
+    def set_heading(self, target_heading, max_angular_velocity=None):
+        """_summary_
+
+        Args:
+            target_heading (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+
+        if max_angular_velocity:
+            self.heading_pid.output_limits = (-max_angular_velocity, max_angular_velocity)
+
+        self.control_level = 2
+        self._set_heading(target_heading)
+
+    def get_heading(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        return self.heading
 
     def set_global_position(self, pos):
         """_summary_
@@ -218,19 +323,6 @@ class DDRobot:
         self.global_position = pos
         return self.global_position
 
-    def set_heading(self, heading):
-        """_summary_
-
-        Args:
-            heading (_type_): _description_
-
-        Returns:
-            _type_: _description_
-        """
-
-        self.heading = np.arctan2(np.sin(heading), np.cos(heading))
-        return self.heading
-
     def get_global_position(self):
         """_summary_
 
@@ -238,14 +330,6 @@ class DDRobot:
             _type_: _description_
         """
         return self.global_position
-
-    def get_heading(self):
-        """_summary_
-
-        Returns:
-            _type_: _description_
-        """
-        return self.heading
 
     def get_linear_velocity(self):
         """_summary_
@@ -348,3 +432,18 @@ class DDRobot:
         self.angular_velocity = C[1]
 
         return [self.linear_velocity, self.angular_velocity]
+
+    def go_to(self, target_position, tolerance=0.1, max_linear_velocity=None, max_angular_velocity=None):
+        """_summary_
+
+        Args:
+            target_position (_type_): _description_
+            tolerance (float, optional): _description_. Defaults to 0.1.
+            max_linear_velocity (_type_, optional): _description_. Defaults to None.
+            max_angular_velocity (_type_, optional): _description_. Defaults to None.
+        """
+        self.target_position = target_position
+        self.position_tolerance = tolerance
+        self.max_linear_velocity = max_linear_velocity
+        self.max_angular_velocity = max_angular_velocity
+        self.control_level = 2

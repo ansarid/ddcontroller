@@ -25,22 +25,16 @@ from ddcontroller import DDRobot
 # Create robot object
 robot = DDRobot(debug=True)
 
-# robot.heading_Kp = 20
-# robot.heading_Ki = 0
-# robot.heading_Kd = 0
-
 try:
 
-    # Create infinite loop
-    while True:
-
+    # While robot is running
+    while robot.running:
 
         # Set robot's heading to pi/2 with a maximum angular velocity of 1 rad/s
-        robot.set_heading(math.pi/2, max_angular_velocity=2)
+        robot.set_heading(math.pi/2, max_angular_velocity=1)
 
         # Print the motion of the robot
         print("Target:", robot.target_heading, "Actual:",robot.get_heading())
-        print(robot.heading_controller_frequency)
 
         # Run loop at 50Hz
         time.sleep(1/50)

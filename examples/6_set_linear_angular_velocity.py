@@ -26,11 +26,11 @@ robot = DDRobot(debug=True)
 
 try:
 
-    # Create infinite loop
-    while True:
+    # While robot is running
+    while robot.running:
 
         # Set robot's linear velocity to 0.2m/s and angular velocity to 0.5 rad/s
-        robot.set_motion([0.2,0.5])
+        robot.set_motion([0.2, 0.5])
 
         # Print the motion of the robot
         print(robot.get_motion())

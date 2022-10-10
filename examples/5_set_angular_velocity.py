@@ -22,18 +22,18 @@ import time
 from ddcontroller import DDRobot
 
 # Create robot object
-robot = DDRobot()
+robot = DDRobot(debug=True)
 
 try:
 
-    # Create infinite loop
-    while True:
+    # While robot is running
+    while robot.running:
 
         # Set robot's angular velocity to 1 rad/s
-        robot.set_angular_velocity(1.5)
+        robot.set_angular_velocity(1)
 
         # Print the motion of the robot
-        print(robot.get_motion(), robot.get_heading())
+        print(robot.get_motion())
 
         # Run loop at 50Hz
         time.sleep(1/50)

@@ -21,16 +21,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import time
 from ddcontroller import DDRobot
 
-# Create Robot object
-robot = DDRobot()
+# Create robot object
+robot = DDRobot(debug=True)
 
 try:
 
-    # Create infinite loop
-    while True:
+    # While robot is running
+    while robot.running:
 
         # Set robot's linear velocity to 0.2 m/s
-        robot.set_linear_velocity(0.1)
+        robot.set_linear_velocity(0.2)
 
         # Print the motion of the robot
         print(robot.get_motion())

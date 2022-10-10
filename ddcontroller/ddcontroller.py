@@ -141,8 +141,8 @@ class DDRobot:
         self.position_controller_frequency = 0
 
         self.odometry_thread.start()                # start odometry thread
-        self.heading_controller_thread.start()      # start heading controller thread
-        self.position_controller_thread.start()     # start position contoller thread
+        self.heading_controller_thread.start()      # start heading controller thread # Ideally we don't start this until it's needed
+        self.position_controller_thread.start()     # start position contoller thread # Ideally we don't start this until it's needed
 
     def sleep(self, start_time):
         """_summary_

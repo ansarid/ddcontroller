@@ -40,7 +40,7 @@ try:
 
         motion = [
                   # Mutiply joystick y axis by robot max linear velocity to get linear velocity
-                  joystickY*robot.max_velocity,
+                  joystickY*robot.max_linear_velocity,
 
                   # Mutiply joystick x axis by robot max angular velocity to get angular velocity
                   joystickX*robot.max_angular_velocity

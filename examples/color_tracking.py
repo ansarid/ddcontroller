@@ -134,7 +134,7 @@ try:
 
                     # Calculate linear velocity
                     a, b = slope_intercept(
-                        image_resize[1], -robot.max_velocity, target_radius, 0
+                        image_resize[1], -robot.max_linear_velocity, target_radius, 0
                     )
                     linear_velocity = (
                         (a * (radius * 2)) + b

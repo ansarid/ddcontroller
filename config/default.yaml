@@ -6,7 +6,7 @@ robot:
     wheel_base: 0.355
 
     # Maximum Linear Velocity (m/s)
-    max_velocity: 0.45
+    max_linear_velocity: 0.45
 
     # Maximum Angular Velocity (rad/s)
     max_angular_velocity: 2.7

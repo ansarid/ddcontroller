@@ -72,7 +72,7 @@ class DDRobot:
 
         self.wheel_base = config['robot']['wheel_base']
 
-        self.max_linear_velocity = config['robot']['max_velocity']
+        self.max_linear_velocity = config['robot']['max_linear_velocity']
         self.max_angular_velocity = config['robot']['max_angular_velocity']
 
         self.max_traveling_linear_velocity = config['robot']['max_traveling_linear_velocity']

@@ -43,16 +43,36 @@ class DDRobot:
 
         config = yaml.load(open(config_path,"r").read())
 
+        self.debug = debug
+
         self.heading = 0
         self.linear_velocity = 0
         self.angular_velocity = 0
         self.global_position = [0, 0]
 
-        self.heading_offset = 0
+        self.target_motion = [0, 0]
+        self.target_heading = self.heading
+        self.target_position = [0,0]
+        self.reached_target_position = False
+        self.position_tolerance = 0.1
+        self.heading_error = 0
+        self.position_error = 0
+
+        # These'll need to be revisited. Did rough PID tuning.
+        heading_Kp = 0.35
+        heading_Ki = 0
+        heading_Kd = 0
+
+        self.odometry_frequency = 0
+        self.heading_controller_frequency = 0
+        self.position_controller_frequency = 0
+
+        self.control_level = 1
+        self.running = True
 
         self.wheel_base = config['robot']['wheel_base']
 
-        self.max_velocity = config['robot']['max_velocity']
+        self.max_linear_velocity = config['robot']['max_velocity']
         self.max_angular_velocity = config['robot']['max_angular_velocity']
 
         self.max_traveling_linear_velocity = config['robot']['max_traveling_linear_velocity']
@@ -84,44 +104,14 @@ class DDRobot:
             invert_encoder=config['robot']['r_wheel']['encoder']['invert'],
         )
 
-        self.wheel_speeds = [0, 0]
-        self.target_motion = [0, 0]
-        self.target_heading = self.heading
-        self.target_position = [0,0]
-        self.reached_target_position = False
-        self.position_tolerance = 0.1
-        self._loop_start = time.monotonic_ns()
-
-        self.heading_error = 0
-        self.position_error = 0
-
-        self.debug = debug
-
-        self._time_initial = time.monotonic_ns()
-        self._time_final = 0
-        self._angular_displacement = 0
-        self._forward_displacement = 0
-        self._wheel_increments = np.array([0, 0])
-
-        self.loop_period = 0            # in ms
-
-        self.running = True
-
-        self.control_level = 1
-
-        # These'll need to be revisited. Did rough PID tuning.
-        heading_Kp = 20
-        heading_Ki = 0.3
-        heading_Kd = 1
-
         self.heading_pid = PID(heading_Kp, heading_Ki, heading_Kd, setpoint=0)
         self.heading_pid.output_limits = (-self.max_angular_velocity, self.max_angular_velocity)
         self.heading_pid.setpoint = 0
 
-        self._loop_freq = config['robot']['wheel_frequency']  # target wheel loop frequency (hz)
+        self.loop_freq = config['robot']['wheel_frequency']  # target wheel loop frequency (hz)
 
         self._wait = (
-            1 / self._loop_freq
+            1 / self.loop_freq
         )  # corrected wait time between encoder measurements (s)
 
         self.odometry_thread = threading.Thread(
@@ -135,10 +125,6 @@ class DDRobot:
         self.position_controller_thread = threading.Thread(
             target=self._position_controller
         )  # create position controller thread object
-
-        self.odometry_frequency = 0
-        self.heading_controller_frequency = 0
-        self.position_controller_frequency = 0
 
         self.odometry_thread.start()                # start odometry thread
         self.heading_controller_thread.start()      # start heading controller thread # Ideally we don't start this until it's needed
@@ -236,12 +222,10 @@ class DDRobot:
                     target_heading = np.arctan2((self.target_position[1]-self.global_position[1]),(self.target_position[0]-self.global_position[0]))
                     self.set_heading(target_heading, max_angular_velocity=self.max_traveling_linear_velocity)
 
-                    start_time = time.monotonic_ns()  # record loop start time
-
                     if self.max_traveling_linear_velocity:
                         self.set_linear_velocity(self.max_traveling_linear_velocity)
                     else:
-                        self.set_linear_velocity(self.max_velocity)
+                        self.set_linear_velocity(self.max_linear_velocity)
 
                     self.sleep(start_time)
                     self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)

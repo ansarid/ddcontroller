@@ -50,11 +50,8 @@ robot:
             # Indicate if the motor duty cycle needs to be inverted
             invert: False
 
-            # GPIO pin designated as digital
-            digital_pin: 11
-
-            # GPIO pin designed as PWM
-            pwm_pin: 12
+            # Motor Pins
+            motor_pins: (11,12)
 
     # Right wheel parameters
     r_wheel:
@@ -88,7 +85,4 @@ robot:
             invert: False
 
             # GPIO pin designated as digital
-            digital_pin: 15
-
-            # GPIO pin designed as PWM
-            pwm_pin: 16
+            motor_pins: (15,16)

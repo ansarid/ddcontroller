@@ -79,8 +79,7 @@ class DDRobot:
         self.max_traveling_angular_velocity = config['robot']['max_traveling_angular_velocity']
 
         self.left_wheel = wheels.Wheel(
-            digital_pin=config['robot']['l_wheel']['motor']['digital_pin'],
-            pwm_pin=config['robot']['l_wheel']['motor']['pwm_pin'],
+            motor_pins=config['robot']['l_wheel']['motor']['pins'],
             pwm_frequency=config['robot']['l_wheel']['motor']['pwm_frequency'],
             i2c_bus=config['robot']['l_wheel']['encoder']['i2c_bus'],
             encoder_address=config['robot']['l_wheel']['encoder']['address'],
@@ -92,7 +91,7 @@ class DDRobot:
         )
 
         self.right_wheel = wheels.Wheel(
-            digital_pin=config['robot']['r_wheel']['motor']['digital_pin'],
+            motor_pins=config['robot']['r_wheel']['motor']['pins'],
             pwm_pin=config['robot']['r_wheel']['motor']['pwm_pin'],
             pwm_frequency=config['robot']['r_wheel']['motor']['pwm_frequency'],
             i2c_bus=config['robot']['r_wheel']['encoder']['i2c_bus'],

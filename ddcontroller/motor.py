@@ -27,7 +27,7 @@ class Motor:
         Motor
     """
 
-    def __init__(self, digital_pin, pwm_pin, pwm_frequency, invert=False, rpm=175):
+    def __init__(self, pins, pwm_frequency, invert=False, rpm=175):
         """_summary_
 
         Args:
@@ -37,11 +37,13 @@ class Motor:
             invert (bool, optional): _description_. Defaults to False.
         """
 
-        self.digital_pin = digital_pin
-        self.pwm_pin = pwm_pin
+        # self.digital_pin = digital_pin
+        # self.pwm_pin = pwm_pin
+        self.pins = pins
+        self._pins = []
 
         # First pin will be digital and second pin will be PWM
-        self.pins = (self.digital_pin, self.pwm_pin)
+        # self.pins = (self.digital_pin, self.pwm_pin)
 
         # Initial Duty %
         self.duty = 0
@@ -68,11 +70,10 @@ class Motor:
 
         for pin in self.pins:  # Set motor pins as outputs
             GPIO.setup(pin, GPIO.OUT)
+            self._pins.append(GPIO.PWM(pin, self.pwm_frequency))
 
-        self.motor = GPIO.PWM(  # set first pin as PWM and set freq
-            self.pins[1], self.pwm_frequency
-        )
-        self.motor.start(self.duty)
+        for pin in self._pins:
+            pin.start(self.duty)
 
     def set_duty(self, duty):
         """_summary_
@@ -86,21 +87,24 @@ class Motor:
 
         duty = self.duty * 100
 
-        GPIO.output(  # Set direction pin high if duty cycle is negative
-            self.pins[0], duty < 0
-        )
-
         if duty == 0:
-            GPIO.output(self.pins[0], False)
-            self.motor.ChangeDutyCycle(0)
+            for pin in self._pins:
+                pin.ChangeDutyCycle(100)
 
-        else:
-            self.motor.ChangeDutyCycle(duty if (duty > 0) else abs(100 + duty))
+        elif duty > 0:
+            self._pins[0].ChangeDutyCycle(100)
+            self._pins[1].ChangeDutyCycle(100-duty)
+
+        elif duty < 0:
+            self._pins[0].ChangeDutyCycle(100-abs(duty))
+            self._pins[1].ChangeDutyCycle(100)
 
     def stop(self):
         """_summary_
 
         """
-        GPIO.output(self.pins[0], False)
-        self.motor.stop()
+
+        for pin in self._pins:
+            pin.stop()
+
         GPIO.cleanup(self.pins)

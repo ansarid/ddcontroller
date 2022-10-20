@@ -34,8 +34,7 @@ class Wheel:
 
     def __init__(
         self,
-        digital_pin,
-        pwm_pin,
+        motor_pins,
         pwm_frequency,
         i2c_bus,
         encoder_address,
@@ -67,8 +66,7 @@ class Wheel:
         self.closed_loop = closed_loop
 
         self.motor = motor.Motor(
-            digital_pin,
-            pwm_pin,
+            motor_pins,
             pwm_frequency,
             invert=invert_motor,
         )

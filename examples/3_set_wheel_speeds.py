@@ -23,8 +23,7 @@ import numpy as np
 from ddcontroller.wheels import Wheel
 
 # Create right wheel object
-wheel = Wheel(digital_pin=11,
-              pwm_pin=12,
+wheel = Wheel(motor_pins=(11, 12),
               pwm_frequency=150,
               i2c_bus=1,
               encoder_address=0x40,

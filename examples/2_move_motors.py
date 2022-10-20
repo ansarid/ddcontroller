@@ -31,7 +31,6 @@ try:
 
         # For loop iterating through values from 100 to -100 with an increment of -1
         for duty in range(100, -100, -1):
-#        for duty in range(10, -10, -1):
 
             # Divide duty by 100 because duty cycle input needs to be between -1 and 1
             duty /= 100

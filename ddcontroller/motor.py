@@ -75,6 +75,11 @@ class Motor:
         for pin in self._pins:
             pin.start(self.duty)
 
+    def set_pwm_frequency(self, frequency):
+        self.pwm_frequency = frequency
+        for pin in self._pins:
+            pin.ChangeFrequency(self.pwm_frequency)
+
     def set_duty(self, duty):
         """_summary_
 

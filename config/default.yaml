@@ -14,11 +14,16 @@ robot:
     # Wheel Loop Frequency
     wheel_frequency: 50
 
-    #  Maximum Linear Velocity During Goal-to-Goal Navigation (m/s)
+    # Maximum Linear Velocity During Goal-to-Goal Navigation (m/s)
     max_traveling_linear_velocity: 0.2
 
-    #  Maximum Angular Velocity During Goal-to-Goal Navigation (m/s)
+    # Maximum Angular Velocity During Goal-to-Goal Navigation (m/s)
     max_traveling_angular_velocity: 0.75
+
+    # Heading Controller PID Gains    
+    heading_Kp: 0
+    heading_Ki: 0
+    heading_Kd: 0
 
     # Left Wheel Parameters
     l_wheel:
@@ -31,6 +36,11 @@ robot:
 
         # Number of teeth on wheel pulley
         wheel_pulley_teeth: 30
+
+        # Closed Loop Left Wheel Speed PID Gains    
+        Kp: 0
+        Ki: 0
+        Kd: 0
 
         encoder:
             # I2C bus id
@@ -64,6 +74,11 @@ robot:
 
         # Number of teeth on wheel pulley
         wheel_pulley_teeth: 30
+
+        # Closed Loop Right Wheel Speed PID Gains    
+        Kp: 0
+        Ki: 0
+        Kd: 0
 
         encoder:
 

@@ -2,7 +2,7 @@ label: 'Default Robot Config'
 
 robot:
 
-    # Wheel base (L) in meters.
+    # Length of wheel base (m)
     wheel_base: 0.355
 
     # Maximum Linear Velocity (m/s)
@@ -11,7 +11,7 @@ robot:
     # Maximum Angular Velocity (rad/s)
     max_angular_velocity: 2.7
 
-    # Wheel Loop Frequency
+    # Wheel Loop Frequency (Hz)
     wheel_frequency: 50
 
     # Maximum Linear Velocity During Goal-to-Goal Navigation (m/s)
@@ -28,7 +28,7 @@ robot:
     # Left Wheel Parameters
     l_wheel:
 
-        # Wheel radius in meters
+        # Wheel radius (m)
         wheel_radius: 0.04165
 
         # Number of teeth on motor pulley
@@ -42,31 +42,37 @@ robot:
         Ki: 0
         Kd: 0
 
+        # Motor Parameters
         encoder:
+
             # I2C bus id
             i2c_bus: 1
 
             # Encoder address
             address: 0x40
 
-            # Flag to indicate if the encoder data needs to be inverted
+            # Indicate if the encoder direction needs to be inverted
             invert: True
 
+        # Motor Parameters
         motor:
 
             # Motor PWM frequency in Hz
             pwm_frequency: 150
 
-            # Indicate if the motor duty cycle needs to be inverted
+            # Indicate if the motor direction needs to be inverted
             invert: False
 
-            # Motor Pins
+            # Motor GPIO Pins
             motor_pins: (11,12)
+            
+            # Motor RPM
+            rpm: 200
 
     # Right wheel parameters
     r_wheel:
 
-        # Wheel radius in meters
+        # Wheel radius (m)
         wheel_radius: 0.04165
 
         # Number of teeth on motor pulley
@@ -80,6 +86,7 @@ robot:
         Ki: 0
         Kd: 0
 
+        # Encoder Parameters
         encoder:
 
             # I2C bus id
@@ -88,16 +95,22 @@ robot:
             # Encoder address
             address: 0x41
 
-            # Flag to indicate if the encoder data needs to be inverted
+            # Indicate if the encoder direction needs to be inverted
             invert: False
 
+        # Motor Parameters
         motor:
 
             # Motor PWM frequency in Hz
             pwm_frequency: 150
 
-            # Indicate if the motor duty cycle needs to be inverted
+            # Indicate if the motor direction needs to be inverted
             invert: False
 
-            # GPIO pin designated as digital
+            # Motor GPIO Pins
             motor_pins: (15,16)
+
+            # Motor RPM
+            rpm: 200
+
+            decay_mode = FAST

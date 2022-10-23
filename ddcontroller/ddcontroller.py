@@ -63,11 +63,6 @@ class DDRobot:
         self.heading_error = 0
         self.position_error = 0
 
-        # These'll need to be revisited. Did rough PID tuning.
-        heading_Kp = 0.35
-        heading_Ki = 0
-        heading_Kd = 0
-
         self.odometry_frequency = 0
         self.heading_controller_frequency = 0
         self.position_controller_frequency = 0
@@ -93,6 +88,9 @@ class DDRobot:
             wheel_pulley_teeth=config['robot']['l_wheel']['wheel_pulley_teeth'],
             invert_motor=config['robot']['l_wheel']['motor']['invert'],
             invert_encoder=config['robot']['l_wheel']['encoder']['invert'],
+            Kp=config['robot']['l_wheel']['Kp'],
+            Ki=config['robot']['l_wheel']['Ki'],
+            Kd=config['robot']['l_wheel']['Kd'],
         )
 
         self.right_wheel = wheels.Wheel(
@@ -106,9 +104,12 @@ class DDRobot:
             wheel_pulley_teeth=config['robot']['r_wheel']['wheel_pulley_teeth'],
             invert_motor=config['robot']['r_wheel']['motor']['invert'],
             invert_encoder=config['robot']['r_wheel']['encoder']['invert'],
+            Kp=config['robot']['r_wheel']['Kp'],
+            Ki=config['robot']['r_wheel']['Ki'],
+            Kd=config['robot']['r_wheel']['Kd'],
         )
 
-        self.heading_pid = PID(heading_Kp, heading_Ki, heading_Kd, setpoint=0)
+        self.heading_pid = PID(config['robot']['heading_Kp'], config['robot']['heading_Ki'], config['robot']['heading_Kd'], setpoint=0)
         self.heading_pid.output_limits = (-self.max_angular_velocity, self.max_angular_velocity)
         self.heading_pid.setpoint = 0
 

@@ -41,6 +41,11 @@ class DDRobot:
             config (_type_, optional): _description_. Defaults to None.
         """
 
+        if debug:
+            print('Using config from {}.'.format(config_path))
+        else:
+            pass
+
         config = yaml.load(open(config_path,"r").read())
 
         self.debug = debug

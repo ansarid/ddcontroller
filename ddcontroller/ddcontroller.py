@@ -46,7 +46,7 @@ class DDRobot:
         else:
             pass
 
-        config = yaml.load(open(config_path,"r").read())
+        self.config = yaml.load(open(config_path,"r").read())
 
         self.debug = debug
 
@@ -70,50 +70,50 @@ class DDRobot:
         self.control_level = 1
         self.running = True
 
-        self.wheel_base = config['robot']['wheel_base']
+        self.wheel_base = self.config['robot']['wheel_base']
 
-        self.max_linear_velocity = config['robot']['max_linear_velocity']
-        self.max_angular_velocity = config['robot']['max_angular_velocity']
+        self.max_linear_velocity = self.config['robot']['max_linear_velocity']
+        self.max_angular_velocity = self.config['robot']['max_angular_velocity']
 
-        self.max_traveling_linear_velocity = config['robot']['max_traveling_linear_velocity']
-        self.max_traveling_angular_velocity = config['robot']['max_traveling_angular_velocity']
+        self.max_traveling_linear_velocity = self.config['robot']['max_traveling_linear_velocity']
+        self.max_traveling_angular_velocity = self.config['robot']['max_traveling_angular_velocity']
 
         self.left_wheel = wheels.Wheel(
-            motor_pins=config['robot']['l_wheel']['motor']['pins'],
-            pwm_frequency=config['robot']['l_wheel']['motor']['pwm_frequency'],
-            i2c_bus=config['robot']['l_wheel']['encoder']['i2c_bus'],
-            encoder_address=config['robot']['l_wheel']['encoder']['address'],
-            wheel_radius=config['robot']['l_wheel']['wheel_radius'],
-            motor_pulley_teeth=config['robot']['l_wheel']['motor_pulley_teeth'],
-            wheel_pulley_teeth=config['robot']['l_wheel']['wheel_pulley_teeth'],
-            invert_motor=config['robot']['l_wheel']['motor']['invert'],
-            invert_encoder=config['robot']['l_wheel']['encoder']['invert'],
-            Kp=config['robot']['l_wheel']['Kp'],
-            Ki=config['robot']['l_wheel']['Ki'],
-            Kd=config['robot']['l_wheel']['Kd'],
+            motor_pins=self.config['robot']['l_wheel']['motor']['pins'],
+            pwm_frequency=self.config['robot']['l_wheel']['motor']['pwm_frequency'],
+            i2c_bus=self.config['robot']['l_wheel']['encoder']['i2c_bus'],
+            encoder_address=self.config['robot']['l_wheel']['encoder']['address'],
+            wheel_radius=self.config['robot']['l_wheel']['wheel_radius'],
+            motor_pulley_teeth=self.config['robot']['l_wheel']['motor_pulley_teeth'],
+            wheel_pulley_teeth=self.config['robot']['l_wheel']['wheel_pulley_teeth'],
+            invert_motor=self.config['robot']['l_wheel']['motor']['invert'],
+            invert_encoder=self.config['robot']['l_wheel']['encoder']['invert'],
+            Kp=self.config['robot']['l_wheel']['Kp'],
+            Ki=self.config['robot']['l_wheel']['Ki'],
+            Kd=self.config['robot']['l_wheel']['Kd'],
         )
 
         self.right_wheel = wheels.Wheel(
-            motor_pins=config['robot']['r_wheel']['motor']['pins'],
-            pwm_pin=config['robot']['r_wheel']['motor']['pwm_pin'],
-            pwm_frequency=config['robot']['r_wheel']['motor']['pwm_frequency'],
-            i2c_bus=config['robot']['r_wheel']['encoder']['i2c_bus'],
-            encoder_address=config['robot']['r_wheel']['encoder']['address'],
-            wheel_radius=config['robot']['r_wheel']['wheel_radius'],
-            motor_pulley_teeth=config['robot']['r_wheel']['motor_pulley_teeth'],
-            wheel_pulley_teeth=config['robot']['r_wheel']['wheel_pulley_teeth'],
-            invert_motor=config['robot']['r_wheel']['motor']['invert'],
-            invert_encoder=config['robot']['r_wheel']['encoder']['invert'],
-            Kp=config['robot']['r_wheel']['Kp'],
-            Ki=config['robot']['r_wheel']['Ki'],
-            Kd=config['robot']['r_wheel']['Kd'],
+            motor_pins=self.config['robot']['r_wheel']['motor']['pins'],
+            pwm_pin=self.config['robot']['r_wheel']['motor']['pwm_pin'],
+            pwm_frequency=self.config['robot']['r_wheel']['motor']['pwm_frequency'],
+            i2c_bus=self.config['robot']['r_wheel']['encoder']['i2c_bus'],
+            encoder_address=self.config['robot']['r_wheel']['encoder']['address'],
+            wheel_radius=self.config['robot']['r_wheel']['wheel_radius'],
+            motor_pulley_teeth=self.config['robot']['r_wheel']['motor_pulley_teeth'],
+            wheel_pulley_teeth=self.config['robot']['r_wheel']['wheel_pulley_teeth'],
+            invert_motor=self.config['robot']['r_wheel']['motor']['invert'],
+            invert_encoder=self.config['robot']['r_wheel']['encoder']['invert'],
+            Kp=self.config['robot']['r_wheel']['Kp'],
+            Ki=self.config['robot']['r_wheel']['Ki'],
+            Kd=self.config['robot']['r_wheel']['Kd'],
         )
 
-        self.heading_pid = PID(config['robot']['heading_Kp'], config['robot']['heading_Ki'], config['robot']['heading_Kd'], setpoint=0)
+        self.heading_pid = PID(self.config['robot']['heading_Kp'], self.config['robot']['heading_Ki'], self.config['robot']['heading_Kd'], setpoint=0)
         self.heading_pid.output_limits = (-self.max_angular_velocity, self.max_angular_velocity)
         self.heading_pid.setpoint = 0
 
-        self.loop_freq = config['robot']['wheel_frequency']  # target wheel loop frequency (hz)
+        self.loop_freq = self.config['robot']['wheel_frequency']  # target wheel loop frequency (hz)
 
         self._wait = (
             1 / self.loop_freq

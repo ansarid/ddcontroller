@@ -92,7 +92,6 @@ class DDRobot:
 
         self.right_wheel = wheels.Wheel(
             motor_pins=config['robot']['r_wheel']['motor']['pins'],
-            pwm_pin=config['robot']['r_wheel']['motor']['pwm_pin'],
             pwm_frequency=config['robot']['r_wheel']['motor']['pwm_frequency'],
             i2c_bus=config['robot']['r_wheel']['encoder']['i2c_bus'],
             encoder_address=config['robot']['r_wheel']['encoder']['address'],

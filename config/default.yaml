@@ -51,7 +51,9 @@ robot:
             invert: False
 
             # Motor Pins
-            motor_pins: (11,12)
+            pins:
+                - 11
+                - 12
 
     # Right wheel parameters
     r_wheel:
@@ -85,4 +87,6 @@ robot:
             invert: False
 
             # GPIO pin designated as digital
-            motor_pins: (15,16)
+            pins:
+                - 15
+                - 16

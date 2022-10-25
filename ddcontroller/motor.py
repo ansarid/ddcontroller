@@ -27,7 +27,7 @@ class Motor:
         Motor
     """
 
-    def __init__(self, pins, pwm_frequency, invert=False, rpm=175):
+    def __init__(self, pins, pwm_frequency, initial_duty=100, decay_mode='SLOW', invert=False, rpm=175):
         """_summary_
 
         Args:
@@ -46,10 +46,13 @@ class Motor:
         # self.pins = (self.digital_pin, self.pwm_pin)
 
         # Initial Duty %
-        self.duty = 0
+        self.duty = initial_duty
 
         # PWM frequency (Hz)
         self.pwm_frequency = pwm_frequency
+
+        # Decay Mode (FAST/SLOW)
+        self.decay_mode = decay_mode
 
         # Reverse motor direction
         self.invert = invert
@@ -92,17 +95,33 @@ class Motor:
 
         duty = self.duty * 100
 
-        if duty == 0:
-            for pin in self._pins:
-                pin.ChangeDutyCycle(100)
+        if self.decay_mode is 'SLOW':
 
-        elif duty > 0:
-            self._pins[0].ChangeDutyCycle(100)
-            self._pins[1].ChangeDutyCycle(100-duty)
+            if duty == 0:
+                for pin in self._pins:
+                    pin.ChangeDutyCycle(100)
 
-        elif duty < 0:
-            self._pins[0].ChangeDutyCycle(100-abs(duty))
-            self._pins[1].ChangeDutyCycle(100)
+            elif duty > 0:
+                self._pins[0].ChangeDutyCycle(100)
+                self._pins[1].ChangeDutyCycle(100-duty)
+
+            elif duty < 0:
+                self._pins[0].ChangeDutyCycle(100-abs(duty))
+                self._pins[1].ChangeDutyCycle(100)
+
+        elif self.decay_mode is 'FAST':
+
+            if duty == 0:
+                for pin in self._pins:
+                    pin.ChangeDutyCycle(0)
+
+            elif duty > 0:
+                self._pins[0].ChangeDutyCycle(0)
+                self._pins[1].ChangeDutyCycle(duty)
+
+            elif duty < 0:
+                self._pins[0].ChangeDutyCycle(abs(duty))
+                self._pins[1].ChangeDutyCycle(0)
 
     def stop(self):
         """_summary_

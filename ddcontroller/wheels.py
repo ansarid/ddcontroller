@@ -36,6 +36,7 @@ class Wheel:
         self,
         motor_pins,
         pwm_frequency,
+        motor_decay_mode,
         i2c_bus,
         encoder_address,
         wheel_radius,
@@ -68,6 +69,7 @@ class Wheel:
         self.motor = motor.Motor(
             motor_pins,
             pwm_frequency,
+            decay_mode=motor_decay_mode,
             invert=invert_motor,
         )
 

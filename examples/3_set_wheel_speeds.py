@@ -24,7 +24,7 @@ from ddcontroller.wheels import Wheel
 
 # Create right wheel object
 wheel = Wheel(motor_pins=(11, 12),
-              pwm_frequency=150,
+              pwm_frequency=220,
               i2c_bus=1,
               encoder_address=0x40,
               wheel_radius=0.04165,

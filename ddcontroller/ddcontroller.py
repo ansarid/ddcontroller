@@ -28,6 +28,7 @@ from ruamel.yaml import YAML
 
 yaml = YAML(typ='safe')
 
+
 class DDRobot:
 
     """_summary_
@@ -46,7 +47,7 @@ class DDRobot:
         else:
             pass
 
-        self.config = yaml.load(open(config_path,"r").read())
+        self.config = yaml.load(open(config_path, "r").read())
 
         self.debug = debug
 
@@ -57,9 +58,9 @@ class DDRobot:
 
         self.target_motion = [0, 0]
         self.target_heading = self.heading
-        self.target_position = [0,0]
-        self.reached_target_position = False
+        self.target_position = [0, 0]
         self.position_tolerance = 0.1
+        self.reached_target_position = False
         self.heading_error = 0
         self.position_error = 0
 
@@ -81,6 +82,7 @@ class DDRobot:
         self.left_wheel = wheels.Wheel(
             motor_pins=self.config['robot']['l_wheel']['motor']['pins'],
             pwm_frequency=self.config['robot']['l_wheel']['motor']['pwm_frequency'],
+            motor_decay_mode=self.config['robot']['l_wheel']['motor']['decay_mode'],
             i2c_bus=self.config['robot']['l_wheel']['encoder']['i2c_bus'],
             encoder_address=self.config['robot']['l_wheel']['encoder']['address'],
             wheel_radius=self.config['robot']['l_wheel']['wheel_radius'],
@@ -88,6 +90,7 @@ class DDRobot:
             wheel_pulley_teeth=self.config['robot']['l_wheel']['wheel_pulley_teeth'],
             invert_motor=self.config['robot']['l_wheel']['motor']['invert'],
             invert_encoder=self.config['robot']['l_wheel']['encoder']['invert'],
+            closed_loop=self.config['robot']['l_wheel']['closed_loop'],
             Kp=self.config['robot']['l_wheel']['Kp'],
             Ki=self.config['robot']['l_wheel']['Ki'],
             Kd=self.config['robot']['l_wheel']['Kd'],
@@ -97,6 +100,7 @@ class DDRobot:
             motor_pins=self.config['robot']['r_wheel']['motor']['pins'],
             pwm_pin=self.config['robot']['r_wheel']['motor']['pwm_pin'],
             pwm_frequency=self.config['robot']['r_wheel']['motor']['pwm_frequency'],
+            motor_decay_mode=self.config['robot']['r_wheel']['motor']['decay_mode'],
             i2c_bus=self.config['robot']['r_wheel']['encoder']['i2c_bus'],
             encoder_address=self.config['robot']['r_wheel']['encoder']['address'],
             wheel_radius=self.config['robot']['r_wheel']['wheel_radius'],
@@ -104,6 +108,7 @@ class DDRobot:
             wheel_pulley_teeth=self.config['robot']['r_wheel']['wheel_pulley_teeth'],
             invert_motor=self.config['robot']['r_wheel']['motor']['invert'],
             invert_encoder=self.config['robot']['r_wheel']['encoder']['invert'],
+            closed_loop=self.config['robot']['r_wheel']['closed_loop'],
             Kp=self.config['robot']['r_wheel']['Kp'],
             Ki=self.config['robot']['r_wheel']['Ki'],
             Kd=self.config['robot']['r_wheel']['Kd'],
@@ -179,11 +184,10 @@ class DDRobot:
                 ),  # calculate global y position
             ]
 
-            self._write_heading(
-                # calculate and update global heading
-                self.heading
-                + ((right_wheel_travel - left_wheel_travel) / self.wheel_base)
-            )
+            self.heading = np.arctan2(
+                                        np.sin(self.heading + ((right_wheel_travel - left_wheel_travel) / self.wheel_base)),
+                                        np.cos(self.heading + ((right_wheel_travel - left_wheel_travel) / self.wheel_base))
+                                    )
 
             self.sleep(start_time)
             self.odometry_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
@@ -250,7 +254,7 @@ class DDRobot:
         self.right_wheel.stop()
         self.left_wheel.stop()
 
-    def _write_heading(self, heading):
+    def define_heading(self, heading):
         """_summary_
 
         Args:
@@ -262,19 +266,6 @@ class DDRobot:
 
         self.heading = np.arctan2(np.sin(heading), np.cos(heading))
         return self.heading
-
-    def _set_heading(self, target_heading):
-        """_summary_
-
-        Args:
-            target_heading (_type_): _description_
-
-        Returns:
-            _type_: _description_
-        """
-
-        self.target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
-        return self.target_heading
 
     def set_heading(self, target_heading, max_angular_velocity=None):
         """_summary_
@@ -290,7 +281,7 @@ class DDRobot:
             self.heading_pid.output_limits = (-max_angular_velocity, max_angular_velocity)
 
         self.control_level = 2
-        self._set_heading(target_heading)
+        self.target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
 
     def get_heading(self):
         """_summary_
@@ -300,7 +291,7 @@ class DDRobot:
         """
         return self.heading
 
-    def set_global_position(self, pos):
+    def define_global_position(self, pos):
         """_summary_
 
         Args:

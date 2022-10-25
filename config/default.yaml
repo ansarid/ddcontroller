@@ -20,7 +20,7 @@ robot:
     # Maximum Angular Velocity During Goal-to-Goal Navigation (m/s)
     max_traveling_angular_velocity: 0.75
 
-    # Heading Controller PID Gains    
+    # Heading Controller PID Gains
     heading_Kp: 0
     heading_Ki: 0
     heading_Kd: 0
@@ -37,7 +37,10 @@ robot:
         # Number of teeth on wheel pulley
         wheel_pulley_teeth: 30
 
-        # Closed Loop Left Wheel Speed PID Gains    
+        # Open loop or closed loop control
+        closed_loop: False
+
+        # Closed Loop Left Wheel Speed PID Gains
         Kp: 0
         Ki: 0
         Kd: 0
@@ -58,14 +61,14 @@ robot:
         motor:
 
             # Motor PWM frequency in Hz
-            pwm_frequency: 150
+            pwm_frequency: 220
 
             # Indicate if the motor direction needs to be inverted
             invert: False
 
             # Motor GPIO Pins
             motor_pins: (11,12)
-            
+
             # Motor RPM
             rpm: 200
 
@@ -84,7 +87,10 @@ robot:
         # Number of teeth on wheel pulley
         wheel_pulley_teeth: 30
 
-        # Closed Loop Right Wheel Speed PID Gains    
+        # Open loop or closed loop control
+        closed_loop: False
+
+        # Closed Loop Right Wheel Speed PID Gains
         Kp: 0
         Ki: 0
         Kd: 0
@@ -105,7 +111,7 @@ robot:
         motor:
 
             # Motor PWM frequency in Hz
-            pwm_frequency: 150
+            pwm_frequency: 220
 
             # Indicate if the motor direction needs to be inverted
             invert: False
@@ -115,6 +121,6 @@ robot:
 
             # Motor RPM
             rpm: 200
-            
+
             # Indicate motor decay mode (SLOW/FAST)
             decay_mode: SLOW

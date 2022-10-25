@@ -45,7 +45,7 @@ robot:
         motor:
 
             # Motor PWM frequency in Hz
-            pwm_frequency: 150
+            pwm_frequency: 220
 
             # Indicate if the motor duty cycle needs to be inverted
             invert: False
@@ -81,7 +81,7 @@ robot:
         motor:
 
             # Motor PWM frequency in Hz
-            pwm_frequency: 150
+            pwm_frequency: 220
 
             # Indicate if the motor duty cycle needs to be inverted
             invert: False

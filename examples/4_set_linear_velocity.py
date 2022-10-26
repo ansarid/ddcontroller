@@ -29,11 +29,12 @@ try:
     # While robot is running
     while robot.running:
 
-        # Set robot's linear velocity to 0.2 m/s
-        robot.set_linear_velocity(0.2)
+        # Set robot's linear velocity to 0.3 m/s
+        robot.set_linear_velocity(0.3)
 
         # Print the motion of the robot
-        print(robot.get_motion())
+        # print(robot.get_motion())
+        print(robot.left_wheel.motor.duty, robot.right_wheel.motor.duty)
 
         # Run loop at 50Hz
         time.sleep(1/50)

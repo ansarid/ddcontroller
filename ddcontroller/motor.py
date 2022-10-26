@@ -28,22 +28,20 @@ class Motor:
     """
 
     def __init__(self, pins, pwm_frequency, initial_duty=0, decay_mode='FAST', invert=False, rpm=200):
+
         """_summary_
 
         Args:
-            digital_pin (int, optional): _description_.
-            pwm_pin (int, optional): _description_.
-            pwm_frequency (int, optional): _description_.
+            pins (_type_): _description_
+            pwm_frequency (_type_): _description_
+            initial_duty (int, optional): _description_. Defaults to 0.
+            decay_mode (str, optional): _description_. Defaults to 'FAST'.
             invert (bool, optional): _description_. Defaults to False.
+            rpm (int, optional): _description_. Defaults to 200.
         """
 
-        # self.digital_pin = digital_pin
-        # self.pwm_pin = pwm_pin
         self.pins = pins
         self._pins = []
-
-        # First pin will be digital and second pin will be PWM
-        # self.pins = (self.digital_pin, self.pwm_pin)
 
         # Initial Duty %
         self.duty = initial_duty
@@ -79,6 +77,11 @@ class Motor:
             pin.start(self.duty)
 
     def set_pwm_frequency(self, frequency):
+        """_summary_
+
+        Args:
+            frequency (_type_): _description_
+        """
         self.pwm_frequency = frequency
         for pin in self._pins:
             pin.ChangeFrequency(self.pwm_frequency)
@@ -95,7 +98,7 @@ class Motor:
 
         duty = self.duty * 100
 
-        if self.decay_mode is 'SLOW':
+        if self.decay_mode == 'SLOW':
 
             if duty == 0:
                 for pin in self._pins:
@@ -109,7 +112,7 @@ class Motor:
                 self._pins[0].ChangeDutyCycle(100-abs(duty))
                 self._pins[1].ChangeDutyCycle(100)
 
-        elif self.decay_mode is 'FAST':
+        elif self.decay_mode == 'FAST':
 
             if duty == 0:
                 for pin in self._pins:
@@ -122,6 +125,9 @@ class Motor:
             elif duty < 0:
                 self._pins[0].ChangeDutyCycle(abs(duty))
                 self._pins[1].ChangeDutyCycle(0)
+
+        else:
+            print('Invalid Decay Mode!')
 
     def stop(self):
         """_summary_

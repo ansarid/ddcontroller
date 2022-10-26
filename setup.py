@@ -53,6 +53,7 @@ else:
     os.mkdir('/opt/ddcontroller/config')
 
 if os.path.exists('/opt/ddcontroller/config/default.yaml') and filecmp.cmp(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml'):
-    pass
+    print('Config already exists and is up to date.')
 else:
     shutil.copyfile(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml')
+    print('Updated to latest config.')

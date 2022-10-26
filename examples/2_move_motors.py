@@ -22,7 +22,7 @@ import time
 from ddcontroller.motor import Motor
 
 # Create motor object (digital_pin, pwm_pin, pwm_frequency)
-motor = Motor((11, 12), 220)
+motor = Motor((11, 12), 220, )
 
 try:
 

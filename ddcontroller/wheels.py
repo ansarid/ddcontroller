@@ -36,12 +36,12 @@ class Wheel:
         self,
         motor_pins,
         pwm_frequency,
-        motor_decay_mode,
         i2c_bus,
         encoder_address,
         wheel_radius,
         motor_pulley_teeth,
         wheel_pulley_teeth,
+        motor_decay_mode='FAST',
         invert_motor=False,
         invert_encoder=False,
         closed_loop=False,
@@ -49,19 +49,26 @@ class Wheel:
         Ki=0,
         Kd=0,
     ):
+
         """_summary_
 
         Args:
-            motor_output (_type_): _description_
-            bus (_type_): _description_
+            motor_pins (_type_): _description_
             pwm_frequency (_type_): _description_
+            motor_decay_mode (_type_): _description_
+            i2c_bus (_type_): _description_
             encoder_address (_type_): _description_
-            wheel_radius (float, optional): _description_.
-            motor_pulley_teeth (int, optional): _description_.
-            wheel_pulley_teeth (int, optional): _description_.
+            wheel_radius (_type_): _description_
+            motor_pulley_teeth (_type_): _description_
+            wheel_pulley_teeth (_type_): _description_
             invert_motor (bool, optional): _description_. Defaults to False.
             invert_encoder (bool, optional): _description_. Defaults to False.
+            closed_loop (bool, optional): _description_. Defaults to False.
+            Kp (int, optional): _description_. Defaults to 0.
+            Ki (int, optional): _description_. Defaults to 0.
+            Kd (int, optional): _description_. Defaults to 0.
         """
+
         self.invert_motor = invert_motor
         self.invert_encoder = invert_encoder
         self.closed_loop = closed_loop

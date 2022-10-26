@@ -27,7 +27,7 @@ class Motor:
         Motor
     """
 
-    def __init__(self, pins, pwm_frequency, initial_duty=100, decay_mode='SLOW', invert=False, rpm=175):
+    def __init__(self, pins, pwm_frequency, initial_duty=100, decay_mode='FAST', invert=False, rpm=175):
         """_summary_
 
         Args:

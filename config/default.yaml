@@ -1,8 +1,24 @@
+# This file is part of the ddcontroller library (https://github.com/ansarid/ddcontroller).
+# Copyright (C) 2022  Daniyal Ansari
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 label: 'Default Robot Config'
 
 robot:
 
-    # Wheel base (L) in meters.
+    # Wheel Base Distance (m).
     wheel_base: 0.355
 
     # Maximum Linear Velocity (m/s)
@@ -11,43 +27,56 @@ robot:
     # Maximum Angular Velocity (rad/s)
     max_angular_velocity: 2.7
 
-    # Wheel Loop Frequency
+    # Wheel Loop Frequency (Hz)
     wheel_frequency: 50
 
-    #  Maximum Linear Velocity During Goal-to-Goal Navigation (m/s)
+    # Maximum Linear Velocity During Goal-to-Goal Navigation (m/s)
     max_traveling_linear_velocity: 0.2
 
-    #  Maximum Angular Velocity During Goal-to-Goal Navigation (m/s)
+    # Maximum Angular Velocity During Goal-to-Goal Navigation (m/s)
     max_traveling_angular_velocity: 0.75
 
-    # Left Wheel Parameters
-    l_wheel:
+    # Heading Controller PID Gains
+    heading_Kp: 0
+    heading_Ki: 0
+    heading_Kd: 0
 
-        # Wheel radius in meters
+    # Left Wheel Parameters
+    left_wheel:
+
+        # Wheel Radius (m)
         wheel_radius: 0.04165
 
-        # Number of teeth on motor pulley
+        # Number Of Teeth On Motor Pulley
         motor_pulley_teeth: 15
 
-        # Number of teeth on wheel pulley
+        # Number Of Teeth On Wheel Pulley
         wheel_pulley_teeth: 30
 
+        # Open or closed loop control
+        closed_loop: False
+
+        # Closed Loop Wheel Speed PID Gains
+        Kp: 0
+        Ki: 0
+        Kd: 0
+
         encoder:
-            # I2C bus id
+            # I2C Bus ID
             i2c_bus: 1
 
-            # Encoder address
+            # Encoder Address
             address: 0x40
 
-            # Flag to indicate if the encoder data needs to be inverted
+            # Flag To Indicate If The Encoder Readings Need To Be Inverted
             invert: True
 
         motor:
 
-            # Motor PWM frequency in Hz
+            # Motor PWM Frequency (Hz)
             pwm_frequency: 220
 
-            # Indicate if the motor duty cycle needs to be inverted
+            # Indicate If The Motor Duty Cycle Needs To Be Inverted
             invert: False
 
             # Motor Pins
@@ -55,38 +84,52 @@ robot:
                 - 11
                 - 12
 
-    # Right wheel parameters
-    r_wheel:
+            # Indicate Motor Decay Mode (SLOW/FAST)
+            decay_mode: FAST
 
-        # Wheel radius in meters
+    # Right Wheel Parameters
+    right_wheel:
+
+        # Wheel Radius (m)
         wheel_radius: 0.04165
 
-        # Number of teeth on motor pulley
+        # Number Of Teeth On Motor Pulley
         motor_pulley_teeth: 15
 
-        # Number of teeth on wheel pulley
+        # Number Of Teeth On Wheel Pulley
+
         wheel_pulley_teeth: 30
 
-        encoder:
+        # Open or closed loop control
+        closed_loop: False
 
-            # I2C bus id
+        # Closed Loop Wheel Speed PID Gains
+        Kp: 0
+        Ki: 0
+        Kd: 0
+
+        encoder:
+            # I2C Bus ID
             i2c_bus: 1
 
-            # Encoder address
+            # Encoder Address
             address: 0x41
 
-            # Flag to indicate if the encoder data needs to be inverted
+            # Flag To Indicate If The Encoder Readings Need To Be Inverted
             invert: False
 
         motor:
 
-            # Motor PWM frequency in Hz
+            # Motor PWM Frequency (Hz)
             pwm_frequency: 220
 
-            # Indicate if the motor duty cycle needs to be inverted
+            # Indicate If The Motor Duty Cycle Needs To Be Inverted
             invert: False
 
-            # GPIO pin designated as digital
+            # Motor Pins
             pins:
                 - 15
                 - 16
+
+            # Indicate Motor Decay Mode (SLOW/FAST)
+            decay_mode: FAST

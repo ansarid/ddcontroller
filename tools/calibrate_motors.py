@@ -28,29 +28,29 @@ config = yaml.load(open('/opt/ddcontroller/config/default.yaml',"r").read())
 
 # Create right wheel object
 left_wheel = Wheel(
-    digital_pin=config['robot']['l_wheel']['motor']['digital_pin'],
-    pwm_pin=config['robot']['l_wheel']['motor']['pwm_pin'],
-    pwm_frequency=config['robot']['l_wheel']['motor']['pwm_frequency'],
-    i2c_bus=config['robot']['l_wheel']['encoder']['i2c_bus'],
-    encoder_address=config['robot']['l_wheel']['encoder']['address'],
-    wheel_radius=config['robot']['l_wheel']['wheel_radius'],
-    motor_pulley_teeth=config['robot']['l_wheel']['motor_pulley_teeth'],
-    wheel_pulley_teeth=config['robot']['l_wheel']['wheel_pulley_teeth'],
-    invert_motor=config['robot']['l_wheel']['motor']['invert'],
-    invert_encoder=config['robot']['l_wheel']['encoder']['invert'],
+    digital_pin=config['robot']['left_wheel']['motor']['digital_pin'],
+    pwm_pin=config['robot']['left_wheel']['motor']['pwm_pin'],
+    pwm_frequency=config['robot']['left_wheel']['motor']['pwm_frequency'],
+    i2c_bus=config['robot']['left_wheel']['encoder']['i2c_bus'],
+    encoder_address=config['robot']['left_wheel']['encoder']['address'],
+    wheel_radius=config['robot']['left_wheel']['wheel_radius'],
+    motor_pulley_teeth=config['robot']['left_wheel']['motor_pulley_teeth'],
+    wheel_pulley_teeth=config['robot']['left_wheel']['wheel_pulley_teeth'],
+    invert_motor=config['robot']['left_wheel']['motor']['invert'],
+    invert_encoder=config['robot']['left_wheel']['encoder']['invert'],
 )
 
 right_wheel = Wheel(
-    digital_pin=config['robot']['r_wheel']['motor']['digital_pin'],
-    pwm_pin=config['robot']['r_wheel']['motor']['pwm_pin'],
-    pwm_frequency=config['robot']['r_wheel']['motor']['pwm_frequency'],
-    i2c_bus=config['robot']['r_wheel']['encoder']['i2c_bus'],
-    encoder_address=config['robot']['r_wheel']['encoder']['address'],
-    wheel_radius=config['robot']['r_wheel']['wheel_radius'],
-    motor_pulley_teeth=config['robot']['r_wheel']['motor_pulley_teeth'],
-    wheel_pulley_teeth=config['robot']['r_wheel']['wheel_pulley_teeth'],
-    invert_motor=config['robot']['r_wheel']['motor']['invert'],
-    invert_encoder=config['robot']['r_wheel']['encoder']['invert'],
+    digital_pin=config['robot']['right_wheel']['motor']['digital_pin'],
+    pwm_pin=config['robot']['right_wheel']['motor']['pwm_pin'],
+    pwm_frequency=config['robot']['right_wheel']['motor']['pwm_frequency'],
+    i2c_bus=config['robot']['right_wheel']['encoder']['i2c_bus'],
+    encoder_address=config['robot']['right_wheel']['encoder']['address'],
+    wheel_radius=config['robot']['right_wheel']['wheel_radius'],
+    motor_pulley_teeth=config['robot']['right_wheel']['motor_pulley_teeth'],
+    wheel_pulley_teeth=config['robot']['right_wheel']['wheel_pulley_teeth'],
+    invert_motor=config['robot']['right_wheel']['motor']['invert'],
+    invert_encoder=config['robot']['right_wheel']['encoder']['invert'],
 )
 
 try:

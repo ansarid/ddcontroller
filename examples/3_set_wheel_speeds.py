@@ -41,7 +41,7 @@ try:
         wheel.update()
 
         # Print current wheel angular velocity
-        print('{}'.format(wheel.get_angular_velocity()))
+        print(f"{wheel.get_angular_velocity()}")
 
         # Set wheel angular velocity to 2*pi
         wheel.set_angular_velocity(2*np.pi)

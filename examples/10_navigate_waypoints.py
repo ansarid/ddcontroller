@@ -35,19 +35,21 @@ waypoints = {
 try:
 
     # Get list of keys from waypoints
-    for waypoint in waypoints.keys():
+    for label, waypoint in waypoints.items():
 
         # Set path for robot to navigate
-        robot.go_to(waypoints[waypoint])
+        robot.go_to(waypoint)
+
+        print(f"Going to waypoint {label} at {waypoint}.")
 
         # Loop while robot is running and not at target location
         while robot.running and not robot.reached_target_position:
 
             # Get the robot's latest location
-            x,y = robot.get_global_position()
+            x, y = robot.get_global_position()
 
             # Print the location of the robot
-            print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
+            print(f"Global Position: {round(x, 3)}, {round(y, 3)}")
 
             # Run loop at 50Hz
             time.sleep(1/50)

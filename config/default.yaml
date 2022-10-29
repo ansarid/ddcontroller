@@ -18,7 +18,7 @@ label: 'Default Robot Config'
 
 robot:
 
-    # Wheel Base Distance (m).
+    # Wheel Base Distance (m)
     wheel_base: 0.355
 
     # Maximum Linear Velocity (m/s)

@@ -97,7 +97,6 @@ robot:
         motor_pulley_teeth: 15
 
         # Number Of Teeth On Wheel Pulley
-
         wheel_pulley_teeth: 30
 
         # Open or closed loop control

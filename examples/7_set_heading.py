@@ -34,7 +34,7 @@ try:
         robot.set_heading(math.pi/2, max_angular_velocity=1)
 
         # Print the motion of the robot
-        print("Target:", robot.target_heading, "Actual:",robot.get_heading())
+        print(f"Target: {math.degrees(robot.target_heading)} degrees\tActual: {round(math.degrees(robot.get_heading()), 1)} degrees")
 
         # Run loop at 50Hz
         time.sleep(1/50)

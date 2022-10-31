@@ -32,9 +32,11 @@ try:
         # Set robot's linear velocity to 0.3 m/s
         robot.set_linear_velocity(0.3)
 
+        # Get the motion of the robot
+        motion = robot.get_motion()
+
         # Print the motion of the robot
-        # print(robot.get_motion())
-        print(robot.left_wheel.motor.duty, robot.right_wheel.motor.duty)
+        print(f"{round(motion[0], 3)} m/s\t{round(motion[1], 3)} rad/s")
 
         # Run loop at 50Hz
         time.sleep(1/50)

@@ -37,7 +37,7 @@ robot:
     max_traveling_angular_velocity: 0.75
 
     # Heading Controller PID Gains
-    heading_Kp: 0
+    heading_Kp: 6
     heading_Ki: 0
     heading_Kd: 0
 

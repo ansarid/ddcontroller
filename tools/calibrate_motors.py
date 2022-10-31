@@ -20,8 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import time
 import numpy as np
-from ddcontroller.wheels import Wheel
 from ruamel.yaml import YAML
+from ddcontroller.wheels import Wheel
 
 yaml = YAML(typ='safe')
 config = yaml.load(open('/opt/ddcontroller/config/default.yaml',"r").read())

@@ -24,11 +24,15 @@ from ddcontroller import DDRobot
 # Create robot object
 robot = DDRobot(debug=True)
 
+robot.heading_pid.Kp = 6
+robot.heading_pid.Ki = 0
+robot.heading_pid.Kd = 0
+
 # Create Path with list of Points
 waypoints = {
-            'A':[1,0],
-            'B':[1,1],
-            'C':[0,1],
+            'A':[0.5,0],
+            'B':[0.5,0.5],
+            'C':[0,0.5],
             'D':[0,0],
             }
 
@@ -38,18 +42,23 @@ try:
     for label, waypoint in waypoints.items():
 
         # Set path for robot to navigate
-        robot.go_to(waypoint)
+        # robot.go_to(waypoint)
+        robot.go_to(waypoint, tolerance=0.05, max_linear_velocity=0.1, max_angular_velocity=2)
 
         print(f"Going to waypoint {label} at {waypoint}.")
 
         # Loop while robot is running and not at target location
+        print('target?',robot.reached_target_position)
+        x, y = robot.get_global_position()
+        print(f"Global Position: {round(x, 3)}, {round(y, 3)}")
         while robot.running and not robot.reached_target_position:
 
             # Get the robot's latest location
-            x, y = robot.get_global_position()
+            # x, y = robot.get_global_position()
 
             # Print the location of the robot
-            print(f"Global Position: {round(x, 3)}, {round(y, 3)}")
+            # print(f"Global Position: {round(x, 3)}, {round(y, 3)}")
+            print(robot.target_motion)
 
             # Run loop at 50Hz
             time.sleep(1/50)

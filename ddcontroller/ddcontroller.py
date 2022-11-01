@@ -44,9 +44,9 @@ class DDRobot:
 
         self.config = yaml.load(open(config_path, "r", encoding="utf-8").read())
         self.debug = debug
+
         if self.debug:
             print(f"Loaded config from: {config_path}\nLabeled: {self.config['label']}")
-
 
         self.heading = 0
         self.linear_velocity = 0
@@ -228,12 +228,12 @@ class DDRobot:
                     start_time = time.monotonic_ns()  # record loop start time
 
                     target_heading = np.arctan2((self.target_position[1]-self.global_position[1]),(self.target_position[0]-self.global_position[0]))
-                    self.set_heading(target_heading, max_angular_velocity=self.max_traveling_linear_velocity)
+                    self.set_heading(target_heading, max_angular_velocity=self.max_angular_velocity)
 
                     if self.max_traveling_linear_velocity:
-                        self.set_linear_velocity(self.max_traveling_linear_velocity)
+                        self.set_linear_velocity(self.max_traveling_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity)))
                     else:
-                        self.set_linear_velocity(self.max_linear_velocity)
+                        self.set_linear_velocity(self.max_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity)))
 
                     self.sleep(start_time)
                     self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
@@ -270,7 +270,7 @@ class DDRobot:
         """_summary_
 
         Args:
-            target_heading (_type_): _description_
+            target_heading (_type_): _description_1
 
         Returns:
             _type_: _description_
@@ -423,7 +423,11 @@ class DDRobot:
         """
         self.target_position = target_position
         self.position_tolerance = tolerance
-        self.max_linear_velocity = max_linear_velocity
-        self.max_angular_velocity = max_angular_velocity
+
+        if max_linear_velocity:
+            self.max_linear_velocity = max_linear_velocity
+        if max_angular_velocity:
+            self.max_angular_velocity = max_angular_velocity
+
         self.reached_target_position = False
         self.control_level = 2

@@ -40,7 +40,7 @@ try:
         print(f"Headed to {point}.")
 
         # Set target location for navigation to (1,1)
-        robot.go_to(point, tolerance=0.1, max_linear_velocity=0.3, max_angular_velocity=2)
+        robot.go_to(point, tolerance=0.01, max_linear_velocity=0.3, max_angular_velocity=1)
 
         # Loop while robot is running and not at target location
         while robot.running and not robot.reached_target_position:

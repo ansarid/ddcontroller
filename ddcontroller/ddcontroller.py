@@ -200,10 +200,7 @@ class DDRobot:
             if self.control_level >= 2:
 
                 heading_error = self.get_heading() - self.target_heading
-
-                # self.heading_error = heading_error
                 self.heading_error = np.arctan2(np.sin(heading_error), np.cos(heading_error))
-
                 angular_velocity = self.heading_pid(self.heading_error)
                 self.set_angular_velocity(angular_velocity)
 

@@ -32,8 +32,11 @@ try:
         # Set robot's angular velocity to 1 rad/s
         robot.set_angular_velocity(1)
 
+        # Get the motion of the robot
+        motion = robot.get_motion()
+
         # Print the motion of the robot
-        print(robot.get_motion())
+        print(f"{round(motion[0], 3)} m/s\t{round(motion[1], 3)} rad/s")
 
         # Run loop at 50Hz
         time.sleep(1/50)

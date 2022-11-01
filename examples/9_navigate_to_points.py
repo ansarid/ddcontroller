@@ -24,22 +24,37 @@ from ddcontroller import DDRobot
 # Create robot object
 robot = DDRobot(debug=True)
 
+# Create list of Points
+points = [
+        [1,0],
+        [1,1],
+        [0,1],
+        [0,0],
+        ]
+
 try:
 
-    # While robot is running
-    while robot.running:
+    for point in points:
 
-        # Set robot's linear velocity to 0.2m/s and angular velocity to 0.5 rad/s
-        robot.set_motion([0.2, 0.5])
+        # Print target location
+        print(f"Headed to {point}.")
 
-        # Get the motion of the robot
-        motion = robot.get_motion()
+        # Set target location for navigation to (1,1)
+        robot.go_to(point, tolerance=0.01, max_linear_velocity=0.3, max_angular_velocity=1)
 
-        # Print the motion of the robot
-        print(f"{round(motion[0], 3)} m/s\t{round(motion[1], 3)} rad/s")
+        # Loop while robot is running and not at target location
+        while robot.running and not robot.reached_target_position:
 
-        # Run loop at 50Hz
-        time.sleep(1/50)
+            # Get the robot's latest location
+            x, y = robot.get_global_position()
+
+            # Print the location of the robot
+            print(f"Global Position: {round(x, 3)}, {round(y, 3)}", end="\r")
+
+            # Run loop at 50Hz
+            time.sleep(1/50)
+
+        print('\nDone!')
 
 except KeyboardInterrupt:
     print('Stopping...')

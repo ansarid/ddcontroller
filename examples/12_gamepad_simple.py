@@ -19,40 +19,48 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import time
+from .utils.gamepad import Gamepad
 from ddcontroller import DDRobot
 
-# Create robot object
+# Create gamepad object
+gamepad = Gamepad()
+
+# Create robot Object
 robot = DDRobot()
 
-# Create Path with list of Points
-path = [
-        [1,0],
-        [1,1],
-        [0,1],
-        [0,0],
-        ]
-
 try:
-
-    # Set path for robot to navigate
-    robot.follow_path(path)
 
     # While robot is running
     while robot.running:
 
+        # Get joystick x and y values and scale values to -1 to 1
+        joystickX, joystickY = [((-2/255)*gamepad.axes['LEFT_X'])+1,
+                                ((-2/255)*gamepad.axes['LEFT_Y'])+1
+                                ]
+
+        motion = [
+                  # Mutiply joystick y axis by robot max linear velocity to get linear velocity
+                  joystickY*robot.max_linear_velocity,
+
+                  # Mutiply joystick x axis by robot max angular velocity to get angular velocity
+                  joystickX*robot.max_angular_velocity
+                 ]
+
         # Get the robot's latest location
-        x,y = robot.get_global_position()
+        x, y = robot.get_global_position()
 
         # Print the location of the robot
-        print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
+        print(f"Global Position: {round(x, 3)}, {round(y, 3)}")
 
         # Run loop at 50Hz
         time.sleep(1/50)
 
 except KeyboardInterrupt:
-    print('Stopping...')
+
+    pass
 
 finally:
     # Clean up.
+    gamepad.close()
     robot.stop()
     print('Stopped.')

@@ -20,17 +20,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import time
 import numpy as np
-from ddcontroller.wheels import Wheel
 from ruamel.yaml import YAML
+from ddcontroller.wheels import Wheel
 
 yaml = YAML(typ='safe')
 config = yaml.load(open('/opt/ddcontroller/config/default.yaml',"r").read())
 
-# Create right wheel object
+def radians2rpm(radians):
+    return (2*(radians*60)/(np.pi*2))
+
 left_wheel = Wheel(
-    digital_pin=config['robot']['left_wheel']['motor']['digital_pin'],
-    pwm_pin=config['robot']['left_wheel']['motor']['pwm_pin'],
+    motor_pins=config['robot']['left_wheel']['motor']['pins'],
     pwm_frequency=config['robot']['left_wheel']['motor']['pwm_frequency'],
+    motor_decay_mode=config['robot']['left_wheel']['motor']['decay_mode'],
     i2c_bus=config['robot']['left_wheel']['encoder']['i2c_bus'],
     encoder_address=config['robot']['left_wheel']['encoder']['address'],
     wheel_radius=config['robot']['left_wheel']['wheel_radius'],
@@ -41,9 +43,9 @@ left_wheel = Wheel(
 )
 
 right_wheel = Wheel(
-    digital_pin=config['robot']['right_wheel']['motor']['digital_pin'],
-    pwm_pin=config['robot']['right_wheel']['motor']['pwm_pin'],
+    motor_pins=config['robot']['right_wheel']['motor']['pins'],
     pwm_frequency=config['robot']['right_wheel']['motor']['pwm_frequency'],
+    motor_decay_mode=config['robot']['right_wheel']['motor']['decay_mode'],
     i2c_bus=config['robot']['right_wheel']['encoder']['i2c_bus'],
     encoder_address=config['robot']['right_wheel']['encoder']['address'],
     wheel_radius=config['robot']['right_wheel']['wheel_radius'],
@@ -55,6 +57,10 @@ right_wheel = Wheel(
 
 try:
 
+    # Set motors to maximum duty cycle
+    left_wheel.motor.set_duty(1)
+    right_wheel.motor.set_duty(1)
+
     # Create infinite loop
     while True:
 
@@ -62,11 +68,7 @@ try:
         left_wheel.update()
         right_wheel.update()
 
-        # Set wheel angular velocity to 2*pi
-        left_wheel.motor.set_duty(1)
-        right_wheel.motor.set_duty(1)
-
-        print((2*(left_wheel.get_angular_velocity()*60)/(np.pi*2)), (2*(right_wheel.get_angular_velocity()*60)/(np.pi*2)))
+        print(f"Left Wheel Speed: {round(left_wheel.get_angular_velocity(),3)} rad/s\t{round(radians2rpm(left_wheel.get_angular_velocity()),1)} rpm\tRight Wheel Speed: {round(right_wheel.get_angular_velocity(),3)} rad/s\t{round(radians2rpm(right_wheel.get_angular_velocity()),1)} rpm")
 
         # Run loop at 50Hz
         time.sleep(1/50)

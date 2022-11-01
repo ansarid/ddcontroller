@@ -27,19 +27,21 @@ robot = DDRobot(debug=True)
 try:
 
     # Set target location for navigation to (1,1)
-    robot.go_to([1, 1], tolerance=0.2, max_linear_velocity=0.2, max_angular_velocity=1)
+    robot.go_to([1, 1], tolerance=0.1, max_linear_velocity=0.3, max_angular_velocity=2)
 
     # Loop while robot is running and not at target location
     while robot.running and not robot.reached_target_position:
 
         # Get the robot's latest location
-        x,y = robot.get_global_position()
+        x, y = robot.get_global_position()
 
         # Print the location of the robot
-        print('Global Position: {}, {}'.format(round(x, 3), round(y, 3)))
+        print(f"Global Position: {round(x, 3)}, {round(y, 3)}", end="\r")
 
         # Run loop at 50Hz
         time.sleep(1/50)
+
+    print('\nDone!')
 
 except KeyboardInterrupt:
     print('Stopping...')

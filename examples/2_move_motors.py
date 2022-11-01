@@ -36,7 +36,7 @@ try:
             duty /= 100
 
             # Print the current duty cycle
-            print('Duty:', duty)
+            print(f"Duty: {duty}")
 
             # Set the duty cycle to the motor
             motor.set_duty(duty)

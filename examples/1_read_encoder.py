@@ -36,7 +36,7 @@ try:
         angle = encoder.read_angle()
 
         # Print out the encoder position and angle
-        print(f"Angle: {round(angle, 3)}\tPosition: {position}")
+        print(f"Angle: {round(angle, 3)} radians\tPosition: {position}")
 
         # Run loop at 50Hz
         time.sleep(1/50)

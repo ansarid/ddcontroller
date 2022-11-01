@@ -24,10 +24,6 @@ from ddcontroller import DDRobot
 # Create robot object
 robot = DDRobot(debug=True)
 
-robot.heading_pid.Kp = 6
-robot.heading_pid.Ki = 0
-robot.heading_pid.Kd = 0
-
 # Create Path with list of Points
 waypoints = {
             'A':[0.5,0],

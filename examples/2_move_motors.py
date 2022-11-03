@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import time
 from ddcontroller.motor import Motor
 
-# Create motor object (digital_pin, pwm_pin, pwm_frequency)
+# Create motor object ((pins), pwm_frequency)
 motor = Motor((11, 12), 220)
 
 try:

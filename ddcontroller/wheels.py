@@ -69,8 +69,6 @@ class Wheel:
             Kd (int, optional): _description_. Defaults to 0.
         """
 
-        self.invert_motor = invert_motor
-        self.invert_encoder = invert_encoder
         self.closed_loop = closed_loop
 
         self.motor = motor.Motor(
@@ -81,7 +79,9 @@ class Wheel:
         )
 
         self.encoder = AS5048B(
-            encoder_address, bus=i2c_bus, invert=self.invert_encoder
+            encoder_address,
+            bus=i2c_bus,
+            invert=invert_encoder
         )
 
         if self.closed_loop:

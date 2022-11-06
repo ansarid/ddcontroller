@@ -25,7 +25,7 @@ robot:
     max_linear_velocity: 0.45
 
     # Maximum Angular Velocity (rad/s)
-    max_angular_velocity: 2.7
+    max_angular_velocity: 2.5
 
     # Wheel Loop Frequency (Hz)
     wheel_frequency: 50

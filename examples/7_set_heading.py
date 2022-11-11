@@ -31,7 +31,7 @@ try:
     while robot.running:
 
         # Set robot's heading to pi/2 with a maximum angular velocity of 1 rad/s
-        robot.set_heading(math.pi/2, max_angular_velocity=1)
+        robot.set_heading(math.pi/4, max_angular_velocity=2.7)
 
         # Print the motion of the robot
         print(f"Target: {math.degrees(robot.target_heading)} degrees\tActual: {round(math.degrees(robot.get_heading()), 1)} degrees")

@@ -60,6 +60,7 @@ class DDRobot:
         self.reached_target_position = False
         self.heading_error = 0
         self.position_error = 0
+        self.backwards = False
 
         self.odometry_frequency = 0
         self.heading_controller_frequency = 0
@@ -200,6 +201,12 @@ class DDRobot:
             if self.control_level >= 2:
 
                 heading_error = self.get_heading() - self.target_heading
+
+                if self.backwards:
+                    heading_error+=np.pi
+                else:
+                    pass
+
                 self.heading_error = np.arctan2(np.sin(heading_error), np.cos(heading_error))
                 angular_velocity = self.heading_pid(self.heading_error)
                 self.set_angular_velocity(angular_velocity)
@@ -227,10 +234,16 @@ class DDRobot:
                     target_heading = np.arctan2((self.target_position[1]-self.global_position[1]),(self.target_position[0]-self.global_position[0]))
                     self.set_heading(target_heading, max_angular_velocity=self.max_angular_velocity)
 
-                    if self.max_traveling_linear_velocity:
-                        self.set_linear_velocity(self.max_traveling_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity)))
+                    if not self.backwards:
+                        if self.max_traveling_linear_velocity:
+                            self.set_linear_velocity(self.max_traveling_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity)))
+                        else:
+                            self.set_linear_velocity(self.max_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity)))
                     else:
-                        self.set_linear_velocity(self.max_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity)))
+                        if self.max_traveling_linear_velocity:
+                            self.set_linear_velocity(-(self.max_traveling_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity))))
+                        else:
+                            self.set_linear_velocity(-(self.max_linear_velocity*abs(1-(self.target_motion[1]/self.max_angular_velocity))))
 
                     self.sleep(start_time)
                     self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
@@ -409,7 +422,7 @@ class DDRobot:
 
         return [self.linear_velocity, self.angular_velocity]
 
-    def go_to(self, target_position, tolerance=0.1, max_linear_velocity=None, max_angular_velocity=None):
+    def go_to(self, target_position, tolerance=0.1, max_linear_velocity=None, max_angular_velocity=None, backwards=False):
         """_summary_
 
         Args:
@@ -420,6 +433,7 @@ class DDRobot:
         """
         self.target_position = target_position
         self.position_tolerance = tolerance
+        self.backwards=backwards
 
         if max_linear_velocity:
             self.max_linear_velocity = max_linear_velocity

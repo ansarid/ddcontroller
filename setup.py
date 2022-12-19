@@ -31,6 +31,7 @@ install_requires = [
                     'smbus2',
                     'ruamel.yaml',
                     'simple-pid',
+                    'adafruit-circuitpython-ina219',
                     # 'as5048b'
                    ]
 

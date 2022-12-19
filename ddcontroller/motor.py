@@ -18,6 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
+import board
+import busio
+import adafruit_ina219
 
 import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
@@ -27,7 +30,7 @@ class Motor:
         Motor
     """
 
-    def __init__(self, pins, pwm_frequency, initial_duty=0, decay_mode='FAST', invert=False, rpm=200):
+    def __init__(self, pins, pwm_frequency, initial_duty=0, decay_mode='FAST', invert=False, rpm=200, max_voltage=12):
 
         """_summary_
 
@@ -64,6 +67,9 @@ class Motor:
         # Max motor Duty
         self.max_duty = 1
 
+        # Motor rated voltage
+        self.max_voltage = max_voltage
+
         if GPIO.getmode() is None:
             GPIO.setmode(GPIO.BOARD)
         else:
@@ -75,6 +81,9 @@ class Motor:
 
         for pin in self._pins:
             pin.start(self.duty)
+
+        self.i2c = busio.I2C(board.SCL, board.SDA)
+        self.ina219 = adafruit_ina219.INA219(self.i2c, addr=0x44)
 
     def set_pwm_frequency(self, frequency):
         """_summary_
@@ -95,6 +104,9 @@ class Motor:
         self.duty = round(  # Make sure duty is between -1 and 1
             sorted((-1, float(duty), 1))[1], 2
         )
+
+        max_duty = (1/self.ina219.bus_voltage)*self.max_voltage
+        duty = duty * max_duty
 
         duty = self.duty * 100
 

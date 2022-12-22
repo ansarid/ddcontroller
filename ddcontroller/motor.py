@@ -18,9 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
-import board
-import busio
-import adafruit_ina219
+from ina219 import INA219
+from ina219 import DeviceRangeError
 
 import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
@@ -82,8 +81,8 @@ class Motor:
         for pin in self._pins:
             pin.start(self.duty)
 
-        self.i2c = busio.I2C(board.SCL, board.SDA)
-        self.ina219 = adafruit_ina219.INA219(self.i2c, addr=0x44)
+        self.ina = INA219(0.1, address=0x44)
+        self.ina.configure()
 
     def set_pwm_frequency(self, frequency):
         """_summary_
@@ -105,10 +104,10 @@ class Motor:
             sorted((-1, float(duty), 1))[1], 2
         )
 
-        max_duty = (1/self.ina219.bus_voltage)*self.max_voltage
-        duty = duty * max_duty
+        max_duty = (1/self.ina.voltage())*self.max_voltage
 
-        duty = self.duty * 100
+        duty = self.duty * max_duty
+        duty = duty * 100
 
         if self.decay_mode == 'SLOW':
 

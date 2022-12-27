@@ -357,10 +357,10 @@ class DDRobot:
 
     def set_linear_velocity(self, linear_velocity):
 
-        """Set the desired angular velocity of the robot.
+        """Set the desired linear velocity of the robot.
 
         Args:
-            angular_velocity (float): The angular velocity to set in radians per second.
+            linear_velocity (float): The linear velocity to set in meters per second.
 
         Returns:
             list: The updated target motion of the robot.

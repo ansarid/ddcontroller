@@ -31,16 +31,16 @@ yaml = YAML(typ='safe')
 
 class DDRobot:
 
-    """_summary_
-    DDRobot
+    """Initialize a DDRobot object.
+
+    This method initializes a DDRobot object by setting up the wheels and loading the configuration from a YAML file. The robot has various attributes such as its heading, linear velocity, and global position, as well as target motion, heading, and position. The robot also has various constants such as its wheel base, maximum linear and angular velocities, and tolerance for reaching the target position.
+
+    Args:
+    config_path (str, optional): The path to the YAML configuration file. Defaults to '/opt/ddcontroller/config/default.yaml'.
+    debug (bool, optional): Whether to print debugging messages. Defaults to False.
     """
 
     def __init__(self, config_path='/opt/ddcontroller/config/default.yaml', debug=False):
-        """_summary_
-
-        Args:
-            config (_type_, optional): _description_. Defaults to None.
-        """
 
         self.config = yaml.load(open(config_path, "r", encoding="utf-8").read())
         self.debug = debug
@@ -141,12 +141,20 @@ class DDRobot:
         self.position_controller_thread.start()     # start position contoller thread # Ideally we don't start this until it's needed
 
     def sleep(self, start_time):
-        """_summary_
+        """Sleep for a specified amount of time.
+
+        This method calculates the amount of time that has passed since the start time
+        and subtracts that from the wait time specified in the `self._wait` attribute.
+        If the calculated sleep time is negative, it is set to 0 instead. The method
+        then calls the built-in `time.sleep()` method to pause the program for the
+        calculated amount of time.
 
         Args:
-            start_time (_type_): _description_
+            start_time (int): The starting timestamp in nanoseconds.
+
+        Returns:
+            float: The amount of time slept in seconds.
         """
-        # measure time since start and subtract from sleep time
         sleep_time = sorted(
             [self._wait - ((time.monotonic_ns() - start_time) / 1e9), 0]
         )[1]
@@ -161,8 +169,8 @@ class DDRobot:
 
             start_time = time.monotonic_ns()  # record loop start time
 
-            self.left_wheel.update()  # update left wheel readings
-            self.right_wheel.update()  # update right wheel readings
+            self.left_wheel.update()    # update left wheel readings
+            self.right_wheel.update()   # update right wheel readings
 
             self.linear_velocity, self.angular_velocity  = self.get_motion()  # get robot linear and angular velocities
 
@@ -254,7 +262,11 @@ class DDRobot:
             self.position_controller_frequency = 1000/((time.monotonic_ns()-start_time)/1e6)
 
     def stop(self):
-        """_summary_"""
+
+        """Stop the robot.
+
+        This method stops the robot by setting the motion to 0, stopping the control threads, and stopping the wheels.
+        """
         self.set_motion([0, 0])
         self.running = False
         self.odometry_thread.join()
@@ -264,26 +276,31 @@ class DDRobot:
         self.left_wheel.stop()
 
     def define_heading(self, heading):
-        """_summary_
+        """Define the heading of the robot.
+
+        This method defines the heading of the robot by taking the arctangent of the sine and cosine of the input heading, constraining the heading to be between -pi and pi. The defined heading is then stored as an attribute of the DDRobot object and returned.
 
         Args:
-            heading (_type_): _description_
+        heading (float): The heading of the robot in radians.
 
         Returns:
-            _type_: _description_
+        float: The defined heading of the robot in radians, constrained to be between -pi and pi.
         """
 
         self.heading = np.arctan2(np.sin(heading), np.cos(heading))
         return self.heading
 
     def set_heading(self, target_heading, max_angular_velocity=None):
-        """_summary_
+        """Set the heading of the robot.
+
+        This method sets the target heading of the robot by taking the arctangent of the sine and cosine of the input heading, constraining the heading to be between -pi and pi. The maximum angular velocity of the robot can also be set as an optional parameter. The control level of the robot is set to 2, indicating that heading control is active.
 
         Args:
-            target_heading (_type_): _description_1
+        target_heading (float): The target heading of the robot in radians.
+        max_angular_velocity (float, optional): The maximum angular velocity of the robot in radians per second. Defaults to None.
 
         Returns:
-            _type_: _description_
+        None
         """
 
         if max_angular_velocity:
@@ -293,80 +310,97 @@ class DDRobot:
         self.target_heading = np.arctan2(np.sin(target_heading), np.cos(target_heading))
 
     def get_heading(self):
-        """_summary_
+        """Get the heading of the robot.
+
+        This method returns the heading of the robot as an attribute of the DDRobot object.
 
         Returns:
-            _type_: _description_
+        float: The heading of the robot in radians.
         """
         return self.heading
 
-    def define_global_position(self, pos):
-        """_summary_
+    def define_global_position(self, position):
+        """Define the global position of the robot.
+
+        This method sets the global position of the robot as an attribute of the DDRobot object.
 
         Args:
-            pos (_type_): _description_
+        position (list): A list containing the x and y position of the robot.
 
         Returns:
-            _type_: _description_
+        list: The global position of the robot.
         """
-        self.global_position = pos
+        self.global_position = position
         return self.global_position
 
     def get_global_position(self):
-        """_summary_
+        """Get the global position of the robot.
+
+        This method returns the global position of the robot as an attribute of the DDRobot object.
 
         Returns:
-            _type_: _description_
+        list: The global position of the robot, as a list containing the x and y position.
         """
         return self.global_position
 
     def get_linear_velocity(self):
-        """_summary_
+        """Get the linear velocity of the robot.
+
+        This method returns the linear velocity of the robot as an attribute of the DDRobot object.
 
         Returns:
-            _type_: _description_
+        float: The linear velocity of the robot, in meters per second.
         """
         return self.linear_velocity
 
     def get_angular_velocity(self):
-        """_summary_
+        """Get the angular velocity of the robot.
+
+        This method returns the angular velocity of the robot as an attribute of the DDRobot object.
 
         Returns:
-            _type_: _description_
+        float: The angular velocity of the robot, in radians per second.
         """
         return self.angular_velocity
 
     def set_linear_velocity(self, linear_velocity):
-        """_summary_
+
+        """Set the desired linear velocity of the robot.
 
         Args:
-            linear_velocity (_type_): _description_
+            linear_velocity (float): The linear velocity to set in meters per second.
 
         Returns:
-            _type_: _description_
+            list: The updated target motion of the robot.
         """
+
         self.target_motion[0] = linear_velocity
         self.set_motion(self.target_motion)
         return self.target_motion
 
     def set_angular_velocity(self, angular_velocity):
-        """_summary_
+        """Set the target angular velocity for the robot.
 
         Args:
-            angular_velocity (_type_): _description_
+            angular_velocity (float): The desired angular velocity of the robot in radians per second.
 
         Returns:
-            _type_: _description_
+            list: The current target motion of the robot, where the first element is the linear velocity and the second element is the angular velocity.
         """
         self.target_motion[1] = angular_velocity
         self.set_motion(self.target_motion)
         return self.target_motion
 
     def set_motion(self, target_motion):
-        """_summary_
+        """
+        Set the target linear and angular velocities for the robot.
 
         Args:
-            target_motion (_type_): _description_
+            target_motion (list): A list containing the target linear velocity (m/s) as the first element
+                                 and the target angular velocity (rad/s) as the second element.
+
+        Returns:
+            numpy.ndarray: An array containing the target angular velocities (rad/s) for the left and right wheels.
         """
 
         self.target_motion = target_motion
@@ -392,10 +426,11 @@ class DDRobot:
         return C
 
     def get_motion(self):
-        """_summary_
+        """
+        Calculate and return the current linear and angular velocities of the robot.
 
         Returns:
-            _type_: _description_
+            list: A list of two floats, representing the linear and angular velocities of the robot, in that order.
         """
 
         A = np.array(
@@ -423,13 +458,16 @@ class DDRobot:
         return [self.linear_velocity, self.angular_velocity]
 
     def go_to(self, target_position, tolerance=0.1, max_linear_velocity=None, max_angular_velocity=None, backwards=False):
-        """_summary_
+        """
+        Moves the robot to the specified target position using a position controller.
+        The robot will continue to move towards the target position until it is within the specified tolerance.
 
         Args:
-            target_position (_type_): _description_
-            tolerance (float, optional): _description_. Defaults to 0.1.
-            max_linear_velocity (_type_, optional): _description_. Defaults to None.
-            max_angular_velocity (_type_, optional): _description_. Defaults to None.
+            target_position (list): The target position as a 2-element list [x, y] in global coordinates.
+            tolerance (float, optional): The tolerance for reaching the target position in meters. Defaults to 0.1.
+            max_linear_velocity (float, optional): The maximum linear velocity the robot will use to reach the target position in m/s. If not provided, the default value specified in the configuration file will be used.
+            max_angular_velocity (float, optional): The maximum angular velocity the robot will use to reach the target position in rad/s. If not provided, the default value specified in the configuration file will be used.
+            backwards (bool, optional): Whether the robot should move backwards to reach the target position. Defaults to False.
         """
         self.target_position = target_position
         self.position_tolerance = tolerance

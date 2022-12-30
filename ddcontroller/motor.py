@@ -18,28 +18,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
-
 import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
 
 class Motor:
-    """_summary_
-        Motor
+    """Class for controlling a motor using the Raspberry Pi's GPIO pins.
+
+    Args:
+        pins (list): A list of the GPIO pins that will be used to control the motor.
+        pwm_frequency (int): The frequency of the pulse width modulation (PWM) signal
+            that will be used to control the motor.
+        initial_duty (int, optional): The initial duty cycle of the PWM signal. Defaults to 0.
+        decay_mode (str, optional): The decay mode of the motor. Can be either "FAST" or
+            "SLOW". Defaults to "FAST".
+        invert (bool, optional): A boolean value indicating whether the motor's direction
+            should be reversed. Defaults to False.
+        rpm (int, optional): The speed of the motor in rotations per minute. Defaults to 200.
     """
 
     def __init__(self, pins, pwm_frequency, initial_duty=0, decay_mode='FAST', invert=False, rpm=200):
-
-        """_summary_
-
-        Args:
-            pins (_type_): _description_
-            pwm_frequency (_type_): _description_
-            initial_duty (int, optional): _description_. Defaults to 0.
-            decay_mode (str, optional): _description_. Defaults to 'FAST'.
-            invert (bool, optional): _description_. Defaults to False.
-            rpm (int, optional): _description_. Defaults to 200.
-        """
-
         self.pins = pins
         self._pins = []
 
@@ -77,20 +74,20 @@ class Motor:
             pin.start(self.duty)
 
     def set_pwm_frequency(self, frequency):
-        """_summary_
+        """Sets the frequency of the PWM signal.
 
         Args:
-            frequency (_type_): _description_
+            frequency (int): The new frequency of the PWM signal.
         """
         self.pwm_frequency = frequency
         for pin in self._pins:
             pin.ChangeFrequency(self.pwm_frequency)
 
     def set_duty(self, duty):
-        """_summary_
+        """Sets the duty cycle of the PWM signal.
 
         Args:
-            duty (_type_): _description_
+            duty (float): The new duty cycle of the PWM signal, from -1 to 1.
         """
         self.duty = round(  # Make sure duty is between -1 and 1
             sorted((-1, float(duty), 1))[1], 2
@@ -124,15 +121,12 @@ class Motor:
 
             elif duty < 0:
                 self._pins[0].ChangeDutyCycle(abs(duty))
-                self._pins[1].ChangeDutyCycle(0)
 
         else:
             print('Invalid Decay Mode!')
 
     def stop(self):
-        """_summary_
-
-        """
+        """Stops the motor by setting the duty cycle of the PWM signal to 0."""
 
         for pin in self._pins:
             pin.stop()

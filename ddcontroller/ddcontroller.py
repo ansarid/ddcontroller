@@ -141,20 +141,12 @@ class DDRobot:
         self.position_controller_thread.start()     # start position contoller thread # Ideally we don't start this until it's needed
 
     def sleep(self, start_time):
-        """Sleep for a specified amount of time.
-
-        This method calculates the amount of time that has passed since the start time
-        and subtracts that from the wait time specified in the `self._wait` attribute.
-        If the calculated sleep time is negative, it is set to 0 instead. The method
-        then calls the built-in `time.sleep()` method to pause the program for the
-        calculated amount of time.
+        """_summary_
 
         Args:
-            start_time (int): The starting timestamp in nanoseconds.
-
-        Returns:
-            float: The amount of time slept in seconds.
+            start_time (_type_): _description_
         """
+        # measure time since start and subtract from sleep time
         sleep_time = sorted(
             [self._wait - ((time.monotonic_ns() - start_time) / 1e9), 0]
         )[1]
@@ -169,8 +161,8 @@ class DDRobot:
 
             start_time = time.monotonic_ns()  # record loop start time
 
-            self.left_wheel.update()    # update left wheel readings
-            self.right_wheel.update()   # update right wheel readings
+            self.left_wheel.update()  # update left wheel readings
+            self.right_wheel.update()  # update right wheel readings
 
             self.linear_velocity, self.angular_velocity  = self.get_motion()  # get robot linear and angular velocities
 

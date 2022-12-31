@@ -20,7 +20,7 @@ jobs:
           pip install sphinx
       - name: Build documentation
         run: |
-          cd path/to/your/library/docs
+          cd ./docs
           make html
       - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3

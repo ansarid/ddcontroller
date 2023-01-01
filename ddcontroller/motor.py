@@ -22,21 +22,23 @@ import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
 
 class Motor:
-    """Class for controlling a motor using the Raspberry Pi's GPIO pins.
-
-    Args:
-        pins (list): A list of the GPIO pins that will be used to control the motor.
-        pwm_frequency (int): The frequency of the pulse width modulation (PWM) signal
-            that will be used to control the motor.
-        initial_duty (int, optional): The initial duty cycle of the PWM signal. Defaults to 0.
-        decay_mode (str, optional): The decay mode of the motor. Can be either "FAST" or
-            "SLOW". Defaults to "FAST".
-        invert (bool, optional): A boolean value indicating whether the motor's direction
-            should be reversed. Defaults to False.
-        rpm (int, optional): The speed of the motor in rotations per minute. Defaults to 200.
-    """
 
     def __init__(self, pins, pwm_frequency, initial_duty=0, decay_mode='FAST', invert=False, rpm=200):
+
+        """Class for controlling a motor using the Raspberry Pi's GPIO pins.
+
+        Args:
+            pins (list): A list of the GPIO pins that will be used to control the motor.
+            pwm_frequency (int): The frequency of the pulse width modulation (PWM) signal
+                that will be used to control the motor.
+            initial_duty (int, optional): The initial duty cycle of the PWM signal. Defaults to 0.
+            decay_mode (str, optional): The decay mode of the motor. Can be either "FAST" or
+                "SLOW". Defaults to "FAST".
+            invert (bool, optional): A boolean value indicating whether the motor's direction
+                should be reversed. Defaults to False.
+            rpm (int, optional): The speed of the motor in rotations per minute. Defaults to 200.
+        """
+
         self.pins = pins
         self._pins = []
 

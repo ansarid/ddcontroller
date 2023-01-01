@@ -31,16 +31,16 @@ yaml = YAML(typ='safe')
 
 class DDRobot:
 
-    """Initialize a DDRobot object.
-
-    This method initializes a DDRobot object by setting up the wheels and loading the configuration from a YAML file. The robot has various attributes such as its heading, linear velocity, and global position, as well as target motion, heading, and position. The robot also has various constants such as its wheel base, maximum linear and angular velocities, and tolerance for reaching the target position.
-
-    Args:
-    config_path (str, optional): The path to the YAML configuration file. Defaults to '/opt/ddcontroller/config/default.yaml'.
-    debug (bool, optional): Whether to print debugging messages. Defaults to False.
-    """
-
     def __init__(self, config_path='/opt/ddcontroller/config/default.yaml', debug=False):
+
+        """Initialize a DDRobot object.
+
+        This method initializes a DDRobot object by setting up the wheels and loading the configuration from a YAML file. The robot has various attributes such as its heading, linear velocity, and global position, as well as target motion, heading, and position. The robot also has various constants such as its wheel base, maximum linear and angular velocities, and tolerance for reaching the target position.
+
+        Args:
+        config_path (str, optional): The path to the YAML configuration file. Defaults to '/opt/ddcontroller/config/default.yaml'.
+        debug (bool, optional): Whether to print debugging messages. Defaults to False.
+        """
 
         self.config = yaml.load(open(config_path, "r", encoding="utf-8").read())
         self.debug = debug

@@ -51,39 +51,39 @@ class Wheel:
         This class represents a single wheel, including its motor and encoder, and provides methods for controlling the speed of the motor and calculating the rotation and linear velocity of the wheel.
 
         Attributes:
-        closed_loop (bool): A flag indicating whether closed loop control should be used to control the motor.
-        motor (Motor): An instance of the Motor class representing the motor driving the wheel.
-        encoder (AS5048B): An instance of the AS5048B class representing the encoder attached to the wheel.
-        pid (PID): An instance of the PID class representing the PID controller used for closed loop control.
-        radius (float): The radius of the wheel, in meters.
-        pulley_ratio (float): The ratio of the number of teeth on the motor pulley to the number of teeth on the wheel pulley.
-        rpm (float): The rotational speed of the motor, in revolutions per minute.
-        max_angular_velocity (float): The maximum angular velocity of the wheel, in radians per second, based on the maximum RPM of the motor.
-        target_angular_velocity (float): The target angular velocity of the system, in radians per second, used to control the motor.
-        position (int): The raw encoder position of the wheel, in ticks.
-        timestamp (int): The timestamp of the last measurement of the encoder position, in nanoseconds.
-        target_velocity (float): The target linear velocity of the wheel, in meters per second.
-        angular_velocity (float): The current angular velocity of the wheel, in radians per second.
-        linear_velocity (float): The current linear velocity of the wheel, in meters per second.
-        rollover_limit (int): The limit at which the encoder position will rollover, in ticks.
-        _positions (deque): A deque object containing the last two encoder positions of the wheel, in ticks.
-        _timestamps (deque): A deque object containing the timestamps of the last two encoder position measurements, in nanoseconds.
+            closed_loop (bool): A flag indicating whether closed loop control should be used to control the motor.
+            motor (Motor): An instance of the Motor class representing the motor driving the wheel.
+            encoder (AS5048B): An instance of the AS5048B class representing the encoder attached to the wheel.
+            pid (PID): An instance of the PID class representing the PID controller used for closed loop control.
+            radius (float): The radius of the wheel, in meters.
+            pulley_ratio (float): The ratio of the number of teeth on the motor pulley to the number of teeth on the wheel pulley.
+            rpm (float): The rotational speed of the motor, in revolutions per minute.
+            max_angular_velocity (float): The maximum angular velocity of the wheel, in radians per second, based on the maximum RPM of the motor.
+            target_angular_velocity (float): The target angular velocity of the system, in radians per second, used to control the motor.
+            position (int): The raw encoder position of the wheel, in ticks.
+            timestamp (int): The timestamp of the last measurement of the encoder position, in nanoseconds.
+            target_velocity (float): The target linear velocity of the wheel, in meters per second.
+            angular_velocity (float): The current angular velocity of the wheel, in radians per second.
+            linear_velocity (float): The current linear velocity of the wheel, in meters per second.
+            rollover_limit (int): The limit at which the encoder position will rollover, in ticks.
+            _positions (deque): A deque object containing the last two encoder positions of the wheel, in ticks.
+            _timestamps (deque): A deque object containing the timestamps of the last two encoder position measurements, in nanoseconds.
 
         Args:
-        motor_pins (tuple): A tuple containing the pins of the motor driver connected to the motor.
-        pwm_frequency (int): The frequency of the pulse width modulation used to control the motor, in hertz.
-        i2c_bus (int): The number of the I2C bus on which the encoder is connected.
-        encoder_address (int): The I2C address of the encoder.
-        wheel_radius (float): The radius of the wheel, in meters.
-        motor_pulley_teeth (int): The number of teeth on the pulley attached to the motor shaft.
-        wheel_pulley_teeth (int): The number of teeth on the pulley attached to the wheel hub.
-        motor_decay_mode (str, optional): The decay mode of the motor. Can be 'FAST' or 'SLOW'. Defaults to 'FAST'.
-        invert_motor (bool, optional): A flag indicating whether the motor should be inverted. Defaults to False.
-        invert_encoder (bool, optional): A flag indicating whether the encoder readings should be inverted. Defaults to False.
-        closed_loop (bool, optional): A flag indicating whether closed loop control should be used to control the motor. Defaults to False.
-        Kp (int, optional): The proportional gain of the PID controller. Defaults to 0.
-        Ki (int, optional): The integral gain of the PID controller. Defaults to 0.
-        Kd (int, optional): The derivative gain of the PID controller. Defaults to 0.
+            motor_pins (tuple): A tuple containing the pins of the motor driver connected to the motor.
+            pwm_frequency (int): The frequency of the pulse width modulation used to control the motor, in hertz.
+            i2c_bus (int): The number of the I2C bus on which the encoder is connected.
+            encoder_address (int): The I2C address of the encoder.
+            wheel_radius (float): The radius of the wheel, in meters.
+            motor_pulley_teeth (int): The number of teeth on the pulley attached to the motor shaft.
+            wheel_pulley_teeth (int): The number of teeth on the pulley attached to the wheel hub.
+            motor_decay_mode (str, optional): The decay mode of the motor. Can be 'FAST' or 'SLOW'. Defaults to 'FAST'.
+            invert_motor (bool, optional): A flag indicating whether the motor should be inverted. Defaults to False.
+            invert_encoder (bool, optional): A flag indicating whether the encoder readings should be inverted. Defaults to False.
+            closed_loop (bool, optional): A flag indicating whether closed loop control should be used to control the motor. Defaults to False.
+            Kp (int, optional): The proportional gain of the PID controller. Defaults to 0.
+            Ki (int, optional): The integral gain of the PID controller. Defaults to 0.
+            Kd (int, optional): The derivative gain of the PID controller. Defaults to 0.
         """
 
 
@@ -155,7 +155,7 @@ class Wheel:
         This method calculates and returns the rotation of the wheel, in ticks, based on the positions of the encoder at two different points in time. It also accounts for rollover, where the encoder position resets after reaching a certain value. The rotation is calculated by taking the difference between the encoder positions and applying a pulley ratio to convert from motor pulley rotation to wheel rotation.
 
         Returns:
-        int: The rotation of the wheel, in ticks.
+            int: The rotation of the wheel, in ticks.
         """
 
         rotation = (
@@ -180,7 +180,7 @@ class Wheel:
         This method calculates and returns the distance traveled by the wheel, in meters, based on the rotation of the wheel and the radius of the wheel.
 
         Returns:
-        float: The distance traveled by the wheel.
+            float: The distance traveled by the wheel.
         """
 
         # get wheel rotation between measurements
@@ -196,7 +196,7 @@ class Wheel:
         This method calculates and returns the current linear velocity of the wheel, in meters per second, based on the distance traveled by the wheel and the elapsed time between measurements.
 
         Returns:
-        float: The current linear velocity of the wheel.
+            float: The current linear velocity of the wheel.
         """
         distance = self.get_travel()  # get wheel travel
         # calculate delta_time, convert from ns to s
@@ -211,7 +211,7 @@ class Wheel:
         This method calculates and returns the current angular velocity of the wheel, in radians per second, based on the rotation of the wheel and the elapsed time between measurements.
 
         Returns:
-        float: The current angular velocity of the wheel.
+            float: The current angular velocity of the wheel.
         """
 
         # get wheel rotation between measurements
@@ -230,7 +230,7 @@ class Wheel:
         This method sets the target angular velocity of the wheel, which is used to control the speed of the motor. The motor's duty cycle is adjusted based on the target angular velocity, using either open loop or closed loop control.
 
         Args:
-        angular_velocity (float): The target angular velocity to set, in radians per second.
+            angular_velocity (float): The target angular velocity to set, in radians per second.
         """
         self.target_angular_velocity = angular_velocity
 

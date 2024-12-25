@@ -23,17 +23,16 @@ import numpy as np
 from ddcontroller.wheels import Wheel
 
 # Create right wheel object
-wheel = Wheel(motor_pins=(11, 12),
-              pwm_frequency=220,
+wheel = Wheel(motor_pins=(0, 1),
               i2c_bus=1,
-              encoder_address=0x40,
-              wheel_radius=0.04165,
-              motor_pulley_teeth=15,
-              wheel_pulley_teeth=30,
+              encoder_address=0x41,
+              invert_encoder=True,
+              wheel_radius=0.030,
               )
 
 try:
 
+    print(wheel.max_angular_velocity)
     # Create infinite loop
     while True:
 
@@ -44,7 +43,7 @@ try:
         print(f"{round(wheel.get_angular_velocity(), 3)} rad/s")
 
         # Set wheel angular velocity to 2*pi
-        wheel.set_angular_velocity(2*np.pi)
+        wheel.set_angular_velocity(-5)
 
         # Run loop at 50Hz
         time.sleep(1/50)

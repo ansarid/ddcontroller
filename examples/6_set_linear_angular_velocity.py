@@ -30,7 +30,7 @@ try:
     while robot.running:
 
         # Set robot's linear velocity to 0.2m/s and angular velocity to 0.5 rad/s
-        robot.set_motion([0.2, 0.5])
+        robot.set_motion([0.5, 2])
 
         # Get the motion of the robot
         motion = robot.get_motion()

@@ -26,10 +26,10 @@ robot = DDRobot(debug=True)
 
 # Create list of Points
 points = [
-        [1,0],
-        [1,1],
-        [0,1],
-        [0,0],
+        [1.0, 0.0],
+        [1.0, 1.0],
+        [0.0, 1.0],
+        [0.0, 0.0],
         ]
 
 try:
@@ -40,7 +40,7 @@ try:
         print(f"Headed to {point}.")
 
         # Set target location for navigation to (1,1)
-        robot.go_to(point, tolerance=0.01, max_linear_velocity=0.3, max_angular_velocity=1)
+        robot.go_to(point, tolerance=0.01, max_linear_velocity=0.1, max_angular_velocity=3)
 
         # Loop while robot is running and not at target location
         while robot.running and not robot.reached_target_position:
@@ -55,6 +55,8 @@ try:
             time.sleep(1/50)
 
         print('\nDone!')
+
+    robot.set_heading(0)
 
 except KeyboardInterrupt:
     print('Stopping...')

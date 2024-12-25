@@ -79,36 +79,22 @@ class DDRobot:
 
         self.left_wheel = wheels.Wheel(
             motor_pins=self.config['robot']['left_wheel']['motor']['pins'],
-            pwm_frequency=self.config['robot']['left_wheel']['motor']['pwm_frequency'],
             motor_decay_mode=self.config['robot']['left_wheel']['motor']['decay_mode'],
             i2c_bus=self.config['robot']['left_wheel']['encoder']['i2c_bus'],
             encoder_address=self.config['robot']['left_wheel']['encoder']['address'],
             wheel_radius=self.config['robot']['left_wheel']['wheel_radius'],
-            motor_pulley_teeth=self.config['robot']['left_wheel']['motor_pulley_teeth'],
-            wheel_pulley_teeth=self.config['robot']['left_wheel']['wheel_pulley_teeth'],
             invert_motor=self.config['robot']['left_wheel']['motor']['invert'],
             invert_encoder=self.config['robot']['left_wheel']['encoder']['invert'],
-            closed_loop=self.config['robot']['left_wheel']['closed_loop'],
-            Kp=self.config['robot']['left_wheel']['Kp'],
-            Ki=self.config['robot']['left_wheel']['Ki'],
-            Kd=self.config['robot']['left_wheel']['Kd'],
         )
 
         self.right_wheel = wheels.Wheel(
             motor_pins=self.config['robot']['right_wheel']['motor']['pins'],
-            pwm_frequency=self.config['robot']['right_wheel']['motor']['pwm_frequency'],
             motor_decay_mode=self.config['robot']['right_wheel']['motor']['decay_mode'],
             i2c_bus=self.config['robot']['right_wheel']['encoder']['i2c_bus'],
             encoder_address=self.config['robot']['right_wheel']['encoder']['address'],
             wheel_radius=self.config['robot']['right_wheel']['wheel_radius'],
-            motor_pulley_teeth=self.config['robot']['right_wheel']['motor_pulley_teeth'],
-            wheel_pulley_teeth=self.config['robot']['right_wheel']['wheel_pulley_teeth'],
             invert_motor=self.config['robot']['right_wheel']['motor']['invert'],
             invert_encoder=self.config['robot']['right_wheel']['encoder']['invert'],
-            closed_loop=self.config['robot']['right_wheel']['closed_loop'],
-            Kp=self.config['robot']['right_wheel']['Kp'],
-            Ki=self.config['robot']['right_wheel']['Ki'],
-            Kd=self.config['robot']['right_wheel']['Kd'],
         )
 
         self.heading_pid = PID(self.config['robot']['heading_Kp'],

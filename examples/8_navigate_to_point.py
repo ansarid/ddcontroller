@@ -27,7 +27,7 @@ robot = DDRobot(debug=True)
 try:
 
     # Set target location for navigation to (1,1)
-    robot.go_to([1, 1], tolerance=0.1, max_linear_velocity=0.3, max_angular_velocity=2)
+    robot.go_to([0.3, 0.3], tolerance=0.001, max_linear_velocity=0.6, max_angular_velocity=6)
 
     # Loop while robot is running and not at target location
     while robot.running and not robot.reached_target_position:

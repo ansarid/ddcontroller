@@ -9,10 +9,10 @@ Python controller for differential drive robots.
 
 ### Manual Install
 
-Install the AS5048B Encoder Library:
+Install the AS5600L Encoder Library:
 
 ```bash
-python3 -m pip install git+https://github.com/ansarid/as5048b
+python3 -m pip install git+https://github.com/ansarid/as5600l
 ```
 
 Install the DDController Library:

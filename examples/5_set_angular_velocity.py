@@ -30,7 +30,7 @@ try:
     while robot.running:
 
         # Set robot's angular velocity to 1 rad/s
-        robot.set_angular_velocity(1)
+        robot.set_angular_velocity(12)
 
         # Get the motion of the robot
         motion = robot.get_motion()

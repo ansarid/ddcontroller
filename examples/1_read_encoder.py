@@ -19,10 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import time
-from as5048b import AS5048B
+from as5600l import AS5600L
 
 # Create encoder object
-encoder = AS5048B(0x40)
+encoder = AS5600L(0x42)
 
 try:
 

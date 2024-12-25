@@ -22,7 +22,7 @@ import time
 from ddcontroller.motor import Motor
 
 # Create motor object ((pins), pwm_frequency)
-motor = Motor((11, 12), 220)
+motor = Motor((0, 1), 1600)
 
 try:
 
@@ -42,7 +42,22 @@ try:
             motor.set_duty(duty)
 
             # Run loop at 50Hz
-            time.sleep(1/50)
+            time.sleep(1/10)
+
+        # For loop iterating through values from 100 to -100 with an increment of -1
+        for duty in range(-100, 100, 1):
+
+            # Divide duty by 100 because duty cycle input needs to be between -1 and 1
+            duty /= 100
+
+            # Print the current duty cycle
+            print(f"Duty: {duty}")
+
+            # Set the duty cycle to the motor
+            motor.set_duty(duty)
+
+            # Run loop at 50Hz
+            time.sleep(1/10)
 
 except KeyboardInterrupt:
     print('Stopping...')

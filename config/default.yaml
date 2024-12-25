@@ -19,25 +19,25 @@ label: 'Default Robot Config'
 robot:
 
     # Wheel Base Distance (m)
-    wheel_base: 0.355
+    wheel_base: 0.100
 
     # Maximum Linear Velocity (m/s)
-    max_linear_velocity: 0.45
+    max_linear_velocity: 0.8
 
     # Maximum Angular Velocity (rad/s)
-    max_angular_velocity: 2.5
+    max_angular_velocity: 12
 
     # Wheel Loop Frequency (Hz)
     wheel_frequency: 50
 
     # Maximum Linear Velocity During Goal-to-Goal Navigation (m/s)
-    max_traveling_linear_velocity: 0.2
+    max_traveling_linear_velocity: 0.3
 
     # Maximum Angular Velocity During Goal-to-Goal Navigation (m/s)
-    max_traveling_angular_velocity: 0.75
+    max_traveling_angular_velocity: 6
 
     # Heading Controller PID Gains
-    heading_Kp: 6
+    heading_Kp: 12
     heading_Ki: 0
     heading_Kd: 0
 
@@ -45,60 +45,13 @@ robot:
     left_wheel:
 
         # Wheel Radius (m)
-        wheel_radius: 0.04165
+        wheel_radius: 0.030
 
         # Number Of Teeth On Motor Pulley
-        motor_pulley_teeth: 15
+        motor_pulley_teeth: 1
 
         # Number Of Teeth On Wheel Pulley
-        wheel_pulley_teeth: 30
-
-        # Open or closed loop control
-        closed_loop: False
-
-        # Closed Loop Wheel Speed PID Gains
-        Kp: 0
-        Ki: 0
-        Kd: 0
-
-        encoder:
-
-            # I2C Bus ID
-            i2c_bus: 1
-
-            # Encoder Address
-            address: 0x40
-
-            # Flag To Indicate If The Encoder Readings Need To Be Inverted
-            invert: True
-
-        motor:
-
-            # Motor PWM Frequency (Hz)
-            pwm_frequency: 220
-
-            # Indicate If The Motor Duty Cycle Needs To Be Inverted
-            invert: False
-
-            # Motor Pins
-            pins:
-                - 11
-                - 12
-
-            # Indicate Motor Decay Mode (SLOW/FAST)
-            decay_mode: FAST
-
-    # Right Wheel Parameters
-    right_wheel:
-
-        # Wheel Radius (m)
-        wheel_radius: 0.04165
-
-        # Number Of Teeth On Motor Pulley
-        motor_pulley_teeth: 15
-
-        # Number Of Teeth On Wheel Pulley
-        wheel_pulley_teeth: 30
+        wheel_pulley_teeth: 1
 
         # Open or closed loop control
         closed_loop: False
@@ -117,20 +70,67 @@ robot:
             address: 0x41
 
             # Flag To Indicate If The Encoder Readings Need To Be Inverted
-            invert: False
+            invert: True
 
         motor:
 
             # Motor PWM Frequency (Hz)
-            pwm_frequency: 220
+            pwm_frequency: 100
 
             # Indicate If The Motor Duty Cycle Needs To Be Inverted
             invert: False
 
             # Motor Pins
             pins:
-                - 15
-                - 16
+                - 0
+                - 1
 
             # Indicate Motor Decay Mode (SLOW/FAST)
-            decay_mode: FAST
+            decay_mode: SLOW
+
+    # Right Wheel Parameters
+    right_wheel:
+
+        # Wheel Radius (m)
+        wheel_radius: 0.030
+
+        # Number Of Teeth On Motor Pulley
+        motor_pulley_teeth: 1
+
+        # Number Of Teeth On Wheel Pulley
+        wheel_pulley_teeth: 1
+
+        # Open or closed loop control
+        closed_loop: False
+
+        # Closed Loop Wheel Speed PID Gains
+        Kp: 0
+        Ki: 0
+        Kd: 0
+
+        encoder:
+
+            # I2C Bus ID
+            i2c_bus: 1
+
+            # Encoder Address
+            address: 0x42
+
+            # Flag To Indicate If The Encoder Readings Need To Be Inverted
+            invert: False
+
+        motor:
+
+            # Motor PWM Frequency (Hz)
+            pwm_frequency: 100
+
+            # Indicate If The Motor Duty Cycle Needs To Be Inverted
+            invert: False
+
+            # Motor Pins
+            pins:
+                - 2
+                - 3
+
+            # Indicate Motor Decay Mode (SLOW/FAST)
+            decay_mode: SLOW

@@ -31,7 +31,7 @@ install_requires = [
                     'smbus2',
                     'ruamel.yaml',
                     'simple-pid',
-                    # 'as5048b'
+                    # 'as5600l'
                    ]
 
 setuptools.setup(
